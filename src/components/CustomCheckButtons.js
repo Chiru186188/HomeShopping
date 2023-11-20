@@ -11,7 +11,7 @@ import TouchableNativeFeedback from './TouchableNativeFeedback';
 function CustomCheckButtons({title, style, selected,onChangeSelected}) {
 
   const onPress = useCallback(() => {
-    
+ 
     onChangeSelected(title); // Notify the parent component about the selected value
   }, [onChangeSelected, title]);
 
@@ -30,9 +30,9 @@ function CustomCheckButtons({title, style, selected,onChangeSelected}) {
       <View
         style={[
           {
-            height: wp('6%'),
-            width: wp('6%'),
-            borderRadius: wp('1%'),
+            height:  Platform.OS === 'web' ? wp('3%') : wp('6%'),            //wp('6%'),
+            width: Platform.OS === 'web' ? wp('3%') : wp('6%'), 
+            borderRadius: Platform.OS === 'web' ? wp('0.5%') : wp('1%'), 
             borderWidth: 2,
             borderColor: selected === title ? COLORS.BlueSelectionBorder : COLORS.black,
             alignItems: 'center',
@@ -42,9 +42,9 @@ function CustomCheckButtons({title, style, selected,onChangeSelected}) {
         <Animated.View
           style={[
             {
-              height: wp('4%'),
-              width: wp('4%'),
-              borderRadius: wp('1%'),
+              height: Platform.OS === 'web' ? wp('1.5%') : wp('4%'),   
+              width:  Platform.OS === 'web' ? wp('1.5%') : wp('4%'),   
+              borderRadius: Platform.OS === 'web' ? wp('0.5%') : wp('1%'), 
             },
             rStyle,
           ]}

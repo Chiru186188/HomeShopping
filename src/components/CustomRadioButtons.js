@@ -35,9 +35,9 @@ function CustomRadioButtons({title, style, selected,onChangeSelected}) {
       <View
         style={[
           {
-            height: wp('5%'),
-            width: wp('5%'),
-            borderRadius: wp('5%'),
+            height:  Platform.OS === 'web' ? wp('3%') : wp('5%'),            //wp('6%'),
+            width: Platform.OS === 'web' ? wp('3%') : wp('5%'), 
+            borderRadius: Platform.OS === 'web' ? wp('1.5%') : wp('2.5%'), 
             borderWidth: 2,
             borderColor: selected === title ? COLORS.BlueSelectionBorder : COLORS.black,
             alignItems: 'center',
@@ -47,9 +47,9 @@ function CustomRadioButtons({title, style, selected,onChangeSelected}) {
         <Animated.View
           style={[
             {
-              height: wp('3%'),
-              width: wp('3%'),
-              borderRadius: wp('3%'),
+              height: Platform.OS === 'web' ? wp('1.5%') : wp('3%'),   
+              width:  Platform.OS === 'web' ? wp('1.5%') : wp('3%'),   
+              borderRadius: Platform.OS === 'web' ? wp('0.75%') : wp('1.5%'), 
             },
             rStyle,
           ]}

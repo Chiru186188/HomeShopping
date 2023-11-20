@@ -16,12 +16,15 @@ import EditTextBottomBorder from '../../../components/EditTextBottomBorder';
 import CustomRadioButtons from '../../../components/CustomRadioButtons';
 import CustomButtonsBAndS from '../../../components/CustomButtonsBAndS';
 import { useRoute } from '@react-navigation/native';
+import utills from '../../../utills';
+import { RegisterSliceHS } from '../../../redux/slice/auth';
+import useRedux from '../../../components/useRedux';
 // import CustomRadioButtons from '../../../components/CustomRadioButtons';
 
 export default function HomeShopAccountDetailsFinal({navigation}) {
  
 useEffect(() => {
-console.log("HIIII")
+console.log("HIIII",Params1)
   return () => {
    
   };
@@ -30,19 +33,71 @@ const [selectedOption, setSelectedOption] = useState(null);
 
  const [ApplicantSign, setApplicantSign] = useState('');
  const route = useRoute();
- const { From } = route.params;
+ const { From ,Params1} = route.params;
 const [ApplicantName, setApplicantName] = useState('');
 const [AppliDate, setAppliDate] = useState('');
 
+const {dispatch} = useRedux();
 
   const handleBackPress = () => {
     // Add your logic for the "Back" button action here
   };
 
-  const handleNextPress = () => {
-    // Add your logic for the "Next" button action here
-    navigation.navigate(SCREENS.CartValueScreen,{From :"HS",Service:'Home Shopping Services'})
-  };
+  // const handleNextPress = () => {
+  //   // Add your logic for the "Next" button action here
+  //   navigation.navigate(SCREENS.CartValueScreen,{From :"HS",Service:'Home Shopping Services'})
+  // };
+
+  const handleNextPress = async () => {
+  
+    
+    if (utills.isEmptyOrSpaces(ApplicantSign)) {
+       utills.errorAlert('', 'Please Enter Applicant Signature');
+        return;
+      }
+    
+      if (utills.isEmptyOrSpaces(AppliDate)) {
+        utills.errorAlert('', 'Please Enter Apply Date');
+        return;
+      }
+  
+      if (utills.isEmptyOrSpaces(ApplicantName)) {
+        utills.errorAlert('', 'Please Enter Applicant Name');
+        return;
+      }
+     
+      if (utills.isEmptyOrSpaces(selectedOption)) {
+        utills.errorAlert('', 'Please Select Service');
+        return;
+      } 
+
+      let data = {
+        applicantName: ApplicantName,
+        applicantSign: ApplicantSign,
+        date: "20/11/23",
+        authPerson : ApplicantName,
+        oceanfreight:selectedOption
+      };
+     console.log('value==33', data);
+     
+
+      const mergedParams = { ...Params1, ...data };
+      console.log('mergedParams',mergedParams)
+    // navigation.navigate(SCREENS.DashBoard);
+      
+      dispatch(RegisterSliceHS(mergedParams))
+        .unwrap()
+        .then(res => {
+          console.log('Register res==', res);
+          if (res.status == true){
+            navigation.navigate(SCREENS.DashBoard);
+  
+          }else{
+            utills.errorAlert('', res.error);
+            return;
+          }
+        });
+    };
 const handlePress = () => {
 };
   return (
@@ -61,7 +116,7 @@ const handlePress = () => {
 
           </View>
 
-          <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left'}]}>
+          <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
                   <Text  style={styles.Left500BOLDText}>Shipping Address</Text>
                 </View>
@@ -71,7 +126,7 @@ const handlePress = () => {
               <Text  style={styles.Left500Text}>3387 SW 13th Avenue, Fort Lauderdale, Florida 33315 USA</Text>
               </View>
 
-              <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left'}]}>
+              <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
                   <Text  style={styles.Left500BOLDText}>Acknowledgement
 
@@ -107,9 +162,9 @@ const handlePress = () => {
      
 
 
-<View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left'}]}>
+<View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
-                  <Text  style={styles.Left500BOLDText}>AUTHORISED PERSON (if applicadle)</Text>
+                  <Text  style={styles.Left500BOLDText}>AUTHORISED PERSON (if applicable)</Text>
                 </View>
               </View>
 

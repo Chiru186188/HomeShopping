@@ -15,6 +15,7 @@ import EditTextWithLable from '../../components/EditTextWithLable';
 import Icons, { Icon } from '../../components/Icons';
 import { ScrollView } from 'react-native-gesture-handler';
 import HeaderWithBackButtonAndNextButton from '../../components/HeaderWithBackButtonAndNextButton';
+import utills from '../../utills';
 
 export default function SelectServices({navigation}) {
   const [email, setemail] = useState('');
@@ -49,6 +50,13 @@ console.log("HIIII")
 
 const GoToNext = () => {
   console.log(selectedService)
+
+  if (utills.isEmptyOrSpaces(selectedService)) {
+    console.log('value==33', selectedService);
+
+    utills.errorAlert('', 'Please Select Service');
+    return;
+  }
   if (selectedService === "Home Shopping (ocean freight) service"){
 
     navigation.navigate(SCREENS.HomeShopIntroduction)
@@ -78,10 +86,10 @@ const handlePress = () => {
 };
   return (
      <GradientBackground>
-    <HeaderWithBackButtonAndNextButton onPress={handlePress} title = "Select service" onNextPress={GoToNext} />
+    <HeaderWithBackButtonAndNextButton onPress={handlePress} title = "Select Service" onNextPress={GoToNext} />
 
     <ScrollView style={styles.container}>
-    <Text style={styles.serviceText1}>Select Service</Text>
+    {/* <Text style={styles.serviceText1}>Select Service</Text> */}
 
     {services.map((service, index) => (
         <TouchableOpacity

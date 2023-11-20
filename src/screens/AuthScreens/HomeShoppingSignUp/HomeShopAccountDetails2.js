@@ -14,15 +14,11 @@ import EditTextWithLable from '../../../components/EditTextWithLable';
 import CustomButtons from '../../../components/CustomButtons';
 import { useRoute } from '@react-navigation/native';
 import DropDownPicker from 'react-native-dropdown-picker';
+import utills from '../../../utills';
 
 export default function HomeShopAccountDetails2({navigation}) {
  
-useEffect(() => {
-console.log("HIIII")
-  return () => {
-   
-  };
-}, []);
+
 
 const [open, setOpen] = useState(false);
 const [value, setValue] = useState(null);
@@ -30,37 +26,110 @@ const [items, setItems] = useState([
   {label: 'Indian', value: 'Indian'},
   {label: 'USA', value: 'USA'},
   {label: 'UK', value: 'UK'},
-
   {label: 'ENGLAND', value: 'ENGLAND'},
- 
 ]);
 const [selectedOption, setSelectedOption] = useState(null);
-const [title, settitle] = useState('');
-
-const [FirstName, setFirstName] = useState('');
-const [lastName, setlastName] = useState('');
-
-const [dob, setdob] = useState('');
+const [title, settitle] = useState('Mr');
+const [FirstName, setFirstName] = useState('Suraj');
+const [lastName, setlastName] = useState('kumar');
+const [dob, setdob] = useState('10/12/1994');
 const [Natinality, setNatinality] = useState('');
-const [PhysicalAddress, setPhysicalAddress] = useState('');
-const [Poboxnu, setPoboxnu] = useState('');
-const [EmailAdd, setEmailAdd] = useState('');
-const [fbId, setfbId] = useState('');
-const [instaid, setinstaid] = useState('');
-const [homePhone, sethomePhone] = useState('');
-const [workphone, setworkphone] = useState('');
-const [MobilePhone, setMobilePhone] = useState('');
+const [PhysicalAddress, setPhysicalAddress] = useState('Delhi Metro');
+const [Poboxnu, setPoboxnu] = useState('ABD12C123');
+const [EmailAdd, setEmailAdd] = useState('chira1g@gmail.com');
+const [fbId, setfbId] = useState('chirag1@gmail.com');
+const [instaid, setinstaid] = useState('chirag1@gmail.com');
+const [homePhone, sethomePhone] = useState('09098321312');
+const [workphone, setworkphone] = useState('09211231233');
+const [MobilePhone, setMobilePhone] = useState('09242342334');
 const route = useRoute();
-  const { From } = route.params;
+  const { From,params1 } = route.params;
+  
+  useEffect(() => {
+    console.log("HIIII",params1)
+      return () => {
+       
+      };
+    }, []);
 const handleBackPress = () => {
   // Add your logic for the "Back" button action here
   navigation.goBack()
 };
 
-const handleNextPress = () => {
-  // Add your logic for the "Next" button action here
-  navigation.navigate(SCREENS.HomeShopAccountDetailsFinal,{From:From})
-};
+// const handleNextPress = () => {
+//   // Add your logic for the "Next" button action here
+//   navigation.navigate(SCREENS.HomeShopAccountDetailsFinal,{From:From})
+// };
+
+
+const handleNextPress = async () => {
+  
+  if (utills.isEmptyOrSpaces(title)) {
+     utills.errorAlert('', 'Please Enter Title');
+      return;
+    }
+  
+    if (utills.isEmptyOrSpaces(FirstName)) {
+      utills.errorAlert('', 'Please Enter First Name');
+      return;
+    }
+
+    if (utills.isEmptyOrSpaces(lastName)) {
+      utills.errorAlert('', 'Please Enter Last Name');
+      return;
+    }
+   
+    if (utills.isEmptyOrSpaces(dob)) {
+      utills.errorAlert('', 'Please Enter Dob');
+      return;
+    } 
+     if (utills.isEmptyOrSpaces(value)) {
+      utills.errorAlert('', 'Please Select Natinality');
+      return;
+    }
+    if (utills.isEmptyOrSpaces(PhysicalAddress)) {
+      utills.errorAlert('', 'Please Enter  Physical Address');
+      return;
+    }
+    if (utills.isEmptyOrSpaces(Poboxnu)) {
+      utills.errorAlert('', 'Please Enter P.O. Box Number');
+      return;
+    }
+    if (utills.isEmptyOrSpaces(EmailAdd)) {
+      utills.errorAlert('', 'Please Enter Email Address');
+      return;
+    }
+    if (utills.isEmptyOrSpaces(MobilePhone)) {
+      utills.errorAlert('', 'Please Enter Mobile Number');
+      return;
+    }
+    let data = {
+      secondaryTitle: title,
+      secondaryFirstName:FirstName,
+      secondaryLastName:lastName,
+      secondaryDOB:dob,
+      secondaryNationality:value,
+      secondaryPhysicalAddress:PhysicalAddress,
+      secondaryPOBox:Poboxnu,
+      secondaryEmail:EmailAdd,
+      secondaryFacebookId:fbId,
+      secondaryInstaId:instaid,
+      secondaryHome:homePhone,
+      secondaryWork:workphone,
+      secondaryPhoneNumber:MobilePhone,
+
+    };
+
+console.log('data',data)
+const mergedParams = { ...params1, ...data };
+console.log('mergedParams',mergedParams)
+navigation.navigate(SCREENS.HomeShopAccountDetailsFinal,{From:From,Params1:mergedParams})
+  };
+
+
+
+
+
 const handlePress = () => {
 };
   return (
@@ -79,7 +148,8 @@ const handlePress = () => {
 
           </View>
 
-          <View style={[styles.row,{backgroundColor : COLORS.primary,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left'}]}>
+          <View style={[styles.row,{backgroundColor : COLORS.primary,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94'),
+}]}>
                 <View style={styles.col8}>
                   <Text  style={styles.Left500BOLDTextWhite}>Secondary User</Text>
                 </View>
@@ -127,7 +197,7 @@ const handlePress = () => {
     fontSize: rf(1.8),
     color: COLORS.Lableheading,
     fontFamily: FONTFAMILY.Medium,
-    marginLeft:wp('3%'),
+    marginLeft:wp('3.5%'),
     textAlign:'left'
   }}>Nationality</Text>
 </View>
@@ -150,12 +220,16 @@ const handlePress = () => {
       placeholderStyle ={{color:COLORS.Greyscale}}
       style={{ 
         borderColor: COLORS.Greyscale,borderRadius:10, borderWidth:2,height: hp('8%'),
+        width : wp('89%')
     }}
       textStyle={{  
         color:  COLORS.Content,
         fontFamily: FONTFAMILY.Bold,
         alignSelf: 'center',
-        fontSize: rf(1.8),}}
+        fontSize: rf(1.8),
+        marginLeft:wp('2.5%'),
+      }}
+        
     />
 
     </View>
@@ -186,7 +260,7 @@ const handlePress = () => {
 
 
 
-<View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left'}]}>
+<View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
                   <Text  style={styles.Left500BOLDText}>Social Media Handle
 
@@ -212,7 +286,7 @@ const handlePress = () => {
 
 
 
-<View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left'}]}>
+<View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
                   <Text  style={styles.Left500BOLDText}>Tel#
 </Text>

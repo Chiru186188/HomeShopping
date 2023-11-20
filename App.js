@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import WelcomScreen from './src/screens/AuthScreens/WelcomeScreen';
 import LoginScreen from './src/screens/AuthScreens/LoginScreen';
 import SelectServices from './src/screens/AuthScreens/SelectServices';
@@ -23,18 +23,68 @@ import POCDSAccountDetailsFinal from './src/screens/POCDS/POCDSAccountDetailsFin
 import MainNavigation from './src/navigations';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { SCREENS } from './src/constants/them';
+import { COLORS, FONTFAMILY, SCREENS } from './src/constants/them';
+import { Provider } from 'react-redux';
+import store from './src/redux/store';
+import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
+import {
+  heightPercentageToDP as hp,
+  responsiveFontSize as rf,
+  widthPercentageToDP as wp,
+} from './src/common/responsiveFunction';
 
 export default function App() {
   const Stack = createStackNavigator();
-
+  const toastConfig = {
+    success: props => (
+      <BaseToast
+        {...props}
+        text1Style={{
+          color: COLORS.white,
+          fontSize: rf(1.5),
+          fontFamily: FONTFAMILY.Bold,
+        }}
+        text2Style={{
+          color: COLORS.white,
+          fontSize: rf(1.3),
+          fontFamily: FONTFAMILY.SemiBold,
+        }}
+        style={{backgroundColor: COLORS.chatGreencolor, height: hp('8%') ,width : wp('90%')}}
+        numberOfLines={2}
+        />
+    ),
+    error: props => (
+      <ErrorToast
+        {...props}
+        text1Style={{
+          color: COLORS.white,
+          fontSize: rf(1.5),
+          fontFamily: FONTFAMILY.Bold,
+        }}
+        text2Style={{
+          color: COLORS.white,
+          fontSize: rf(1.3),
+          fontFamily: FONTFAMILY.SemiBold,
+        }}
+        style={{backgroundColor: COLORS.red, height: hp('8%') ,width : wp('90%')}}
+      />
+    ),
+  };
   return (
     // <View style={styles.container}>
     // <MainNavigation />
     //   <StatusBar style="auto" />
     // </View>
+    // <SafeAreaView>
+    <Provider store={store}>
     <MainNavigation />
-      
+    <Toast config={toastConfig} />
+
+      {/* <Toast config={toastConfig} />
+      <LogoLoader /> */}
+
+    </Provider>
+  // </SafeAreaView>
     // <NavigationContainer>
     //   <Stack.Navigator initialRouteName={SCREENS.WelcomScreen}>
     //   <Stack.Screen name={SCREENS.WelcomScreen} component={WelcomScreen} />

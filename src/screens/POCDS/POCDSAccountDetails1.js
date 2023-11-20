@@ -77,7 +77,7 @@ const handlePress = () => {
 
           </View>
 
-          <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left'}]}>
+          <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
                   <Text  style={styles.Left500BOLDText}>Zone, Location, Delivery Customs Fee</Text>
                 </View>
@@ -124,7 +124,7 @@ const handlePress = () => {
     fontSize: rf(1.8),
     color: COLORS.Lableheading,
     fontFamily: FONTFAMILY.Medium,
-    marginLeft:wp('3%'),
+    marginLeft:wp('3.5%'),
     textAlign:'left'
   }}>Nationality</Text>
 </View>
@@ -147,17 +147,19 @@ const handlePress = () => {
       placeholderStyle ={{color:COLORS.Greyscale}}
       style={{ 
         borderColor: COLORS.Greyscale,borderRadius:10, borderWidth:2,height: hp('8%'),
+        width : wp('89%')
     }}
       textStyle={{  
         color:  COLORS.Content,
         fontFamily: FONTFAMILY.Bold,
         alignSelf: 'center',
-        fontSize: rf(1.8),}}
+        fontSize: rf(1.8), marginLeft:wp('2.5%'),
+      }}
     />
 
     </View>
 
-<View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left'}]}>
+<View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
                   <Text  style={styles.Left500BOLDText}>Contact Informations</Text>
                 </View>
@@ -181,7 +183,7 @@ const handlePress = () => {
 
 
 
-<View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left'}]}>
+<View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
                   <Text  style={styles.Left500BOLDText}>Social Media Handle
 
@@ -207,7 +209,7 @@ const handlePress = () => {
 
 
 
-<View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left'}]}>
+<View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
                   <Text  style={styles.Left500BOLDText}>Tel#
 </Text>
@@ -333,8 +335,8 @@ const styles = StyleSheet.create({
     
   },
   logo: {
-    width: 90,
-    height: 90,
+    width: 120,
+    height: 120,
   },
   logo1: {
     height: 120,

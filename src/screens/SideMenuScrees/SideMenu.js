@@ -164,6 +164,12 @@ const navigation = useNavigation()
     else  if(ItemName==="Logout"){
       navigation.replace(SCREENS.WelcomScreen);
     }
+    else  if(ItemName==="Change Password"){
+      navigation.replace(SCREENS.ChangePassword);
+    }
+    else  if(ItemName==="Hs Package status & Invoice upload"){
+      navigation.replace(SCREENS.SelectedServices);
+    }
   };
   const TapbMenu= (ItemName) => {
 

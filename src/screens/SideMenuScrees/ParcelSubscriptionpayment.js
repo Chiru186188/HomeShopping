@@ -28,6 +28,8 @@ console.log("HIIII")
   };
 }, []);
 const GoToNext = () => {
+  navigation.navigate(SCREENS.PaymentGatwayScreen)
+
 }
 const handlePress = () => {
 };

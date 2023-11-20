@@ -87,9 +87,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomWidth: 1, // Add a bottom border
     borderColor: COLORS.Greyscale, // Set the initial border color
+    width:wp("90%")
   },
   txtInput: {
-    flex: 0.89,
+    flex: 1,
     color: COLORS.black,
     fontFamily: FONTFAMILY.Regular,
     alignSelf: 'center',

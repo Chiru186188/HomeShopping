@@ -1,4 +1,4 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {memo} from 'react';
 import {
   heightPercentageToDP as hp,
@@ -50,9 +50,9 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.blueButton,
     alignItems: 'center',
     justifyContent: 'center',
-    width: wp('7%'),
-    height: wp('7%'),
-    borderRadius: wp('2%'),
+    width: Platform.OS ==='web' ? wp('4%') : wp('7%'),
+    height: Platform.OS ==='web' ? wp('4%') : wp('7%'),
+    borderRadius: Platform.OS ==='web' ? wp('1%') : wp('2%'),
   },
   subContainer1: {
     flexDirection: 'row',

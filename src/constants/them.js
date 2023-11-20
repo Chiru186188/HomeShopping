@@ -107,6 +107,13 @@ LocationList: [
   
 
 ],
+LocationList2: [
+  'General Post Office',
+  'Welches Polyclinic',
+ 'Western Polyclinic', 
+ 'West End Clinic',
+ 'Rainbow Isles (Best Buy Supermarket – East)'
+ ],
 SubscribedServices: [
   { label: 'Ezone Packages (AXA____________)', value: 'Ezone Packages (AXA____________))' },
  { label: 'Home Shopping packages (HS____________)', value: 'Home Shopping packages (HS____________)' },
@@ -206,9 +213,6 @@ export const IMAGES = {
   Parcel_icon4:require('../assets/Images/Parcel_icon4.png'),
   profit_icon8:require('../assets/Images/profit_icon8.png'),
 
-
-
-  
   // RefferalCode:require('../assets/Images/Reffercode.png'),
   // FST:require('../assets/Images/IstImage.png'),
   // SND:require('../assets/Images/ScdImages.png'),
@@ -217,10 +221,8 @@ export const IMAGES = {
   // CODE:require('../assets/Images/CODE.png'),
   // NOChat:require('../assets/Images/nochat.png'),
   // REFERCODE:require('../assets/Images/REFERCODE.png'),
-
   // NOADD:require('../assets/Images/Noad.png'),
 
-//src/assets/Images/Addblock.pngsrc/assets/Images/Reffercode.png
 };
 
 
@@ -231,12 +233,11 @@ export const FORMATTIMEAMPM = (timestamp) => {
   const ampm = hours >= 12 ? "PM" : "AM";
   const formattedHours = hours % 12 || 12;
   const formattedMinutes = minutes.toString().padStart(2, "0");
-
   return `${formattedHours}:${formattedMinutes} ${ampm}`;
+
 }
 
 export const NAMETOIMAGE = ({ name, profilePicture }) => {
-
   if (profilePicture) {
     return (
       <Image
@@ -284,6 +285,8 @@ export const SCREENS = {
 
   WelcomScreen: 'WelcomScreen',
   LoginScreen: 'LoginScreen',
+  ForgotPwd:'ForgotPwd',
+
   SelectServices : 'SelectServices',
  HomeShopIntroduction : 'HomeShopIntroduction',
  EzoneIntroduction :'EzoneIntroduction',
@@ -330,13 +333,19 @@ export const SCREENS = {
  Userprofile:'Userprofile',
  ChangePassword:'ChangePassword',
  ThankYouScreen:'ThankYouScreen',
+ 
+ VerificationScreen:'VerificationScreen',
+ CreatePassword:'CreatePassword',
+
+ SelectedServices:'SelectedServices',
 
 };
 
 export const API_URL = {
   /** Auth  */
-  SIGNUP: 'auth/signup',
-  LOGIN: 'auth/login',
+//POST /api/AccountApi/HSRegisterApiAsync1
+  LOGIN: 'AccountApi/LoginApiAsync14',
+  SIGNUPHS: 'AccountApi/HSRegisterApiAsync14',
   Userupdate: 'user/update',
   UserPicupdate: 'user/uploadimage',
   Usershowmobile: 'user/showmobile?',
@@ -344,11 +353,11 @@ export const API_URL = {
   APPLE_Login: 'auth/apple/login',
   DELETEUSER: 'user/account/delete',
 USERDETAIL : 'user/',
-  FORGOTPWD: 'user/forgotpassword',
+  FORGOTPWD: 'AccountApi/ForgetPasswordApiAsync14',
   VERIFYOTP: 'user/verify',
-  RESETPASSWORD: 'user/resetpassword',
+  RESETPASSWORD: '/AccountApi/CreateCustomerPasswordApiAsync14',
   Viewrelatedadds: 'product/post/related?productId=',
-  CHANGEPASSWORD: 'user/changepassword',
+  CHANGEPASSWORD: 'AccountApi/ChangeUserPasswordApiAsync14',
 
   /** Category */
   CATEGORY_ALL: 'category/subcategory',

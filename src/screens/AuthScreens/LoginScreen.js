@@ -14,11 +14,16 @@ import HeaderWithBackButton from '../../components/HeaderWithBackButton';
 import EditTextWithLable from '../../components/EditTextWithLable';
 import Icons, { Icon } from '../../components/Icons';
 import CustomHeader from '../../components/CustomHeader';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import utills from '../../utills';
+import useRedux from '../../components/useRedux';
+import { LoginSlice } from '../../redux/slice/auth';
 
 export default function LoginScreen({navigation}) {
-  const [email, setemail] = useState('');
-  const [pwd, setupwd] = useState('');
+  const [email, setemail] = useState('mmelona07@gmail.com');
+  const [pwd, setupwd] = useState('Admin@123');
   const [isChecked, setIsChecked] = useState(false);
+  const {dispatch} = useRedux();
 
 useEffect(() => {
 console.log("HIIII")
@@ -28,6 +33,52 @@ console.log("HIIII")
 }, []);
 const handlePress = () => {
 };
+
+const LoginApi = async () => {
+
+  await utills.saveStringToAsyncStorage('SelectedService', "Home Shopping (ocean freight) service")
+ 
+  // const value = await AsyncStorage.getItem(CONSTANTS.Fcmtoken);
+    let data = {
+      username: email,
+      email: email,
+      Password: pwd,
+      RememberMe : isChecked 
+    };
+     console.log('data==', data);
+    if (utills.isEmptyOrSpaces(email)) {
+      // console.log('value==33', email);
+
+      utills.errorAlert('', 'Please Enter Email');
+      return;
+    }
+    if (!utills.validateEmail(email)) {
+      utills.errorAlert('', 'Invalid Email');
+      return;
+    }
+    if (utills.isEmptyOrSpaces(pwd)) {
+      utills.errorAlert('', 'Please Enter Password');
+      return;
+    }
+    // await utills.saveStringToAsyncStorage('LoginbyID', "yes")
+    // await utills.saveStringToAsyncStorage('FromLogin', "Yes")
+
+    dispatch(LoginSlice(data))
+      .unwrap()
+      .then(res => {
+        console.log('Login res==', res);
+        if (res.success == true){
+          navigation.navigate(SCREENS.DashBoard);
+
+        }else{
+          utills.errorAlert('', res.error);
+          return;
+        }
+      });
+  };
+
+
+
   return (
      <GradientBackground>
     <HeaderWithBackButton onPress={handlePress} title = "Customer Login" />
@@ -102,28 +153,26 @@ const handlePress = () => {
           </TouchableOpacity>
         </View>
 
-
         <CustomBlueButton
           title="Login"
           onPress={() => {
-            navigation.navigate(SCREENS.DashBoard);
+               //navigation.navigate(SCREENS.DashBoard);
+            LoginApi()
           }}          buttonStyle={styles.loginButton} // Custom button style
           textStyle={{fontFamily :FONTFAMILY.Bold,
             fontSize: rf(2.0)}}         />
 
 <View style={styles.SignUpContainer}>
           <TouchableOpacity
-            // activeOpacity={0.8}
             onPress={
               () => {
-              //  navigation.navigate(SCREENS.ForgotPwd);
+                navigation.navigate(SCREENS.ForgotPwd);
             }
             }>
             <Text
               style={
                 styles.txt1
-}>
-              Forgot password?
+}>            Forgot password?
             </Text>
           </TouchableOpacity>
         </View>

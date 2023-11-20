@@ -10,8 +10,8 @@ import Svg, {
   Rect
 } from 'react-native-svg';
 
-
-exports.Dimensio_Icon2Svg = (props) => {
+//
+  export const Dimensio_Icon2Svg = (props) => {
 
 return (
   <Svg
@@ -30,7 +30,7 @@ return (
 </Svg>
 )
 };
-exports.Calender_Icon6Svg = (props) => {
+  export const Calender_Icon6Svg = (props) => {
 
   return (
     <Svg
@@ -49,7 +49,7 @@ exports.Calender_Icon6Svg = (props) => {
   </Svg>
   )
   };
-  exports.Ship_Icon1Svg = (props) => {
+    export const Ship_Icon1Svg = (props) => {
 
     return (
       <Svg
@@ -134,7 +134,7 @@ exports.Calender_Icon6Svg = (props) => {
     </Svg>
     )
     };
-    exports.Weight_Icon3Svg = (props) => {
+      export const Weight_Icon3Svg = (props) => {
 
       return (
         <Svg
@@ -161,7 +161,7 @@ exports.Calender_Icon6Svg = (props) => {
       )
       };
 
-      exports.Location_Icon4Svg = (props) => {
+        export const Location_Icon4Svg = (props) => {
 
         return (
           <Svg
@@ -230,7 +230,7 @@ exports.Calender_Icon6Svg = (props) => {
         </Svg>
         )
         };
-        exports.Processing_Icon5Svg = (props) => {
+          export const Processing_Icon5Svg = (props) => {
 
           return (
             <Svg
@@ -255,7 +255,7 @@ exports.Calender_Icon6Svg = (props) => {
           </Svg>
           )
           };
-          exports.Wallet_Icon7Svg = (props) => {
+          export const Wallet_Icon7Svg = (props) => {
 
             return (
               <Svg
@@ -277,8 +277,9 @@ exports.Calender_Icon6Svg = (props) => {
 
        
             
+            export const History_Icon1 = (props) => {
 
-            exports.History_Icon1 = (props) => {
+           // exports.History_Icon1 = (props) => {
 
               return (
                 <Svg
@@ -297,7 +298,9 @@ exports.Calender_Icon6Svg = (props) => {
               </Svg>
               )
               };
-              exports.History_Icon2 = (props) => {
+             
+
+              export const History_Icon2 = (props) => {
 
                 return (
                   <Svg
@@ -322,7 +325,7 @@ exports.Calender_Icon6Svg = (props) => {
     </Svg>
                 )
                 };
-                exports.History_Icon3 = (props) => {
+                export const History_Icon3 = (props) => {
 
                   return (
                     <Svg
@@ -341,7 +344,7 @@ exports.Calender_Icon6Svg = (props) => {
                   </Svg>
                   )
                   };
-                  exports.History_Icon4 = (props) => {
+                  export const History_Icon4 = (props) => {
 
                     return (
                       <Svg
@@ -376,7 +379,7 @@ exports.Calender_Icon6Svg = (props) => {
                     </Svg>
                     )
                     };
-                    exports.History_Icon5 = (props) => {
+                    export const History_Icon5 = (props) => {
 
                       return (
                         <Svg
@@ -446,7 +449,7 @@ exports.Calender_Icon6Svg = (props) => {
                       </Svg>
                       )
                       };
-                      exports.History_Icon6 = (props) => {
+                      export const History_Icon6 = (props) => {
 
                         return (
                           <Svg
@@ -465,7 +468,7 @@ exports.Calender_Icon6Svg = (props) => {
                         </Svg>
                         )
                         };
-                        exports.History_Icon7 = (props) => {
+                        export const History_Icon7 = (props) => {
 
                           return (
                             <Svg
@@ -637,7 +640,11 @@ exports.Calender_Icon6Svg = (props) => {
                           </Svg>
                           )
                           };
-                          exports.History_Icon8 = (props) => {
+
+
+
+
+  export const History_Icon8 = (props) => {
 
                             return (
                               <Svg

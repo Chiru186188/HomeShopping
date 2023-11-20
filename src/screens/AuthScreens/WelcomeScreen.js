@@ -23,7 +23,6 @@ console.log("HIIII")
 }, []);
 
 
-
 useFocusEffect(
   React.useCallback(() => {
     console.log("Callllllll")

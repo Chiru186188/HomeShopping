@@ -42,7 +42,7 @@ const handlePress = () => {
           </View>
           
 
-          <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,alignContent:'left'}]}>
+          <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,alignContent:'left',width : wp('94')}]}>
               <View style={styles.col8}>
                 <Text style={styles.Left500BOLDText}>Availble at the following Location:</Text>
               </View>
@@ -52,7 +52,7 @@ const handlePress = () => {
             <Image source={IMAGES.HomeSimage} style={styles.image} />
             
 
-            <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,alignContent:'left'}]}>
+            <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,alignContent:'left',width : wp('94')}]}>
               <View style={styles.col8}>
                 <Text style={styles.Left500BOLDText}>Rental Fees</Text>
               </View>
@@ -80,7 +80,7 @@ const handlePress = () => {
           {/* </View> */}
    <View style={styles.hr}></View>
       
-   <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginTop:10,alignContent:'left'}]}>
+   <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginTop:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
                   <Text  style={styles.Left500BOLDText}>Contact Information
 

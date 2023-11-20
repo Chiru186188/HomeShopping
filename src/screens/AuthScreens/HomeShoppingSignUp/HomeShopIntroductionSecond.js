@@ -12,6 +12,7 @@ import GradientBackground from '../../../components/GradientBackground';
 import HeaderWithBackButton from '../../../components/HeaderWithBackButton';
 import CustomRadioButtons from '../../../components/CustomRadioButtons';
 import CustomButtons from '../../../components/CustomButtons';
+import utills from '../../../utills';
 // import CustomRadioButtons from '../../../components/CustomRadioButtons';
 
 export default function HomeShopIntroductionSecond({navigation}) {
@@ -39,6 +40,15 @@ const [selectedOption, setSelectedOption] = useState(null);
 
   const handleNextPress = () => {
     // Add your logic for the "Next" button action here
+    if (utills.isEmptyOrSpaces(selectedOption)) {
+      console.log('value==33', selectedOption);
+  
+      utills.errorAlert('', 'Please Accept/Reject the terms of Agreements');
+      return;
+    }
+
+
+
     navigation.navigate(SCREENS.HomeShopAccountDetails1,{From:"HS"})
   };
 const handlePress = () => {

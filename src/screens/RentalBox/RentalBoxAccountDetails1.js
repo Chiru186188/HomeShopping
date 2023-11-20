@@ -15,16 +15,28 @@ import CustomButtons from '../../components/CustomButtons';
 import CustomCheckButtons from '../../components/CustomCheckButtons';
 import EditTextBottomBorder from '../../components/EditTextBottomBorder';
 import CustomButtonsBAndS from '../../components/CustomButtonsBAndS';
+import CheckboxList from '../../components/CheckboxList';
+import CheckboxListSingleSelected from '../../components/CheckboxListSingleSelected';
 // import CustomRadioButtons from '../../components/CustomRadioButtons';
 
 export default function RentalBoxAccountDetails1({navigation}) {
- 
+  const [selectedValues, setSelectedValues] = useState([]);
+
 useEffect(() => {
 console.log("HIIII")
   return () => {
    
   };
 }, []);
+const LocationList2 = ['General Post Office',
+  'Welches Polyclinic',
+ 'Western Polyclinic', 
+ 'West End Clinic',
+ 'Rainbow Isles (Best Buy Supermarket – East)'
+ ];
+ const SizeBox = ['Medium',
+  'Large (12 inches x 6 inches)',
+ ];
 const [selectedSize, setselectedSize] = useState(null);
 const [selectedLocation, setsselectedLocation] = useState(null);
 
@@ -55,6 +67,17 @@ const handleNextPress = () => {
   navigation.navigate(SCREENS.CartValueScreen,{From :"Post Office Box",Service:'Private Post Office Box Rental SERVICE'})
 
 };
+
+const handleSelectionChange = (selectedItems) => {
+  console.log('Selected Items:', selectedItems);
+  setSelectedValues(selectedItems);
+
+};
+const handleSelectionChangeItem = (selectedItems) => {
+  console.log('Selected Item:', selectedItems);
+  setSelectedValues(selectedItems);
+
+};
 const handlePress = () => {
 };
   return (
@@ -69,7 +92,7 @@ const handlePress = () => {
     <Text  style={styles.Heading}>Private Post Office Box Rental</Text>
     </View>
 
-          <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left'}]}>
+          <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
                   <Text  style={styles.Left500BOLDText}>Postmaster General</Text>
                 </View>
@@ -117,56 +140,31 @@ const handlePress = () => {
 
 
 
-<View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left'}]}>
+<View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
                   <Text  style={styles.Left500BOLDText}>Please indicate size of P.O. Box required</Text>
                 </View>
               </View>
 <View style={{alignSelf:'flex-start'}}>
-{DEFAULTARRAYS.SizeList.map((item1) => {
-            return (
-              <CustomCheckButtons
-                title={item1.label}
-                setSelected={setsselectedLocation}
-                onChangeSelected={(data, item1) => {
-                  console.log(data)
-                  setsselectedLocation(data);
-                 
+<CheckboxListSingleSelected options={SizeBox} onSelectionChange={handleSelectionChangeItem} />
 
-                }}
-                 selected={selectedLocation}
-                style={{marginStart:20,marginBottom : 7 }}
-              />
-            );
-          })}
 
 </View>
-           
-<View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left'}]}>
+        
+<View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
                   <Text  style={styles.Left500BOLDText}>Please indicate size of P.O. Box required</Text>
                 </View>
               </View>
 <View style={{alignSelf:'flex-start'}}>
-{DEFAULTARRAYS.LocationList.map((items) => {
-            return (
-              <CustomCheckButtons
-                title={items.label}
-                setSelected={setselectedSize}
-                onChangeSelected={(data, items) => {
-                  console.log(data)
-                  setselectedSize(data);
-                 
-                }}
-                 selected={selectedSize}
-                style={{marginStart:20,marginBottom : 7 }}
-              />
-            );
-          })}
+<CheckboxList options={LocationList2} onSelectionChange={handleSelectionChange}/>
+
 
 </View>
 
-<View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left'}]}>
+
+
+<View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
                   <Text  style={styles.Left500BOLDText}>Acknowledgement
 </Text>

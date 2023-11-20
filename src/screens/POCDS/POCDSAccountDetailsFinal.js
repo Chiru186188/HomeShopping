@@ -60,7 +60,7 @@ const handlePress = () => {
 
           </View>
 
-          <View style={[styles.row,{backgroundColor : COLORS.primary,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left'}]}>
+          <View style={[styles.row,{backgroundColor : COLORS.primary,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
                   <Text  style={styles.Left500BOLDTextWhite}>Subscribed Services Account #</Text>
                 </View>
@@ -86,7 +86,7 @@ const handlePress = () => {
               </View>
 
 
-              <View style={[styles.row,{backgroundColor : COLORS.primary,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left'}]}>
+              <View style={[styles.row,{backgroundColor : COLORS.primary,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
                   <Text  style={styles.Left500BOLDTextWhite}>POCDS Requirement (Please Click)</Text>
                 </View>
@@ -120,7 +120,7 @@ const handlePress = () => {
       />
               </View>
 
-              <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left'}]}>
+              <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
                   <Text  style={styles.Left500BOLDText}>Acknowledgement
 
@@ -275,8 +275,8 @@ const styles = StyleSheet.create({
     
   },
   logo: {
-    width: 90,
-    height: 90,
+    width: 120,
+    height: 120,
   },
   logo1: {
     height: 120,

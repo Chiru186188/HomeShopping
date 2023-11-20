@@ -26,25 +26,67 @@ import {
   Wallet_Icon7Svg,
   
 } from '../../components/Svg';
+import SelectedServiceshorizontaly from '../../components/SelectedServiceshorizontaly';
+import { useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function DashBoard({navigation}) {
-  const [email, setemail] = useState('');
+  const [SelectedService, setSelectedService] = useState('');
   const [pwd, setupwd] = useState('');
   const [isChecked, setIsChecked] = useState(false);
 
 useEffect(() => {
 console.log("HIIII")
   return () => {
-   
+    getSavedvalue()
   };
-}, []);
+}, [SelectedService]);
+const getSavedvalue = async () => {
+  console.log('Selected Service:', SelectedService);
+
+  const SelectedService = await AsyncStorage.getItem('SelectedService');
+  setSelectedService(SelectedService)
+}
+
+useFocusEffect(
+  React.useCallback(() => {
+    console.log("Callllllll")
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      console.log("beforeRemove",e)
+      const originalString = e.target;
+      const arrayOfSubstrings = originalString.split('-');
+      
+      if (e.data.action.type === 'GO_BACK' && arrayOfSubstrings[0]=== 'DashBoard') {
+
+     // if (Platform.OS === 'android') {
+        if (!handleBackGesture()) {
+          e.preventDefault();
+        }
+     // }
+    }
+   
+    });
+
+    
+    const handleBackGesture = () => {
+      console.log('ooooooo')
+      return false;
+    };
+       
+  }, [navigation])
+);
+
 const handlePress = () => {
 };
   return (
      <GradientBackground>
     <CustomHeader onPress={handlePress} title = "DashBoard" />
-    <ScrollView>
+    <SelectedServiceshorizontaly
+        selectedService={SelectedService}
+        setSelectedService={setSelectedService}
+      />
+          <ScrollView>
     <View style={styles.container}>
 <View>
     <FlatList
@@ -173,8 +215,6 @@ const renderItem2 = ({ item }) => (
         <View style={styles.rowList2}>
         <View style={styles.rowAA}>
         <Wallet_Icon7Svg style={{width:30,height:30}}/>
-    
-    
      <Text style={styles.Left500TextMedum}>{'$10'}</Text>
   
         </View>  
@@ -186,14 +226,10 @@ const renderItem2 = ({ item }) => (
         </View> */}
 
         </View>
-        <Text style={[styles.Left500TextMedum,{paddingHorizontal:10,marginBottom:25}]}>{'Lorem lpsum is simply dummy text of the printing and type typesetting industry.'}</Text>
-
+        {/* <Text style={[styles.Left500TextMedum,{paddingHorizontal:10,marginBottom:25}]}>{'Lorem lpsum is simply dummy text of the printing and type typesetting industry.'}</Text> */}
       </View>
       <View style={styles.hr2}></View>
-
-      </View>
-      
-   
+      </View>   
 );
 
 const styles = StyleSheet.create({

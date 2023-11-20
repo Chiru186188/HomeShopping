@@ -70,7 +70,7 @@ const handlePress = () => {
    
 
           <View style={styles.col11}>
-            <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,alignContent:'left'}]}>
+            <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,alignContent:'left',width : wp('94')}]}>
               <View style={styles.col8}>
                 <Text style={styles.Left500BOLDText}>Annual Subscription Fee</Text>
               </View>
@@ -97,7 +97,7 @@ const handlePress = () => {
             </View>
 
             </View>
-            <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginTop:10,alignContent:'left'}]}>
+            <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginTop:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
                   <Text  style={styles.Left500BOLDText}>Rates</Text>
                 </View>
@@ -134,7 +134,7 @@ const handlePress = () => {
              
             </View>
          
-              <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginTop:10,alignContent:'left'}]}>
+              <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginTop:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
                   <Text  style={styles.Left500BOLDText}>FLIGHT SCHEDULE</Text>
                 </View>

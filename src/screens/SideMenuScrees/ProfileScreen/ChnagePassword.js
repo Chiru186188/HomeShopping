@@ -17,6 +17,7 @@ import CustomRadioButtons from '../../../components/CustomRadioButtons';
 import CustomButtonsBAndS from '../../../components/CustomButtonsBAndS';
 import { useRoute } from '@react-navigation/native';
 import CustomHeader from '../../../components/CustomHeader';
+import { ChangePasswordSlice } from '../../../redux/slice/auth';
 // import CustomRadioButtons from '../../../components/CustomRadioButtons';
 
 export default function ChangePassword({navigation}) {
@@ -42,6 +43,68 @@ const [NCpwd, setNCpwd] = useState('');
 
   const handleNextPress = () => {
     // Add your logic for the "Next" button action here
+   // Changepwd()
+  };
+
+
+  const Changepwd = async () => {
+
+    if (utills.isEmptyOrSpaces(code)) {
+      utills.errorAlert('', 'Please Enter Code');
+      return;
+    }
+    if (code.length < 6) {
+      utills.errorAlert('', 'Invalid Code');
+      return;
+    }
+    if (utills.isEmptyOrSpaces(pwd)) {
+      utills.errorAlert('', 'Please Enter Password');
+      return;
+    }
+    if (utills.isEmptyOrSpaces(Npwd)) {
+      utills.errorAlert('', 'Please Enter New Password');
+      return;
+    }
+    if (pwd.length < 6) {
+      utills.errorAlert('Invalid Password! ', 'It should be minimum 6 Digit');
+      return;
+    }
+    if (Npwd.length < 6) {
+      utills.errorAlert('Invalid Password! ', 'It should be minimum 6 Digit');
+      return;
+    }
+    if (pwd != Npwd) {
+      utills.errorAlert('', 'Password Should be Same as New Password');
+      return;
+    }
+
+
+
+    let data = {
+      email: EmailValue,
+      oldPassword: pwd,
+      newPassword: Npwd,
+      confirmPassword: NCpwd,
+      code: "",
+      userId: 0
+
+
+    };
+console.log('data',data)
+   
+    
+    dispatch(ChangePasswordSlice(data))
+      .unwrap()
+      .then(res => {
+        console.log('ChangePasswordSlice res==', res);
+        if (res.status == true){
+          utills.successAlert('','Password Reset Succesfully')
+          navigation.navigate(SCREENS.Login);
+        }else{
+          utills.errorAlert('', res.data.error);
+          return;
+        }
+      });
   };
 const handlePress = () => {
 };
@@ -202,8 +265,8 @@ const styles = StyleSheet.create({
     
   },
   logo: {
-    width: 90,
-    height: 90,
+    width: 120,
+    height: 120,
   },
   logo1: {
     height: 120,

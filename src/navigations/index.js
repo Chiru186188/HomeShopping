@@ -40,6 +40,10 @@ import ThankYouScreen from '../screens/SideMenuScrees/ProfileScreen/ThankYouScre
 import HSAccountDetail from '../screens/AuthScreens/HomeShoppingSignUp/HSAccountDetail';
 import PBDSIntroductionSecond from '../screens/PBDS/PBDSIntroductionSecond';
 import CartValueScreen from '../screens/SideMenuScrees/CartValueScreen';
+import SelectedServices from '../screens/AuthScreens/SelectedServices';
+import ForgotPwd from '../screens/AuthScreens/ForgotPwd';
+import VerificationScreen from '../screens/AuthScreens/VerificationScreen';
+import CreatePassword from '../screens/AuthScreens/CreatePassword';
 
 const Stack = createStackNavigator();
 
@@ -58,7 +62,7 @@ console.log("HIII")
       <Stack.Screen name={SCREENS.HSAccountDetail} component={HSAccountDetail} options={{headerShown: false}}/>
       <Stack.Screen name={SCREENS.PBDSIntroductionSecond} component={PBDSIntroductionSecond} options={{headerShown: false}}/>
       <Stack.Screen name={SCREENS.CartValueScreen} component={CartValueScreen} options={{headerShown: false}}/>
-
+      <Stack.Screen name={SCREENS.SelectedServices} component={SelectedServices} options={{headerShown: false}}/>
         <Stack.Screen name={SCREENS.LoginScreen} component={LoginScreen} options={{headerShown: false}} />
         <Stack.Screen name={SCREENS.HomeShopIntroduction} component={HomeShopIntroduction} options={{headerShown: false}} />
         <Stack.Screen name={SCREENS.HomeShopAccountDetails1} component={HomeShopAccountDetails1} options={{headerShown: false}} />
@@ -91,6 +95,9 @@ console.log("HIII")
         <Stack.Screen name={SCREENS.Userprofile} component={Userprofile} options={{headerShown: false,gestureEnabled:false}} />
         <Stack.Screen name={SCREENS.ChangePassword} component={ChangePassword} options={{headerShown: false,gestureEnabled:false}} />
         <Stack.Screen name={SCREENS.ThankYouScreen} component={ThankYouScreen} options={{headerShown: false,gestureEnabled:false}} />
+        <Stack.Screen name={SCREENS.ForgotPwd} component={ForgotPwd} options={{headerShown: false,gestureEnabled:false}} />
+        <Stack.Screen name={SCREENS.VerificationScreen} component={VerificationScreen} options={{headerShown: false,gestureEnabled:false}} />
+        <Stack.Screen name={SCREENS.CreatePassword} component={CreatePassword} options={{headerShown: false,gestureEnabled:false}} />
 
       </Stack.Navigator>
     </NavigationContainer>
