@@ -15,11 +15,13 @@ import EditTextWithLable from '../../components/EditTextWithLable';
 import Icons, { Icon } from '../../components/Icons';
 import CustomHeader from '../../components/CustomHeader';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 
 export default function SideMenu({navigation}) {
   const [email, setemail] = useState('');
   const [pwd, setupwd] = useState('');
   const [isChecked, setIsChecked] = useState(false);
+  const userData = useSelector(state => state.auth.userData);
 
 useEffect(() => {
 console.log("HIIII")
@@ -91,8 +93,8 @@ const menus = [
   }} />
 
   <View>
-  <Text style={styles.txt}>Martha Banks</Text>
-  <Text style={styles.txt1}>Martha@Yopmail.com</Text>
+  <Text style={styles.txt}>{userData.firstName + " " + userData.lastName}</Text>
+  <Text style={styles.txt1}>{userData.email}</Text>
 
 
   </View>

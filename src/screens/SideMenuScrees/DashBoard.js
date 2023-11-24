@@ -59,11 +59,9 @@ useFocusEffect(
       
       if (e.data.action.type === 'GO_BACK' && arrayOfSubstrings[0]=== 'DashBoard') {
 
-     // if (Platform.OS === 'android') {
         if (!handleBackGesture()) {
           e.preventDefault();
         }
-     // }
     }
    
     });

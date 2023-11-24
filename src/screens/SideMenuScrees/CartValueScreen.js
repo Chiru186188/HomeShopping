@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View,Platform, Linking,NativeModules, Image, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View,Platform, Linking,NativeModules, Image, TouchableOpacity, FlatList} from 'react-native';
 import React from 'react';
 import {COLORS, CONSTANTS, FONTFAMILY, IMAGES, SCREENS, SIZES, STYLES} from '../../constants/them';
 import {
@@ -16,21 +16,145 @@ import Icons, { Icon } from '../../components/Icons';
 import CustomHeader from '../../components/CustomHeader';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useRoute } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import { SubscriptionValueSlice, saveAllSubscriptions } from '../../redux/slice/categories';
+import useRedux from '../../components/useRedux';
+import { ProceedToPaySlice } from '../../redux/slice/auth';
+import utills from '../../utills';
 
 export default function CartValueScreen({navigation}) {
   const route = useRoute();
   const { From ,Service} = route.params;
+  const {dispatch} = useRedux();
+  const [plansID, setPlans] = useState([]);
 
-useEffect(() => {
-console.log("HIIII")
-  return () => {
-   
+  const MySubscriptionsList  = useSelector(state => state.category.MySubscriptionsList);
+  console.log("MyCoinsList", MySubscriptionsList);
+  const subscription = MySubscriptionsList?.data?.selectedPlans;
+  console.log("subscriptions", subscription);
+
+  useEffect(() => {
+     getAllCoinsPurchaselist();
+    return () => {
+       dispatch(saveAllSubscriptions(null))
+    };
+  }, []);
+
+  const processResponse = (response) => {
+    if (response && response.data && response.data.redirectUrl) {
+      // Extract the redirect URL from the response
+      const redirectUrl = response.data.redirectUrl;
+  
+      // Open the URL using Linking module
+      Linking.openURL(redirectUrl)
+        .then((supported) => {
+          if (!supported) {
+            console.log(`Cannot open URL: ${redirectUrl}`);
+          }
+        })
+        .catch((err) => console.error('An error occurred: ', err));
+    } else {
+      console.log('Redirect URL not found in the response');
+    }
   };
-}, []);
+
+  // const response = {
+  //   "data": {
+  //     "redirectUrl": "https://epay.gov.ai/devpay?paymentid=h58d366B748n"
+  //   },
+  //   "message": "Saved Successfully",
+  //   "recordId": 0,
+  //   "status": true,
+  //   "transactionType": 0
+  // };
+  useEffect(() => {
+    deepLinkEventListener = handleDeepLink;
+  
+    const focusListener = navigation.addListener('focus', () => {
+      Linking.addEventListener('url', deepLinkEventListener);
+    });
+  
+    return () => {
+      focusListener();
+      Linking.removeEventListener('url', deepLinkEventListener);
+    };
+  
+    
+  }, []);
+  let deepLinkEventListener = null;
+
+  const handleDeepLink = async (event) => {
+    //
+    // await utills.saveStringToAsyncStorage('LoginbyID', "no")
+  console.log("event.url",event.url)
+  //   if (event.url && event.url.includes('caribbargainsapp://oauth2/redirect')) {
+  
+    
+  //     const data = queryString.parse(event.url.split('?')[1]);
+  //     const token = data.token;
+  //     const decodedToken = jwtDecode(token);
+  //     SaveDataToLocal(decodedToken,token)
+  // }
+  };
+  const ProceedToPay = async () => {  
+   
+   
+    const subscription = MySubscriptionsList?.data?.selectedPlans;
+const idArray = [];
+
+for (let i = 0; i < subscription.length; i++) {
+  const id = subscription[i].id;
+  idArray.push(id);
+ // setPlans.push(id)
+}
+
+console.log(idArray); // This will log an array containing the extracted id values
+
+console.log(plansID); // This will log an array containing the extracted id values
+
+    
+      let data = {
+        planIds: idArray,
+        userId: 5645,
+      };
+      console.log(data); // This will log an array containing the extracted id values
+
+      dispatch(ProceedToPaySlice(data))
+        .unwrap()
+        .then(res => {
+          console.log('Forgot res==', res);
+          if (res.status == true){
+            utills.successAlert('', res.message);
+            processResponse(res)         
+           }else{
+            utills.errorAlert('', res.message);
+            return;
+          }
+        });
+    };
+const getAllCoinsPurchaselist = () => {
+
+  let data = {
+    id: 5654,
+
+  };
+console.log('data',data)
+  dispatch(SubscriptionValueSlice(data))
+    .unwrap()
+    .then(res => {
+      //  setLoading(false);
+      console.log("AllSubsMembers", res.data);
+    })
+    .catch(e => {
+      //  setLoading(false);
+    });
+};
 const GoToNext = () => {
 
-  navigation.navigate(SCREENS.DashBoard)
+  processResponse(response);
+
 }
+
 const handlePress = () => {
 };
   return (
@@ -40,7 +164,7 @@ const handlePress = () => {
     <View>
     <View style={styles.container}>
     <View style={styles.containerTop}>
-    <Text  style={styles.Left500Text}>Registration Fee
+    <Text  style={styles.Left500Text}>Cart Detail
 </Text>
     </View>
 
@@ -58,7 +182,7 @@ const handlePress = () => {
 
 
 
-              <View style={styles.subcontainer}>
+              {/* <View style={styles.subcontainer}>
                
                 <View style={{flexDirection:'row',gap:20}}>
 
@@ -85,116 +209,106 @@ const handlePress = () => {
 <Text style={styles.txt3}>-$66.67</Text>
 
 </View>
-     
-    </View>
+      */}
 
-    <View style={styles.container}>
-    <View style={styles.containerTop}>
-    <Text  style={styles.Left500Text}>Cart Total (EC$81.67)</Text>
-    </View>
-
-
-
-    <View style={styles.row}>
-            
-    <Text  style={styles.Left500Text}>{From} Registration fee
-    </Text>
- 
-    <Text  style={styles.Left500BOLDText}>$66.67
-    </Text>
-
-    </View>
-
-    <View style={styles.row}>
-            
-            <Text  style={styles.Left500Text}>Key Deposite
-            </Text>
-         
-            <Text  style={styles.Left500BOLDText}>$15.00
-            </Text>
+<FlatList
+      data={subscription} // Your data array from MySubscriptionsList
+      keyExtractor={(item, index) => index.toString()} // Use a proper unique key here
+      renderItem={({ item }) => (
+        // <View style={styles.subcontainer}>
+        //   <View style={{ flexDirection: 'row', gap: 20 }}>
+        //     <View style={styles.circle}>
+        //       {/* Your Icon component */}
+        //       <Icons
+        //         name={'dollar-sign'}
+        //         Type={Icon.Feather}
+        //         size={rf(2.7)}
+        //         color={COLORS.Greyscale}
+        //       />
+        //     </View>
+        //     <View >
+        //     <View style={{ flex: 1 }}>
+        //       <Text style={styles.txt1}>{item.name}</Text>
+        //       <Text style={styles.txt2}
+        //       numberOfLines={3}
+        //       ellipsizeMode="tail"
+        //       >
+        //        {"(" +item.note+")"}
+        //       </Text>
+        //     </View>
+        //     <View style={{ flex:1 }}>
+        //       <Text style={styles.txt1}>{item.name}</Text>
+              
+        //     </View>
+        //   </View>
+        //   </View>
+        //   <Text style={styles.txt3}>${item.amount}</Text>
+        // </View>
+        <View style={styles.subcontainer}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 }}>
         
+          <Image source={IMAGES.logoHS} style={{height : 90 ,width : 90}} />
+
+          <View style={{ flex: 1 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.txt1}>{item.name}</Text>
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.txt3}>${item.amount}</Text>
+              </View>
             </View>
+            <Text style={styles.txt2} numberOfLines={3} ellipsizeMode="tail">
+              {"(" + item.note + ")"}
+            </Text>
+            {item.id === 3 && ( // Conditionally render this view based on MySubscriptionsList?.data?.id value
 
-            {/* <View style={styles.row}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.txt1}>{MySubscriptionsList?.data?.keydepositename}</Text>
+              </View>
+              
+              <View style={{ flex: 1 }}>
+                <Text style={styles.txt3}>${MySubscriptionsList?.data?.keyAmount}</Text>
+              </View>
+            </View>
+            )}
             
-            <Text  style={styles.Left500Text}>AASAP Fee
-            </Text>
-         
-            <Text  style={styles.Left500BOLDText}>$0.00
-            </Text>
-        
-            </View>  
+          </View>
+          
+        </View>
 
-               <View style={styles.row}>
-            
-            <Text  style={styles.Left500Text}>AASAP Fee
-            </Text>
-         
-            <Text  style={styles.Left500BOLDText}>$0.00
-            </Text>
-        
-            </View> 
+      </View>
+      )}
+    />
 
-               <View style={styles.row}>
-            
-            <Text  style={styles.Left500Text}>Insured Amount
-            </Text>
-         
-            <Text  style={styles.Left500BOLDText}>$0.00
-            </Text>
-        
-            </View> 
-
-               <View style={styles.row}>
-            
-            <Text  style={styles.Left500Text}>Service Charge
-            </Text>
-         
-            <Text  style={styles.Left500BOLDText}>$0.00
-            </Text>
-        
-            </View> 
-
-               <View style={styles.row}>
-            
-            <Text  style={styles.Left500Text}>OverWt.Charge
-            </Text>
-         
-            <Text  style={styles.Left500BOLDText}>$0.00
-            </Text>
-        
-            </View>     
-
-             <View style={styles.row}>
-            
-            <Text  style={styles.Left500Text}>Customs Charges
-            </Text>
-         
-            <Text  style={styles.Left500BOLDText}>$0.00
-            </Text>
-        
-            </View>      
-
-             <View style={styles.row}>
-            
-            <Text  style={styles.Left500BOLDTextT}>Total Amount
-            </Text>
-         
-            <Text  style={styles.Left500BOLDTextT}>$66.67
-            </Text>
-        
-            </View>    */}
-            <View style={{alignSelf:'center'}}>
-        <CustomBlueButton
-          title="Proceed To Pay (US$81.67)"
-          onPress={GoToNext}
-          buttonStyle={styles.signUpButton} // Custom button style
-          textStyle={{fontFamily :FONTFAMILY.Bold,
-            fontSize: rf(1.8)}} // Custom text style
-        />       
-                    </View>   
-   
+<View style={{ flexDirection: 'row', justifyContent: 'space-between',marginHorizontal:20 }}>
+              <View style={{ flex: 1  }}>
+                <Text style={styles.txt1}>{"Total Amount"}</Text>
+              </View>
+              
+              <View style={{ flex: 1 }}>
+                <Text style={styles.txt3}>${MySubscriptionsList?.data?.totalAmount}</Text>
+              </View>
+            </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between',marginHorizontal:20 ,marginVertical:15}}>
+              <View style={{ flex: 1  }}>
+              </View>
+              
+              <View style={{ flex: 1 }}>
+              <CustomBlueButton
+          title={"Proceed To Pay (US" + MySubscriptionsList?.data?.totalAmountAsUSDT + ")"}
+          onPress={ProceedToPay}
+          buttonStyle={{width : wp('45%')}} // Custom button style
+          textStyle={{fontFamily :FONTFAMILY.SemiBold,
+            fontSize: rf(1.6)}} // Custom text style
+        />   
+              </View>
+            </View>
+           
     </View>
+
+  
     </View>
     </ScrollView>
      </GradientBackground>
@@ -221,7 +335,7 @@ const styles = StyleSheet.create({
     {
       flex:1,
     flexDirection:'row',
-    backgroundColor : COLORS.lightGreySelection,
+    backgroundColor : COLORS.lightBlueSelection,
     paddingVertical:10,
     paddingHorizontal:10,
     margin:10,
@@ -268,7 +382,7 @@ const styles = StyleSheet.create({
     fontFamily: FONTFAMILY.Bold,
     fontSize: rf(2.0),
     color: COLORS.Heading,
-    textAlign: 'left',
+    textAlign: 'right',
   },
   circle: {
     paddingTop:wp('1.5%'),

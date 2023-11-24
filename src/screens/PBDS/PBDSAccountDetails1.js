@@ -14,6 +14,9 @@ import EditTextWithLable from '../../components/EditTextWithLable';
 import CustomButtons from '../../components/CustomButtons';
 import EditTextBottomBorder from '../../components/EditTextBottomBorder';
 import CustomButtonsBAndS from '../../components/CustomButtonsBAndS';
+import { RegisterSlicePBDS } from '../../redux/slice/auth';
+import useRedux from '../../components/useRedux';
+import utills from '../../utills';
 // import CustomRadioButtons from '../../components/CustomRadioButtons';
 
 export default function PBDSAccountDetails1({navigation}) {
@@ -48,12 +51,72 @@ const handleBackPress = () => {
   // Add your logic for the "Back" button action here
   navigation.goBack()
 };
+const {dispatch} = useRedux();
 
+// const handleNextPress = () => {
+//   // Add your logic for the "Next" button action here
+//   navigation.navigate(SCREENS.CartValueScreen,{From :"PBDS",Service:'Private Bag Delivery Service'})
+
+// };
 const handleNextPress = () => {
   // Add your logic for the "Next" button action here
+
+  if (utills.isEmptyOrSpaces(FirstName)) {
+    utills.errorAlert('', 'Please Enter Name of Primary Renta');
+     return;
+   }
+ 
+   if (utills.isEmptyOrSpaces(dob)) {
+    utills.errorAlert('', 'Please Enter Date of Birth');
+     return;
+   }
+   if (utills.isEmptyOrSpaces(CompName)) {
+    utills.errorAlert('', 'Please Enter Company Name');
+     return;
+   }
+   if (utills.isEmptyOrSpaces(PhysicalAddress)) {
+    utills.errorAlert('', 'Please Enter Physical Address');
+     return;
+   }
+   if (utills.isEmptyOrSpaces(MobilePhone)) {
+    utills.errorAlert('','Please Enter telephone Number');
+     return;
+    }
+    if (utills.isEmptyOrSpaces(EmailAdd)) {
+     utills.errorAlert('','Please Enter Email Address');
+      return;
+    }
+   
+   let data = {
+    // ApplicantName: ApplicantName,
+    // ApplicantSign: ApplicantSign,
+    regDate: "2023/11/21",
+    CompanyName : CompName,
+    firstName : FirstName,
+    surname : lastName,
+    email:EmailAdd,
+    phoneNumber:MobilePhone,
+    dateOfBirth: dob,
+    address:PhysicalAddress,
+   
+  };
+ console.log('value==33', data);
+
+dispatch(RegisterSlicePBDS(data))
+.unwrap()
+.then(res => {
+console.log('Register res==', res);
+if (res.statusCode == 200){
   navigation.navigate(SCREENS.CartValueScreen,{From :"PBDS",Service:'Private Bag Delivery Service'})
+}else{
+  utills.errorAlert('', res.message);
+  return;
+}
+});
+ 
 
 };
+
 const handlePress = () => {
 };
   return (
@@ -155,18 +218,18 @@ const handlePress = () => {
 
 
 
-<View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
+{/* <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
                   <Text  style={styles.Left500BOLDText}>Acknowledgement
 </Text>
                 </View>
-              </View>
+              </View> */}
        
-              <View style={{paddingHorizontal:20, alignSelf:'flex-start'}}>
+              {/* <View style={{paddingHorizontal:20, alignSelf:'flex-start'}}>
               <Text  style={styles.textDanger}>By signing below the customer acknowledges having read all the terms and conditions and agrees to abide by these operational regulations and is in full agreement to their enforcement for the efficient processing of their Home Shopping packages.</Text>
-              </View>
+              </View> */}
 
-           <EditTextBottomBorder
+           {/* <EditTextBottomBorder
         placeholder="Applicant's Name"
         value={ApplicantName}
         onChangeText={setApplicantName}
@@ -187,7 +250,7 @@ const handlePress = () => {
         keyboardType="default"
       />
      
-
+ */}
 
 
         <View style = {{width:wp('90%')}}>

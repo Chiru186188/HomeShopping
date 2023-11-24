@@ -20,7 +20,7 @@ import useRedux from '../../components/useRedux';
 import { LoginSlice } from '../../redux/slice/auth';
 
 export default function LoginScreen({navigation}) {
-  const [email, setemail] = useState('mmelona07@gmail.com');
+  const [email, setemail] = useState('marciar@caribcable.com');
   const [pwd, setupwd] = useState('Admin@123');
   const [isChecked, setIsChecked] = useState(false);
   const {dispatch} = useRedux();
@@ -35,11 +35,7 @@ const handlePress = () => {
 };
 
 const LoginApi = async () => {
-
-  await utills.saveStringToAsyncStorage('SelectedService', "Home Shopping (ocean freight) service")
- 
-  // const value = await AsyncStorage.getItem(CONSTANTS.Fcmtoken);
-    let data = {
+      let data = {
       username: email,
       email: email,
       Password: pwd,
@@ -66,12 +62,19 @@ const LoginApi = async () => {
     dispatch(LoginSlice(data))
       .unwrap()
       .then(res => {
-        console.log('Login res==', res);
         if (res.success == true){
-          navigation.navigate(SCREENS.DashBoard);
+          console.log('Login res==', res.data);
+
+if(res.data.ispayment === true){
+  navigation.navigate(SCREENS.DashBoard);
+
+}else{
+  navigation.navigate(SCREENS.CartValueScreen,{From :"HS",Service:'Home Shopping Services'})
+}
 
         }else{
-          utills.errorAlert('', res.error);
+          utills.errorAlert('', res.message);
+
           return;
         }
       });

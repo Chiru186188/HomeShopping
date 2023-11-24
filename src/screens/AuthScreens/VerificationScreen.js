@@ -67,7 +67,7 @@ console.log('data',data)
         if (res.status == true){
           navigation.navigate(SCREENS.CreatePassword, { EmailValue: EmailValue });
         }else{
-          utills.errorAlert('', res.error);
+          utills.errorAlert('', res.message);
           return;
         }
       });
@@ -89,7 +89,7 @@ console.log('data',data)
           // navigation.navigate(SCREENS.VerificationScreen, { EmailValue: email });
 
         }else{
-          utills.errorAlert('', res.error);
+          utills.errorAlert('', res.message);
           return;
         }
       });

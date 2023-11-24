@@ -9,6 +9,7 @@ import {
 
 import { useEffect,useState } from 'react';
 import utills from '../utills';
+import { useSelector } from 'react-redux';
 
 export default function SelectedServiceshorizontaly({
   selectedService,
@@ -16,7 +17,10 @@ export default function SelectedServiceshorizontaly({
 })
 {  
 
-  // const [selectedService, setSelectedService] = useState(null);
+ const [ServiceList, setServiceList] = useState([]);
+ const [ServiceIconList, setServiceIconList] = useState([]);
+ const userData = useSelector(state => state.auth.userData);
+
   const services = [
     'Home Shopping (ocean freight) service',
     'eZone (AIR) service',
@@ -42,6 +46,42 @@ export default function SelectedServiceshorizontaly({
 useEffect(() => {
 console.log("HIIII")
 console.log("selectedService",selectedService)
+console.log("userData",userData.services)
+const nameArr = []
+const iconArr = []
+
+if(userData?.services?.hsUserId != null){
+  nameArr.push('Home Shopping (ocean freight) service')
+  iconArr.push(IMAGES.HomeShopingImage2)
+
+}
+ if(userData?.services?.ezUserId != null){
+  nameArr.push('eZone (AIR) service')
+  iconArr.push(IMAGES.Ezone1)
+
+}
+
+ if(userData?.services?.ltbUserId != null){
+  nameArr.push('Private Post Office Box Rental')
+  iconArr.push(IMAGES.HomeSimage)
+
+}
+ if(userData?.services?.pbdsUserId != null){
+  nameArr.push('Private Bag Delivery Service')
+  iconArr.push(IMAGES.PBDSlogo)
+
+}
+ if(userData?.services?.pocdsUserId != false){
+  nameArr.push('Post Office Clearance and Delivery Service')
+  iconArr.push(IMAGES.POCDSlogo)
+
+}
+
+setServiceList(nameArr)
+setServiceIconList(iconArr)
+console.log("ServiceList",ServiceList)
+console.log("ServiceLisICont",ServiceIconList)
+
 
   return () => {
    
@@ -81,7 +121,7 @@ console.log("selectedService",selectedService)
     <View>
     <FlatList
     horizontal
-    data={services}
+    data={ServiceList}
     keyExtractor={(item, index) => index.toString()}
     
     style={{marginHorizontal:10}}
@@ -96,7 +136,7 @@ console.log("selectedService",selectedService)
       >
         <Image
           style={{ height: wp('20%'), width: wp('50%'), resizeMode: 'contain' }}
-          source={servicesIcons[index]}
+          source={ServiceIconList[index]}
         />
         <Text style={styles.serviceText}>{item}</Text>
       </TouchableOpacity>

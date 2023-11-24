@@ -55,7 +55,7 @@ export default function ForgotPwd({navigation}) {
             utills.successAlert('', res.message);
             navigation.navigate(SCREENS.CreatePassword, { EmailValue: email });
           }else{
-            utills.errorAlert('', res.error);
+            utills.errorAlert('', res.message);
             return;
           }
         });

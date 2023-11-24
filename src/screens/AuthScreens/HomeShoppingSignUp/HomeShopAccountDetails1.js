@@ -113,7 +113,7 @@ const handleNextPress = async () => {
     let data = {
       title: title,
       firstName:FirstName,
-      lastName:lastName,
+      surname:lastName,
       dob:dob,
       nationality:value,
       physicalAddress:PhysicalAddress,

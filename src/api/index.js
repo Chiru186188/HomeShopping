@@ -20,6 +20,7 @@ export const requestGet = (url, extraHeaders = {}) => {
 console.log(url);
 console.log(extraHeaders);
 
+console.log(base_url+url);
 
 axios.get(`${base_url}${url}`, {
   headers: {

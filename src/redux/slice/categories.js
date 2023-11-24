@@ -26,6 +26,9 @@ const initialState = {
   MyPreChat: [],
   MyAdminChat: [],
   MyLastChat: [],
+
+  SaveSubscriptionPyments: [],
+
   isLoading: false,
 };
 
@@ -65,6 +68,30 @@ async (data, thunk) => {
   }
 },
 );
+
+export const SubscriptionValueSlice = createAsyncThunk(
+  API_URL.SubscriptionGetPayment,
+  async (data, thunk) => {
+    try {
+      thunk.dispatch(saveIsLoading(true));
+      const response = await requestGet(`${API_URL.SubscriptionGetPayment}${data.id}`);
+      thunk.dispatch(saveIsLoading(false));
+      console.log('response',response)
+
+      thunk.dispatch(saveAllSubscriptions(response?.data))
+
+      return response;
+    } catch (error) {
+      thunk.dispatch(saveIsLoading(false));
+
+      console.log('ResetPasswordSlice error', error);
+      utillsJs.errorAlert('',error.response.data.message)
+      throw error;
+    }
+  },
+);
+
+
 export const getAllRelatedSlice = createAsyncThunk(
   API_URL.Viewrelatedadds,
 async (data, thunk) => {

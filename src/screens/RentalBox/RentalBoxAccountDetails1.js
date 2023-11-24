@@ -17,10 +17,15 @@ import EditTextBottomBorder from '../../components/EditTextBottomBorder';
 import CustomButtonsBAndS from '../../components/CustomButtonsBAndS';
 import CheckboxList from '../../components/CheckboxList';
 import CheckboxListSingleSelected from '../../components/CheckboxListSingleSelected';
+import utills from '../../utills';
+import { RegisterSlicePOBOX } from '../../redux/slice/auth';
+import useRedux from '../../components/useRedux';
 // import CustomRadioButtons from '../../components/CustomRadioButtons';
 
 export default function RentalBoxAccountDetails1({navigation}) {
-  const [selectedValues, setSelectedValues] = useState([]);
+  const [selectedLocationValue, setselectedLocationValue] = useState(null);
+  const [selectedSizeValue, setselectedSizeValue] = useState("");
+  const [selectedSizeValue1, setselectedSizeValue1] = useState('');
 
 useEffect(() => {
 console.log("HIIII")
@@ -56,27 +61,98 @@ const [ApplicantSign, setApplicantSign] = useState('');
 
 const [ApplicantName, setApplicantName] = useState('');
 const [AppliDate, setAppliDate] = useState('');
+const [Address1, setAddress1] = useState('');
+const [Address2, setAddress2] = useState('');
+const [Address3, setAddress3] = useState('');
 
 const handleBackPress = () => {
   // Add your logic for the "Back" button action here
   navigation.goBack()
 };
 
+const {dispatch} = useRedux();
+
 const handleNextPress = () => {
   // Add your logic for the "Next" button action here
+
+  if (utills.isEmptyOrSpaces(FirstName)) {
+    utills.errorAlert('', 'Please Enter Name of Primary Renta');
+     return;
+   }
+ 
+   if (utills.isEmptyOrSpaces(dob)) {
+    utills.errorAlert('', 'Please Enter Date of Birth');
+     return;
+   }
+ 
+   if (utills.isEmptyOrSpaces(PhysicalAddress)) {
+    utills.errorAlert('', 'Please Enter Physical Address');
+     return;
+   }
+   if (utills.isEmptyOrSpaces(MobilePhone)) {
+    utills.errorAlert('','Please Enter telephone Number');
+     return;
+    }
+    if (utills.isEmptyOrSpaces(EmailAdd)) {
+     utills.errorAlert('','Please Enter Email Address');
+      return;
+    }
+   if (utills.isEmptyOrSpaces(AppliDate)) {
+     utills.errorAlert('', 'Please Enter Apply Date');
+     return;
+   }
+
+   if (utills.isEmptyOrSpaces(ApplicantName)) {
+     utills.errorAlert('', 'Please Enter Applicant Name');
+     return;
+   }
+   let data = {
+    ApplicantName: ApplicantName,
+    ApplicantSign: ApplicantSign,
+    regDate: "2023/11/21",
+    // authPerson : ApplicantName,
+    firstName : FirstName,
+    surname : lastName,
+    email: EmailAdd,
+    phoneNumber: MobilePhone,
+    dateOfBirth: dob,
+    address: PhysicalAddress,
+    additionalHouseholdAddress1: Address1,
+    additionalHouseholdAddress2: Address2,
+    additionalHouseholdAddress3: Address3,
+    desiredLocation: selectedLocationValue,
+    requestedLB: selectedSizeValue1,
+  };
+ console.log('value==33', data);
+
+dispatch(RegisterSlicePOBOX(data))
+.unwrap()
+.then(res => {
+console.log('Register res==', res);
+if (res.statusCode == 200){
   navigation.navigate(SCREENS.CartValueScreen,{From :"Post Office Box",Service:'Private Post Office Box Rental SERVICE'})
+}else{
+  utills.errorAlert('', res.message);
+  return;
+}
+});
+ 
 
 };
 
 const handleSelectionChange = (selectedItems) => {
   console.log('Selected Items:', selectedItems);
-  setSelectedValues(selectedItems);
+  setselectedLocationValue(selectedItems[0]);
 
 };
 const handleSelectionChangeItem = (selectedItems) => {
-  console.log('Selected Item:', selectedItems);
-  setSelectedValues(selectedItems);
-
+  console.log('Selected Item:', selectedItems[0]);
+  setselectedSizeValue(selectedItems[0]);
+  if  (selectedItems[0] === "Medium"){
+    setselectedSizeValue1("M")
+  }else if  (selectedItems[0] === "Large (12 inches x 6 inches)"){
+    setselectedSizeValue1("L")
+  }
 };
 const handlePress = () => {
 };
@@ -101,10 +177,17 @@ const handlePress = () => {
 
           
        <EditTextWithLable
-        label="Name of Primary Rental"
-        placeholder="Enter Name of Primary Rental"
+        label="First Name of Primary Rental"
+        placeholder="Enter First Name of Primary Rental"
         value={FirstName}
         onChangeText={setFirstName}
+        keyboardType="default"
+      />
+         <EditTextWithLable
+        label="Last Name of Primary Rental"
+        placeholder="Enter Last Name of Primary Rental"
+        value={lastName}
+        onChangeText={setlastName}
         keyboardType="default"
       />
     
@@ -138,13 +221,37 @@ const handlePress = () => {
         keyboardType="default"
       />
 
+<View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
+        <View style={styles.col8}>
+            <Text  style={styles.Left500BOLDText}>Up to 3 Additional Household Addresses</Text>
+              </View>
+                            </View>
 
+
+                            <EditTextBottomBorder
+        placeholder="1. household Address"
+        value={Address1}
+        onChangeText={setAddress1}
+        keyboardType="default"
+      />    
+      <EditTextBottomBorder
+        placeholder="2. household Address"
+        value={Address2}
+        onChangeText={setAddress2}
+        keyboardType="default"
+      />    
+      <EditTextBottomBorder
+        placeholder="3. household Address"
+        value={Address3}
+        onChangeText={setAddress3}
+        keyboardType="default"
+      />    
 
 <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
-                <View style={styles.col8}>
-                  <Text  style={styles.Left500BOLDText}>Please indicate size of P.O. Box required</Text>
-                </View>
+        <View style={styles.col8}>
+            <Text  style={styles.Left500BOLDText}>Please Indicate size of P.O. Box Required</Text>
               </View>
+                            </View>
 <View style={{alignSelf:'flex-start'}}>
 <CheckboxListSingleSelected options={SizeBox} onSelectionChange={handleSelectionChangeItem} />
 
@@ -153,11 +260,11 @@ const handlePress = () => {
         
 <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
-                  <Text  style={styles.Left500BOLDText}>Please indicate size of P.O. Box required</Text>
+                  <Text  style={styles.Left500BOLDText}>Please Indicate Desired Box Location</Text>
                 </View>
               </View>
 <View style={{alignSelf:'flex-start'}}>
-<CheckboxList options={LocationList2} onSelectionChange={handleSelectionChange}/>
+<CheckboxListSingleSelected options={LocationList2} onSelectionChange={handleSelectionChange}/>
 
 
 </View>

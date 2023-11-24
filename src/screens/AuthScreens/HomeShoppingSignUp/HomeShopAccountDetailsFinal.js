@@ -17,7 +17,7 @@ import CustomRadioButtons from '../../../components/CustomRadioButtons';
 import CustomButtonsBAndS from '../../../components/CustomButtonsBAndS';
 import { useRoute } from '@react-navigation/native';
 import utills from '../../../utills';
-import { RegisterSliceHS } from '../../../redux/slice/auth';
+import { RegisterSliceEZone, RegisterSliceHS } from '../../../redux/slice/auth';
 import useRedux from '../../../components/useRedux';
 // import CustomRadioButtons from '../../../components/CustomRadioButtons';
 
@@ -74,7 +74,7 @@ const {dispatch} = useRedux();
       let data = {
         applicantName: ApplicantName,
         applicantSign: ApplicantSign,
-        date: "20/11/23",
+        date: "20/11/2023",
         authPerson : ApplicantName,
         oceanfreight:selectedOption
       };
@@ -84,26 +84,39 @@ const {dispatch} = useRedux();
       const mergedParams = { ...Params1, ...data };
       console.log('mergedParams',mergedParams)
     // navigation.navigate(SCREENS.DashBoard);
-      
-      dispatch(RegisterSliceHS(mergedParams))
-        .unwrap()
-        .then(res => {
-          console.log('Register res==', res);
-          if (res.status == true){
-            navigation.navigate(SCREENS.DashBoard);
-  
-          }else{
-            utills.errorAlert('', res.error);
-            return;
-          }
-        });
+      if (From === "HS")
+{
+  dispatch(RegisterSliceHS(mergedParams))
+  .unwrap()
+  .then(res => {
+    console.log('Register res==', res);
+    if (res.statusCode == 200){
+      navigation.navigate(SCREENS.DashBoard);
+    }else{
+      utills.errorAlert('', res.message);
+      return;
+    }
+  });
+}      else{
+  dispatch(RegisterSliceEZone(mergedParams))
+  .unwrap()
+  .then(res => {
+    console.log('Register res==', res);
+    if (res.statusCode == 200){
+      navigation.navigate(SCREENS.DashBoard);
+    }else{
+      utills.errorAlert('', res.message);
+      return;
+    }
+  });
+}
+
     };
 const handlePress = () => {
 };
   return (
      <GradientBackground>
     <HeaderWithBackButton onPress={handlePress} title = "Application Form" />
-
     <ScrollView style= {styles.containerSc}> 
     <View style={styles.container}>
     {/* <ScrollView> */}
@@ -113,9 +126,7 @@ const handlePress = () => {
   <Image source={IMAGES.HomeShopingImage} style={styles.logo1} />
 ) :             <Image source={IMAGES.Ezone1} style={styles.logo1} />
 }
-
-          </View>
-
+         </View>
           <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
                   <Text  style={styles.Left500BOLDText}>Shipping Address</Text>
@@ -125,7 +136,6 @@ const handlePress = () => {
               <View style={{paddingHorizontal:20, alignSelf:'flex-start'}}>
               <Text  style={styles.Left500Text}>3387 SW 13th Avenue, Fort Lauderdale, Florida 33315 USA</Text>
               </View>
-
               <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
                   <Text  style={styles.Left500BOLDText}>Acknowledgement

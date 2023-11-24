@@ -47,7 +47,6 @@ export const RegisterSliceHS = createAsyncThunk(
       try {
         thunk.dispatch(saveIsLoading(true));
         console.log('data',data)
-
         const response = await requestPost(API_URL.SIGNUPHS, data,true);
         console.log('response',response)
         thunk.dispatch(saveIsLoading(false));
@@ -64,8 +63,74 @@ export const RegisterSliceHS = createAsyncThunk(
       }
     },
   );
+  //SIGNUPPOBOX
+  export const RegisterSliceEZone = createAsyncThunk(
+    API_URL.SIGNUPEZ,
+    async (data, thunk) => {
+      try {
+        thunk.dispatch(saveIsLoading(true));
+        console.log('data',data)
+        const response = await requestPost(API_URL.SIGNUPEZ, data,true);
+        console.log('response',response)
+        thunk.dispatch(saveIsLoading(false));
+        return response;
+      } catch (error) {
+        thunk.dispatch(saveIsLoading(false));
+     
+       console.log('RegisterSliceHS error', error);
+           
+              console.log('RegisterSliceHS error.response.data.message', error.response.data.message);
 
+       utillsJs.errorAlert('',error.response.data.message)
+        throw error;
+      }
+    },
+  );
+  export const RegisterSlicePOBOX = createAsyncThunk(
+    API_URL.SIGNUPPOBOX,
+    async (data, thunk) => {
+      try {
+        thunk.dispatch(saveIsLoading(true));
+        console.log('data',data)
+        const response = await requestPost(API_URL.SIGNUPPOBOX, data,true);
+        console.log('response',response)
+        thunk.dispatch(saveIsLoading(false));
+        return response;
+      } catch (error) {
+        thunk.dispatch(saveIsLoading(false));
+     
+       console.log('RegisterSliceSIGNUPPOBOX error', error);
+           
+              console.log('RegisterSliceSIGNUPPOBOX error.response.data.message', error.response.data.message);
 
+       utillsJs.errorAlert('',error.response.data.message)
+        throw error;
+      }
+    },
+  );
+
+  export const RegisterSlicePBDS = createAsyncThunk(
+    API_URL.SIGNUPPBDS,
+    async (data, thunk) => {
+      try {
+        thunk.dispatch(saveIsLoading(true));
+        console.log('data',data)
+        const response = await requestPost(API_URL.SIGNUPPBDS, data,true);
+        console.log('response',response)
+        thunk.dispatch(saveIsLoading(false));
+        return response;
+      } catch (error) {
+        thunk.dispatch(saveIsLoading(false));
+     
+       console.log('RegisterSliceSIGNUPPBDS error', error);
+           
+              console.log('RegisterSliceSIGNUPPBDS error.response.data.message', error.response.data.message);
+
+       utillsJs.errorAlert('',error.response.data.message)
+        throw error;
+      }
+    },
+  );
 
   export const OrderSaveSlice = createAsyncThunk(
     API_URL.SAVEORDER,
@@ -101,17 +166,14 @@ export const RegisterSliceHS = createAsyncThunk(
         console.log('response',response)
                 // await AsyncStorage.setItem(CONSTANTS.AccessToken,response.data.accessToken);
        
-       //  console.log('data  nnnn',data)
+       // 
+        console.log('data  nnnn',response.data)
         // await AsyncStorage.setItem('isUserLoggedIn', value.toString());
 
-        // await AsyncStorage.setItem(CONSTANTS.ShowMobile,decodedToken.hideMobile.toString());
-        // await AsyncStorage.setItem(CONSTANTS.ShowNotification,decodedToken.getNotification.toString());
-        // await AsyncStorage.setItem(CONSTANTS.ShowRecommNotification,decodedToken.getNotification.toString());
-        // await AsyncStorage.setItem(CONSTANTS.ShowOffersNotification,decodedToken.getOffers.toString());
-        // // await AsyncStorage.setItem('coinsLeft',decodedToken.coinsLeft.toString());
+        // await AsyncStorage.setItem('coinsLeft',decodedToken.coinsLeft.toString());
         // await AsyncStorage.setItem('ComeFromLogin',"Yes");
 
-        //thunk.dispatch(saveUserData(decodedToken))
+        thunk.dispatch(saveUserData(response.data))
         thunk.dispatch(saveIsLoading(false));
 
         return response;
@@ -343,6 +405,28 @@ export const RegisterSliceHS = createAsyncThunk(
       }
     },
   );
+
+  export const ProceedToPaySlice = createAsyncThunk(
+    API_URL.SubscriptionSavePlanPayment,
+    async (data, thunk) => {
+      try {
+        thunk.dispatch(saveIsLoading(true));
+        const response = await requestPost(API_URL.SubscriptionSavePlanPayment, data,true);//requestGet(`${API_URL.RESETPASSWORD}${'?email='}${data.email}${'&password='}${data.password}`);
+        thunk.dispatch(saveIsLoading(false));
+        return response;
+      } catch (error) {
+        thunk.dispatch(saveIsLoading(false));
+
+        console.log('ResetPasswordSlice error', error);
+        utillsJs.errorAlert('',error.response.data.message)
+        throw error;
+      }
+    },
+  );
+
+ 
+
+
   export const ChangePasswordSlice = createAsyncThunk(
     API_URL.CHANGEPASSWORD,
     async (data, thunk) => {

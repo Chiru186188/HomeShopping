@@ -84,7 +84,7 @@ console.log('data',data)
           utills.successAlert('','Password Reset Succesfully')
           navigation.navigate(SCREENS.Login);
         }else{
-          utills.errorAlert('', res.data.error);
+          utills.errorAlert('', res.message);
           return;
         }
       });

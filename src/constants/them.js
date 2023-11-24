@@ -346,13 +346,22 @@ export const API_URL = {
 //POST /api/AccountApi/HSRegisterApiAsync1
   LOGIN: 'AccountApi/LoginApiAsync14',
   SIGNUPHS: 'AccountApi/HSRegisterApiAsync14',
+  SIGNUPEZ: 'AccountApi/EzoneRegisterApiAsync14',
+  SIGNUPPOBOX: 'AccountApi/PostOfficeBoxRegisterApiAsync14',
+  SIGNUPPBDS: 'AccountApi/PBDSRegisterApiAsync14',
+ 
+ 
+ 
+  SubscriptionGetPayment: 'SubsacriptionsApi/GetPayment12?UserId=',
+  SubscriptionSavePlanPayment: 'SubsacriptionsApi/SavePlanApiAsync12',
+
   Userupdate: 'user/update',
   UserPicupdate: 'user/uploadimage',
   Usershowmobile: 'user/showmobile?',
   LOGOUT: 'auth/logout',
   APPLE_Login: 'auth/apple/login',
   DELETEUSER: 'user/account/delete',
-USERDETAIL : 'user/',
+  USERDETAIL : 'user/',
   FORGOTPWD: 'AccountApi/ForgetPasswordApiAsync14',
   VERIFYOTP: 'user/verify',
   RESETPASSWORD: '/AccountApi/CreateCustomerPasswordApiAsync14',
@@ -367,7 +376,6 @@ USERDETAIL : 'user/',
   DYNAMIC_CATEGORYDATA: 'master/post/category/',
   PRODUCT_viewall: 'product/viewall?',
   CATEGORY_getrecommendations: 'product/getrecommendations/',
-
 
   
   PRODUCT_POSTADD: 'product/postad',

@@ -106,7 +106,7 @@ const handleNextPress = async () => {
     let data = {
       secondaryTitle: title,
       secondaryFirstName:FirstName,
-      secondaryLastName:lastName,
+      secondarySurname:lastName,
       secondaryDOB:dob,
       secondaryNationality:value,
       secondaryPhysicalAddress:PhysicalAddress,
