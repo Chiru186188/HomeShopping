@@ -10,6 +10,7 @@ import {
 import { useEffect,useState } from 'react';
 import utills from '../utills';
 import { useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 
 export default function SelectedServiceshorizontaly({
   selectedService,
@@ -19,70 +20,104 @@ export default function SelectedServiceshorizontaly({
 
  const [ServiceList, setServiceList] = useState([]);
  const [ServiceIconList, setServiceIconList] = useState([]);
+ const [ServiceIdList, setServiceIdList] = useState([]);
+
  const userData = useSelector(state => state.auth.userData);
+const navigation = useNavigation()
+  // const services = [
+  //   'Home Shopping (ocean freight) service',
+  //   'eZone (AIR) service',
+  //   'Private Post Office Box Rental',
+  //   'Private Bag Delivery Service',
+  //   'Express Mail Service',
+  //   'Post Office Clearance and Delivery Service',
+  // ];
+  // const servicesIcons = [
+  //   IMAGES.HomeShopingImage2,
+  //   IMAGES.Ezone1,
+  //   IMAGES.HomeSimage,
+  //   IMAGES.PBDSlogo,
+  //   IMAGES.EmsLogo,
+  //   IMAGES.POCDSlogo,
+  // ];
+  const handleServiceSelection =  async (service,index) => {
+   
 
-  const services = [
-    'Home Shopping (ocean freight) service',
-    'eZone (AIR) service',
-    'Private Post Office Box Rental',
-    'Private Bag Delivery Service',
-    'Express Mail Service',
-    'Post Office Clearance and Delivery Service',
-  ];
-  const servicesIcons = [
-    IMAGES.HomeShopingImage2,
-    IMAGES.Ezone1,
-    IMAGES.HomeSimage,
-    IMAGES.PBDSlogo,
-    IMAGES.EmsLogo,
-    IMAGES.POCDSlogo,
-  ];
-  const handleServiceSelection =  async (service) => {
-    setSelectedService(service);
+    // const id =  ServiceIdList[index]
+    // navigation.replace(SCREENS.HSAccountDetail,{From:service,FromID:id});
+//eZone (AIR) service
+if (service === "Home Shopping (ocean freight) service"){
+  navigation.navigate(SCREENS.HSAccountDetail);
 
-    await utills.saveStringToAsyncStorage('SelectedService',service)
+}else if (service === "eZone (AIR) service"){
+  navigation.navigate(SCREENS.EZAccountDetail);
 
-  };
+}
+
+else if (service === "Private Post Office Box Rental"){
+  navigation.navigate(SCREENS.RentalBoxAccountDetail);
+}
+else if (service === "Post Office Clearance and Delivery Service"){
+  navigation.navigate(SCREENS.POCDSAccountDetail);
+}
+else if (service === "Private Bag Delivery Service"){
+  navigation.navigate(SCREENS.PBDSAccountDetail);
+}
+}
 useEffect(() => {
-console.log("HIIII")
-console.log("selectedService",selectedService)
-console.log("userData",userData.services)
+
+// console.log("selectedService",selectedService)
+ console.log("userData",userData?.services)
 const nameArr = []
 const iconArr = []
+const idArr = []
 
 if(userData?.services?.hsUserId != null){
   nameArr.push('Home Shopping (ocean freight) service')
   iconArr.push(IMAGES.HomeShopingImage2)
+  idArr.push(userData?.services?.hsUserId)
+  setSelectedService('Home Shopping (ocean freight) service');
 
 }
  if(userData?.services?.ezUserId != null){
   nameArr.push('eZone (AIR) service')
   iconArr.push(IMAGES.Ezone1)
+  idArr.push(userData?.services?.ezUserId)
 
 }
 
  if(userData?.services?.ltbUserId != null){
   nameArr.push('Private Post Office Box Rental')
   iconArr.push(IMAGES.HomeSimage)
+  idArr.push(userData?.services?.ltbUserId)
 
 }
  if(userData?.services?.pbdsUserId != null){
   nameArr.push('Private Bag Delivery Service')
   iconArr.push(IMAGES.PBDSlogo)
+  idArr.push(userData?.services?.pbdsUserId)
+
 
 }
  if(userData?.services?.pocdsUserId != false){
   nameArr.push('Post Office Clearance and Delivery Service')
   iconArr.push(IMAGES.POCDSlogo)
+  idArr.push(userData?.services?.pocdsUserId)
+
+
+
 
 }
 
+
+// console.log("ServiceList",nameArr)
+// console.log("ServiceLisICont",iconArr)
+
+
+
 setServiceList(nameArr)
 setServiceIconList(iconArr)
-console.log("ServiceList",ServiceList)
-console.log("ServiceLisICont",ServiceIconList)
-
-
+setServiceIdList(idArr)
   return () => {
    
   };
@@ -132,7 +167,7 @@ console.log("ServiceLisICont",ServiceIconList)
           styles.serviceItem,
           selectedService === item ? styles.selectedService : null,
         ]}
-        onPress={() => handleServiceSelection(item)}
+        onPress={() => handleServiceSelection(item,index)}
       >
         <Image
           style={{ height: wp('20%'), width: wp('50%'), resizeMode: 'contain' }}
@@ -168,7 +203,7 @@ const styles = StyleSheet.create({
 
  serviceItem: {
   padding: 12,
-  width:wp('60'),
+  width:wp('80'),
   backgroundColor: COLORS.lightGreySelection, // Default background color
   borderWidth: 1,
   borderColor: 'transparent', // Default border color (transparent)

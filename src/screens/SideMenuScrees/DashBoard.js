@@ -24,36 +24,69 @@ import {
   Location_Icon4Svg,
   Processing_Icon5Svg,
   Wallet_Icon7Svg,
+  History_Icon2,
   
 } from '../../components/Svg';
 import SelectedServiceshorizontaly from '../../components/SelectedServiceshorizontaly';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getAllDashboardDataSlice, getDashboardDataSlice } from '../../redux/slice/categories';
+import useRedux from '../../components/useRedux';
+import { useSelector } from 'react-redux';
+import TouchableNativeFeedback from '../../components/TouchableNativeFeedback';
+import utills from '../../utills';
 
 
 export default function DashBoard({navigation}) {
   const [SelectedService, setSelectedService] = useState('');
   const [pwd, setupwd] = useState('');
   const [isChecked, setIsChecked] = useState(false);
+  const [SelectedList, setSelectedList] = useState([]);
+  const [Selectedtitle, setSelectedtitle] = useState("Pending Packages -Needs To Upload Invoices");
 
+  const {dispatch} = useRedux();
+  const AllDashBoardList  = useSelector(state => state.category.AllDashBoardList);
+  const containermanifest = AllDashBoardList?.containermanifest;
+  const containerDetailData = AllDashBoardList?.containerDetailData; 
 useEffect(() => {
-console.log("HIIII")
-  return () => {
-    getSavedvalue()
-  };
-}, [SelectedService]);
-const getSavedvalue = async () => {
-  console.log('Selected Service:', SelectedService);
 
+
+   // getAllDashboarddata()
+  return () => {
+
+  };
+}, []);
+const getSavedvalue = async () => {
+ // console.log('Selected Service:', SelectedService);
   const SelectedService = await AsyncStorage.getItem('SelectedService');
   setSelectedService(SelectedService)
 }
+const getAllDashboarddata = () => {
+
+  let data = {
+    id: 72,
+
+  };
+
+  dispatch(getAllDashboardDataSlice(data))
+    .unwrap()
+    .then(res => {
+
+console.log("res????",res)
+
+    })
+    .catch(e => {
+
+      setSelectedList(res?.containerDetailData[0]?.containerDetailsListModel)
+      //  setLoading(false);
+    });
+};
 
 useFocusEffect(
   React.useCallback(() => {
-    console.log("Callllllll")
+    
     const unsubscribe = navigation.addListener('beforeRemove', (e) => {
-      console.log("beforeRemove",e)
+      //console.log("beforeRemove",e)
       const originalString = e.target;
       const arrayOfSubstrings = originalString.split('-');
       
@@ -68,15 +101,51 @@ useFocusEffect(
 
     
     const handleBackGesture = () => {
-      console.log('ooooooo')
+     // console.log('ooooooo')
       return false;
     };
        
   }, [navigation])
 );
+const data = [
 
+  { id: '1', text: 'Needs To Upload Invoices',Title: containermanifest?.missingInvoice,color:"#F07C8A",icon:IMAGES.Doc_icon5 },
+  { id: '2', text: 'Intransit Packets',Title:containermanifest?.inTransit,color:"#8FC5EE",icon:IMAGES.profit_icon8 },
+  { id: '3', text: 'Processing',Title: containermanifest?.processing,color:"#FEB08E",icon:IMAGES.Wallet_icon6 },
+  { id: '4', text: 'Ready For Pickup' ,Title: containermanifest?.readyForPickup,color:"#FADA7A",icon:IMAGES.MiscServiceIcon},
+  { id: '5', text: 'Delivered packet',Title: containermanifest?.delivered ,color:"#5AC573",icon:IMAGES.user_icon3},
+  { id: '6', text: 'All Packages',Title: containermanifest?.total ,color:"#A7A9AB",icon:IMAGES.Parcel_icon4},
+
+];
 const handlePress = () => {
+  
 };
+const UpdateList = (item) => {
+  {
+    if (item.id === '1') {
+      setSelectedtitle("Pending Packages - Needs To Upload Invoices");
+      setSelectedList(containerDetailData[0]?.containerDetailsListModel)
+    }
+   else if (item.id === '2') {
+      setSelectedtitle("Pending Packages - Needs To Upload Invoices");
+      setSelectedList(containerDetailData[1]?.containerDetailsListModel)
+    }
+    else if (item.id === '3') {
+      setSelectedtitle("Processing Packages");
+      setSelectedList(containerDetailData[2]?.containerDetailsListModel)
+    }
+    else if (item.id === '4'||item.id === '5'||item.id === '6') {
+      setSelectedtitle("Packages Status - History");
+      setSelectedList(containerDetailData[3]?.containerDetailsListModel)
+    }
+    console.log("containerDetailData", SelectedList);
+
+  }
+};
+
+
+
+
   return (
      <GradientBackground>
     <CustomHeader onPress={handlePress} title = "DashBoard" />
@@ -84,24 +153,52 @@ const handlePress = () => {
         selectedService={SelectedService}
         setSelectedService={setSelectedService}
       />
-          <ScrollView>
+    
+    <ScrollView>
     <View style={styles.container}>
 <View>
     <FlatList
       data={data}
-      horizontal
       showsHorizontalScrollIndicator={false}
       keyExtractor={(item) => item.id}
-      renderItem={renderItem}
+      // renderItem={renderItem}
+
+      renderItem={({ item }) => ( // Define renderItem directly
+      <TouchableNativeFeedback 
+      onPress={() => UpdateList(item)}
+
+      // onPress={() => }
+  
+  style={[styles.item,{    borderLeftColor: item.color,
+}]}>
+    <View style={{flexDirection:'row',gap:10,alignItems:'center'}} >
+      <View style={{width: 30,
+    height: 30,backgroundColor:item.color,alignItems:'center',justifyContent:'center',borderRadius:5}}>
+      <Image source={item.icon} style={{
+    width: 18,
+    height: 18,
+  }} />
+      </View>
+      <View style={[STYLES.row,{flex :1}]}>
+      <Text style={styles.itemText}>{item.text}</Text>
+      <Text style={styles.titleText}>{item.Title}</Text>
+
+      </View>
+      {/* <View style={{ marginLeft: 10, flex: 1 }}>
+     
+    </View> */}
+    </View>
+  </TouchableNativeFeedback>
+    )}
       contentContainerStyle={styles.list}
     />
 </View>
 
 <View style={{marginTop:35}}>
-<Text style={[styles.titleText,{paddingHorizontal:10,textAlign:'left'}]}>Pending Packages - need To Upload Invoice</Text>
+<Text style={[styles.titleText,{paddingHorizontal:10,textAlign:'left'}]}>{Selectedtitle}</Text>
 
 <FlatList
-      data={lowerList}
+      data={SelectedList}
       showsVerticalScrollIndicator={false}
       keyExtractor={(item) => item.id}
       renderItem={renderItem2}
@@ -115,39 +212,45 @@ const handlePress = () => {
 
   );
 }
-const data = [
 
-  { id: '1', text: 'Needs To Upload Invoices',Title: '40',color:COLORS.chatGreencolor,icon:IMAGES.Doc_icon5 },
-  { id: '2', text: 'Upload Doc',Title: '56' ,color:'pink',icon:IMAGES.user_icon3},
-  { id: '3', text: 'Needs To Upload Images',Title: '25',color:COLORS.blueButton,icon:IMAGES.Wallet_icon6 },
-  { id: '4', text: 'Invoices Pending' ,Title:'64',color:'orange',icon:IMAGES.MiscServiceIcon},
-  { id: '5', text: 'Intransit Packets',Title: '20',color:'pink',icon:IMAGES.profit_icon8 },
-  { id: '6', text: 'Parcel',Title: '90' ,color:COLORS.blueButton,icon:IMAGES.Parcel_icon4},
-
-];
 const lowerList = [
 
   { id: '1', text: 'Needs To Upload Invoices',Title: '40',color:COLORS.chatGreencolor,icon:IMAGES.Doc_icon5 },
   { id: '2', text: 'Upload Doc',Title: '56' ,color:'pink',icon:IMAGES.user_icon3},
   
 ];
+const updateList =({item}) =>{
+console.log("Hii",item)
+}
 const renderItem = ({ item }) => (
-  <View style={[styles.item,{    borderLeftColor: item.color,
+
+  <TouchableNativeFeedback 
+  onPress={() =>
+    console.log("Hii",item)
+    //setSelectedtitle(item.text)
+    
+    }
+  
+  style={[styles.item,{    borderLeftColor: item.color,
 }]}>
-    <View style={{flexDirection:'row',gap:10}} >
-      <View style={{width: 40,
-    height: 40,backgroundColor:item.color,alignItems:'center',justifyContent:'center',borderRadius:10}}>
+    <View style={{flexDirection:'row',gap:10,alignItems:'center'}} >
+      <View style={{width: 30,
+    height: 30,backgroundColor:item.color,alignItems:'center',justifyContent:'center',borderRadius:5}}>
       <Image source={item.icon} style={{
-    width: 24,
-    height: 24,
+    width: 18,
+    height: 18,
   }} />
       </View>
-      <View style={{ marginLeft: 10, flex: 1 }}>
+      <View style={[STYLES.row,{flex :1}]}>
+      <Text style={styles.itemText}>{item.text}</Text>
       <Text style={styles.titleText}>{item.Title}</Text>
-    <Text style={styles.itemText}>{item.text}</Text>
+
+      </View>
+      {/* <View style={{ marginLeft: 10, flex: 1 }}>
+     
+    </View> */}
     </View>
-    </View>
-  </View>
+  </TouchableNativeFeedback>
 );
 const renderItem2 = ({ item }) => (
   
@@ -158,13 +261,13 @@ const renderItem2 = ({ item }) => (
         <View style={styles.rowList2}>
         <View style={styles.rowAA}>
         <Ship_Icon1Svg style={{width:30,height:30}}/>
-     <Text style={styles.Left500TextMedum}>{'Ship'}</Text>
+     <Text style={styles.Left500TextMedum}>{item.shipper}</Text>
   
         </View>  
         <View style={styles.rowAA}>
         <Dimensio_Icon2Svg style={{width:30,height:30}}/>
  
-    <Text style={styles.Left500TextMedum}>{'5.2x4 MM'}</Text>
+    <Text style={styles.Left500TextMedum}>{item.length + " * "+item.width + " * "+item.height + " MM" }</Text>
   
         </View>
 
@@ -176,7 +279,7 @@ const renderItem2 = ({ item }) => (
         <Weight_Icon3Svg style={{width:30,height:30}}/>
     
     
-     <Text style={styles.Left500TextMedum}>{'4.8 KG'}</Text>
+     <Text style={styles.Left500TextMedum}>{item.wt + ' KG'}</Text>
   
         </View>  
         <View style={styles.rowAA}>
@@ -184,10 +287,10 @@ const renderItem2 = ({ item }) => (
 
 
 
-    
+    <View>
             
-    <Text style={styles.Left500TextMedum}>{'45565'}</Text>
-  
+    <Text style={styles.Left500TextMedum}>{item.trackingNo}</Text>
+    </View>
         </View>
 
         </View>
@@ -196,13 +299,15 @@ const renderItem2 = ({ item }) => (
         <View style={styles.rowAA}>
         <Location_Icon4Svg style={{width:30,height:30}}/>
 
-     <Text style={styles.Left500TextMedum}>{'Processing'}</Text>
-  
+        <Text style={styles.Left500TextMedum}>
+  {item.deliveredStatus ? 'Delivered' : "Shipped"}
+</Text>  
         </View>  
         <View style={styles.rowAA}>
         <Calender_Icon6Svg style={{width:30,height:30}}/>
        
-    <Text style={styles.Left500TextMedum}>{'07-07-2023'}</Text>
+    <Text style={styles.Left500TextMedum}>  {item.deliveredStatus ? utills.getDateBeforeT(item.deliveredDate) : utills.getDateBeforeT(item.shippedDate)}
+</Text>
   
         </View>
 
@@ -213,19 +318,29 @@ const renderItem2 = ({ item }) => (
         <View style={styles.rowList2}>
         <View style={styles.rowAA}>
         <Wallet_Icon7Svg style={{width:30,height:30}}/>
-     <Text style={styles.Left500TextMedum}>{'$10'}</Text>
+     <Text style={styles.Left500TextMedum}>{item.value}</Text>
   
         </View>  
-        {/* <View style={styles.rowAA}>
-        <Wallet_Icon7Svg style={{width:30,height:30}}/>
+        <View style={styles.rowAA}>
+        <History_Icon2 style={{width:30,height:30}}/>
 
-    <Text style={styles.Left500TextMedum}>{'Rudy Webster'}</Text>
+    <Text style={styles.Left500TextMedum}>{item.via}</Text>
   
-        </View> */}
+        </View>
 
         </View>
-        {/* <Text style={[styles.Left500TextMedum,{paddingHorizontal:10,marginBottom:25}]}>{'Lorem lpsum is simply dummy text of the printing and type typesetting industry.'}</Text> */}
+        <Text style={[styles.Left500BOLDText,{paddingHorizontal:10,marginBottom:10}]}>{item?.contents}</Text>
+   
+        {/* <View style={styles.rowList3}>
+          <Text style={styles.Left500BOLDText} >Contents:</Text>
+          <Text style={styles.Left500TextMedumR} >{item?.contents}</Text>
+          </View> */}
+          {/* <View style={styles.rowList3}>
+          <Text style={styles.Left500BOLDText} >Action</Text>
+          <Text style={styles.Left500TextMedumR} >{item?.contents}</Text>
+          </View> */}
       </View>
+     
       <View style={styles.hr2}></View>
       </View>   
 );
@@ -245,16 +360,17 @@ const styles = StyleSheet.create({
 
  
   item: {
-    width: 200, // Adjust as needed
-    height: 150, // Adjust as needed
+    width: wp('90%'), // Adjust as needed
+    height: 50, // Adjust as needed
     backgroundColor: '#ffffff',
     marginRight: 8, // Adjust as needed
-    alignItems: 'flex-start',
+   
     justifyContent: 'flex-start',
     borderRadius : 15,
-    paddingVertical:15,
+   paddingVertical:10,
 paddingHorizontal:10,
 borderLeftWidth: 7, // Width of the left border
+marginBottom:10
   },
   item1: {
     // Adjust as needed
@@ -348,16 +464,23 @@ Left500TextMedum: {
   fontSize:rf(1.6),
   textAlign: 'left',
 },
+Left500TextMedumR: {
+  fontFamily: FONTFAMILY.Medium,
+  fontSize:rf(1.6),
+  textAlign: 'right',
+},
 rowList: {
   flex:1,
   flexDirection: 'row',
   justifyContent:'space-between',
   paddingHorizontal:10,
   marginVertical:15,
-  gap:30
+  gap:10
 
 },
 rowList2: {
+  flex:1,
+  
   flexDirection: 'row',
   justifyContent:'space-between',
   paddingHorizontal:10,
@@ -365,6 +488,19 @@ rowList2: {
   alignContent:'center'
 
 },
+rowList3: {
+  flex:1,
+  minHeight: 'auto' ,
+  //  flexWrap: 'wrap',
+  flexDirection: 'row',
+  justifyContent:'space-between',
+  paddingHorizontal:10,
+  marginVertical:10,
+  alignItems:'center',
+  gap:20
+
+},
+
 rowAc: {
   flexDirection: 'row',
 justifyContent:'space-around',

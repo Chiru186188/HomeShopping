@@ -1,6 +1,6 @@
 import {StyleSheet, Text, View,Platform, Linking,NativeModules, Image, TouchableOpacity, ScrollView} from 'react-native';
 import React from 'react';
- import {COLORS, CONSTANTS, FONTFAMILY, IMAGES, SCREENS, SIZES, STYLES} from '../../../constants/them';
+ import {COLORS, CONSTANTS, DEFAULTARRAYS, FONTFAMILY, IMAGES, SCREENS, SIZES, STYLES} from '../../../constants/them';
 import {
   heightPercentageToDP as hp,
   responsiveFontSize as rf,
@@ -15,45 +15,100 @@ import CustomButtons from '../../../components/CustomButtons';
 import { useRoute } from '@react-navigation/native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import utills from '../../../utills';
+import TouchableNativeFeedback from '../../../components/TouchableNativeFeedback';
 // import CustomRadioButtons from '../../../components/CustomRadioButtons';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 export default function HomeShopAccountDetails1({navigation}) {
   const route = useRoute();
-  const { From } = route.params;
+
+  const { From,Params1 } = route.params;
 useEffect(() => {
 console.log("From",From)
+console.log("Params1",Params1)
+const formattedItems = DEFAULTARRAYS.Nationality?.map((item) => ({
+  label: item.Text,
+  value: item.Value,
+}));
+console.log("formattedItems",formattedItems)
+setItems(formattedItems);
+
+
+const formattedItemsT = DEFAULTARRAYS.TitleList?.map((item) => ({
+  label: item.Text,
+  value: item.Value,
+}));
+console.log("formattedItems",formattedItemsT)
+setItemsT(formattedItemsT);
+
+
+if (Params1?.DOB != ''){
+  setdob(Params1?.DOB)
+} 
   return () => {
    
   };
 }, []);
 
+const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
 const [open, setOpen] = useState(false);
-const [value, setValue] = useState('Indian');
-const [items, setItems] = useState([
-  {label: 'Indian', value: 'Indian'},
-  {label: 'USA', value: 'USA'},
-  {label: 'UK', value: 'UK'},
+const [value, setValue] = useState(null);
+const [items, setItems] = useState(
+//   [
+//   {label: 'Indian', value: 'Indian'},
+//   {label: 'USA', value: 'USA'},
+//   {label: 'UK', value: 'UK'},
 
-  {label: 'ENGLAND', value: 'ENGLAND'},
+//   {label: 'ENGLAND', value: 'ENGLAND'},
  
-]);
+// ]
+);
 
 
+const [openT, setOpenT] = useState(false);
+const [valueT, setValueT] = useState(null);
+const [itemsT, setItemsT] = useState(
+);
 const [selectedOption, setSelectedOption] = useState(null);
-const [title, settitle] = useState('Mr');
-const [FirstName, setFirstName] = useState('Chirag');
-const [lastName, setlastName] = useState('Wadhwa');
-const [dob, setdob] = useState('10/10/1994');
+const [title, settitle] = useState('');
+const [FirstName, setFirstName] = useState(Params1?.FirstName);
+const [lastName, setlastName] = useState(Params1?.LastName);
 const [Natinality, setNatinality] = useState('');
-const [PhysicalAddress, setPhysicalAddress] = useState('Noida Metro');
-const [Poboxnu, setPoboxnu] = useState('ABC123');
-const [EmailAdd, setEmailAdd] = useState('chirag@gmail.com');
-const [fbId, setfbId] = useState('chirag@gmail.com');
-const [instaid, setinstaid] = useState('chirag@gmail.com');
-const [homePhone, sethomePhone] = useState('98098321312');
-const [workphone, setworkphone] = useState('31211231233');
-const [MobilePhone, setMobilePhone] = useState('43242342334');
+const [PhysicalAddress, setPhysicalAddress] = useState(Params1?.Address);
+const [Poboxnu, setPoboxnu] = useState(Params1?.POBox);
+const [EmailAdd, setEmailAdd] = useState(Params1?.Email);
+const [fbId, setfbId] = useState('');
+const [instaid, setinstaid] = useState('');
+const [homePhone, sethomePhone] = useState('');
+const [workphone, setworkphone] = useState('');
+const [MobilePhone, setMobilePhone] = useState(Params1?.PhoneNumber);
+const [dob, setdob] = useState('Date of Birth');
+const showDatePicker = () => {
+  setDatePickerVisibility(true);
+};
+
+const hideDatePicker = () => {
+  setDatePickerVisibility(false);
+};
+
+const handleConfirm = (date) => {
+  // console.warn("A date has been picked: ", date.toString());
+  const dateObject = new Date(date.toString());
+  const year = dateObject.getFullYear();
+  const month = String(dateObject.getMonth() + 1).padStart(2, '0'); // Adding 1 because getMonth() returns zero-based months
+  const day = String(dateObject.getDate()).padStart(2, '0');
+  
+  const formattedDate = `${year}-${month}-${day}`;
+  console.log(formattedDate); // Output: 2023-12-13
+
+  setdob(formattedDate)
+  hideDatePicker();
+
+};
+const currentDate = new Date();
+  // Set the maximum selectable date to the current date
+  const maximumDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
 
 
 const handleBackPress = () => {
@@ -69,7 +124,7 @@ const handlePress = () => {
 
 const handleNextPress = async () => {
    
-    if (utills.isEmptyOrSpaces(title)) {
+    if (utills.isEmptyOrSpaces(valueT)) {
 
       utills.errorAlert('', 'Please Enter Title');
       return;
@@ -111,7 +166,7 @@ const handleNextPress = async () => {
     }
 
     let data = {
-      title: title,
+      title: valueT,
       firstName:FirstName,
       surname:lastName,
       dob:dob,
@@ -126,8 +181,8 @@ const handleNextPress = async () => {
       phoneNumber:MobilePhone,
 
     };
-console.log('data',data)
-    navigation.navigate(SCREENS.HomeShopAccountDetails2,{From:From,params1:data})
+
+    navigation.navigate(SCREENS.HomeShopAccountDetails2,{From:From,params1:data,LoginParam:Params1})
   };
 
 
@@ -154,41 +209,14 @@ console.log('data',data)
                 <View style={styles.col4}></View>
               </View>
 
-              <EditTextWithLable
-        label="Title"
+              {/* <EditTextWithLable
+        label="Title *"
         placeholder="Enter Title"
         value={title}
         onChangeText={settitle}
         keyboardType="default"
-      />
-       <EditTextWithLable
-        label="First Name"
-        placeholder="Enter First Name"
-        value={FirstName}
-        onChangeText={setFirstName}
-        keyboardType="default"
-      />
-         <EditTextWithLable
-        label="Last Name"
-        placeholder="Enter Last Name"
-        value={lastName}
-        onChangeText={setlastName}
-        keyboardType="default"
-      />
-       <EditTextWithLable
-        label="Date of Birth"
-        placeholder="Enter Date of Birth"
-        value={dob}
-        onChangeText={setdob}
-        keyboardType="default"
-      />
-       {/* <EditTextWithLable
-        label="Nationality"
-        placeholder="Enter Nationality"
-        value={Natinality}
-        onChangeText={setNatinality}
-        keyboardType="default"
       /> */}
+
 <View style={{alignSelf:'flex-start'}}>
   <Text style={{
     marginTop: hp('1%'),
@@ -197,7 +225,163 @@ console.log('data',data)
     fontFamily: FONTFAMILY.Medium,
     marginLeft:wp('3.5%'),
     textAlign:'left'
-  }}>Nationality</Text>
+  }}>Title  
+   <Text style={{
+    marginTop: hp('1%'),
+    fontSize: rf(1.8),
+    color: COLORS.red,
+    fontFamily: FONTFAMILY.Medium,
+    marginLeft:wp('3.5%'),
+    textAlign:'left'
+  }}> *  
+  </Text>
+  </Text>
+</View>
+<View style={{
+           alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal:10,
+      marginTop:10,
+      marginBottom:15
+
+    }}>
+      <DropDownPicker
+      open={openT}
+      value={valueT}
+      items={itemsT}
+      setOpen={setOpenT}
+      setValue={setValueT}
+      setItems={setItemsT}
+      placeholder='Select Title'
+      listMode='SCROLLVIEW'
+      placeholderStyle ={{color:COLORS.Greyscale}}
+      style={{ 
+        borderColor: COLORS.Greyscale,borderRadius:10, borderWidth:2,height: hp('8%'),
+        width : wp('89%')
+    }}
+      textStyle={{  
+        color:  COLORS.Content,
+        fontFamily: FONTFAMILY.Bold,
+        alignSelf: 'center',
+        fontSize: rf(1.8),
+       // marginLeft:wp('1.5%'),
+
+      }}
+    />
+
+    </View>
+
+
+
+       <EditTextWithLable
+        label="First Name *"
+        placeholder="Enter First Name"
+        value={FirstName}
+        onChangeText={setFirstName}
+        keyboardType="default"
+      />
+         <EditTextWithLable
+        label="Last Name *"
+        placeholder="Enter Last Name"
+        value={lastName}
+        onChangeText={setlastName}
+        keyboardType="default"
+      />
+       {/* <EditTextWithLable
+        label="Date of Birth *"
+        placeholder="Enter Date of Birth(yyyy-mm-dd)"
+        value={dob}
+        onChangeText={setdob}
+        keyboardType="default"
+      /> */}
+       {/* <EditTextWithLable
+        label="Nationality"
+        placeholder="Enter Nationality"
+        value={Natinality}
+        onChangeText={setNatinality}
+        keyboardType="default"
+      /> */}
+
+<View style={{alignSelf:'flex-start'}}>
+  <Text style={{
+    marginTop: hp('1%'),
+    fontSize: rf(1.8),
+    color: COLORS.Lableheading,
+    fontFamily: FONTFAMILY.Medium,
+    marginLeft:wp('3.5%'),
+    textAlign:'left'
+  }}>Date Of Birth  
+   <Text style={{
+    marginTop: hp('1%'),
+    fontSize: rf(1.8),
+    color: COLORS.red,
+    fontFamily: FONTFAMILY.Medium,
+    marginLeft:wp('3.5%'),
+    textAlign:'left'
+  }}> *  
+  </Text>
+  </Text>
+</View>
+<View style={{
+      alignItems: 'center',
+      marginTop:10,
+      marginBottom:15,
+      borderColor: COLORS.Greyscale,borderRadius:10, borderWidth:2,height: hp('8%'),
+      width : wp('89%'),
+      justifyContent :'space-between',
+      alignContent:'center',
+      flexDirection:'row',
+      paddingHorizontal:10
+    }}>
+
+<Text style={{
+    marginTop: hp('1%'),
+    fontSize: rf(1.8),
+    color:  dob === "Date of Birth" ?  COLORS.Greyscale : COLORS.Content,
+      textAlign:'left',
+     paddingVertical:5,
+  
+     fontFamily: FONTFAMILY.Bold,
+    fontSize: rf(1.8),
+  }}>{dob} 
+  </Text>
+  <TouchableNativeFeedback
+      onPress={showDatePicker}>
+<Image source={IMAGES.Cal_icon1} style={{width:32,height:32,resizeMode:'contain'}}
+ />
+ </TouchableNativeFeedback>
+  <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        maximumDate={maximumDate}
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+      />
+
+    </View>
+   
+
+
+
+<View style={{alignSelf:'flex-start'}}>
+  <Text style={{
+    marginTop: hp('1%'),
+    fontSize: rf(1.8),
+    color: COLORS.Lableheading,
+    fontFamily: FONTFAMILY.Medium,
+    marginLeft:wp('3.5%'),
+    textAlign:'left'
+  }}>Nationality  
+   <Text style={{
+    marginTop: hp('1%'),
+    fontSize: rf(1.8),
+    color: COLORS.red,
+    fontFamily: FONTFAMILY.Medium,
+    marginLeft:wp('3.5%'),
+    textAlign:'left'
+  }}> *  
+  </Text>
+  </Text>
 </View>
 <View style={{
            alignItems: 'center',
@@ -215,6 +399,8 @@ console.log('data',data)
       setValue={setValue}
       setItems={setItems}
       placeholder='Select Nationality'
+      listMode='SCROLLVIEW'
+
       placeholderStyle ={{color:COLORS.Greyscale}}
       style={{ 
         borderColor: COLORS.Greyscale,borderRadius:10, borderWidth:2,height: hp('8%'),
@@ -225,32 +411,34 @@ console.log('data',data)
         fontFamily: FONTFAMILY.Bold,
         alignSelf: 'center',
         fontSize: rf(1.8),
-        marginLeft:wp('2.5%'),
+       // marginLeft:wp('1.5%'),
 
       }}
     />
 
     </View>
        <EditTextWithLable
-        label="Physical Address"
+        label="Physical Address *"
         placeholder="Enter Physical Address"
         value={PhysicalAddress}
         onChangeText={setPhysicalAddress}
         keyboardType="default"
       />
        <EditTextWithLable
-        label="P.O. Box Number"
+        label="P.O. Box Number *"
         placeholder="Enter P.O. Box Number"
         value={Poboxnu}
         onChangeText={setPoboxnu}
         keyboardType="default"
       />
       <EditTextWithLable
-        label="Email Address"
+        label="Email Address *"
         placeholder="Enter Email Address"
         value={EmailAdd}
         onChangeText={setEmailAdd}
         keyboardType="default"
+        editable={false} // Enable/disable based on radio selection
+
       />
 
 
@@ -303,7 +491,7 @@ console.log('data',data)
         keyboardType="numeric"
       />
        <EditTextWithLable
-        label="Mobile"
+        label="Mobile *"
         placeholder="Enter Mobile Number"
         value={MobilePhone}
         onChangeText={setMobilePhone}

@@ -16,7 +16,7 @@ import { useFocusEffect } from '@react-navigation/native';
 export default function WelcomScreen({navigation}) {
    
 useEffect(() => {
-console.log("HIIII")
+
   return () => {
    
   };
@@ -25,7 +25,7 @@ console.log("HIIII")
 
 useFocusEffect(
   React.useCallback(() => {
-    console.log("Callllllll")
+    
     const unsubscribe = navigation.addListener('beforeRemove', (e) => {
       console.log("beforeRemove",e)
       const originalString = e.target;
@@ -85,7 +85,7 @@ useFocusEffect(
 <View style={styles.buttonContainer}>
         <CustomBlueButton
           title="Sign up"
-          onPress={() => navigation.navigate(SCREENS.SelectServices)}
+          onPress={() => navigation.navigate(SCREENS.RegistrationPage)}
           buttonStyle={styles.signUpButton} // Custom button style
           textStyle={{fontFamily :FONTFAMILY.Bold,
             fontSize: rf(2.0)}} // Custom text style

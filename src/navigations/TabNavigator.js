@@ -28,22 +28,16 @@ function TabNavigation() {
 const isTablet = width >= 768; 
   useFocusEffect(
     React.useCallback(() => {
-      console.log("Callllllll")
+      
       connect()
       const unsubscribe = navigation.addListener('beforeRemove', (e) => {
-        console.log("beforeRemove",e)
-        console.log("e.target",e.target)
-        console.log("e.data.action.type",e.data.action.type)
-
+       
         const originalString = e.target;
-        console.log("originalString",originalString)
         const arrayOfSubstrings = originalString.split('-');
         if (e.data.action.type === 'NAVIGATE' && arrayOfSubstrings[0]=== 'TabNavigation') {
-console.log("1")
           setNavigatedFromLogin(true);
         }
         if (e.data.action.type === 'GO_BACK' && arrayOfSubstrings[0]=== 'TabNavigation') {
-          console.log("2")
 
         if (Platform.OS === 'android') {
           if (!handleBackGesture()) {
@@ -53,11 +47,8 @@ console.log("1")
       }
 
       if (e.data.action.type === 'POP' && arrayOfSubstrings[0]=== 'TabNavigation') {
-        console.log("3")
         if (Platform.OS === 'ios') {
-          console.log("4")
           if (!handleBackGesture()) {
-            console.log("5")
             e.preventDefault();
           }
         }
@@ -68,7 +59,6 @@ console.log("1")
         navigation.navigate(SCREENS.Home); // Navigate to the first tab (Home)
       };
       const handleBackGesture = () => {
-        console.log('ooooooo')
         return false;
       };
       if (navigatedFromLogin) {

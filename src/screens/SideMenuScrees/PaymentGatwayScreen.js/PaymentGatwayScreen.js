@@ -18,6 +18,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import CustomButtons from '../../../components/CustomButtons';
 import CustomButtonsBAndP from '../../../components/CustomButtonsBAndP';
 import CustomButtonsBAndPNow from '../../../components/CustomButtonsBAndPNow';
+import utills from '../../../utills';
 
 export default function PaymentGatwayScreen({navigation}) {
   const [amount, setamount] = useState('');
@@ -25,7 +26,7 @@ export default function PaymentGatwayScreen({navigation}) {
   const [isChecked, setIsChecked] = useState(false);
 
 useEffect(() => {
-console.log("HIIII")
+
   return () => {
    
   };
@@ -42,6 +43,8 @@ const handleBackPress = () => {
 const handleNextPress = () => {
   // Add your logic for the "Next" button action here
   //  navigation.navigate(SCREENS.POCDSAccountDetailsFinal)
+  utills.successAlert('Payment Succeed!','Your Payment Reference no. is AAG56YUBHJ')
+  navigation.navigate(SCREENS.DashBoard)
 };
   return (
      <GradientBackground>

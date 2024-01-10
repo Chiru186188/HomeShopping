@@ -16,7 +16,7 @@ import Icons, { Icon } from '../../components/Icons';
 export default function EMSIntroduction({navigation}) {
   
 useEffect(() => {
-console.log("HIIII")
+
   return () => {
    
   };
@@ -37,7 +37,7 @@ const handlePress = () => {
           <View style={styles.col11}>
             <Text style={styles.Heading}>
             EXPRESS MAIL SERVICE{' '}
-              <Text style={styles.textDanger}>click</Text> here to sign up
+              {/* <Text style={styles.textDanger}>click</Text> here to sign up */}
             </Text>
           </View>
           <View style={styles.col11}>
@@ -143,13 +143,13 @@ const handlePress = () => {
         
 
            
-          <CustomBlueButton
+          {/* <CustomBlueButton
           title="Sign up"
           onPress={() => navigation.navigate(SCREENS.EMSIntroductionSecond)}
          
           textStyle={{fontFamily :FONTFAMILY.Bold,
             fontSize: rf(2.0)}} // Custom text style
-        />
+        /> */}
     </View>
    
     </ScrollView>

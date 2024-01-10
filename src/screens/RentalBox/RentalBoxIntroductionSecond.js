@@ -12,12 +12,15 @@ import GradientBackground from '../../components/GradientBackground';
 import HeaderWithBackButton from '../../components/HeaderWithBackButton';
 import CustomRadioButtons from '../../components/CustomRadioButtons';
 import CustomButtons from '../../components/CustomButtons';
+import { useRoute } from '@react-navigation/native';
 // import CustomRadioButtons from '../../components/CustomRadioButtons';
 
 export default function RentalBoxIntroductionSecond({navigation}) {
- 
+  const route = useRoute();
+
+  const {Params1 } = route.params;
 useEffect(() => {
-console.log("HIIII")
+
   return () => {
    
   };
@@ -39,7 +42,7 @@ const [selectedOption, setSelectedOption] = useState(null);
   
   const handleNextPress = () => {
     // Add your logic for the "Next" button action here
-     navigation.navigate(SCREENS.RentalBoxAccountDetails1)
+     navigation.navigate(SCREENS.RentalBoxAccountDetails1,{Params1:Params1})
   };
 const handlePress = () => {
 };

@@ -17,35 +17,101 @@ import CustomButtonsBAndS from '../../components/CustomButtonsBAndS';
 import { RegisterSlicePBDS } from '../../redux/slice/auth';
 import useRedux from '../../components/useRedux';
 import utills from '../../utills';
+import TouchableNativeFeedback from '../../components/TouchableNativeFeedback';
 // import CustomRadioButtons from '../../components/CustomRadioButtons';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { useRoute } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import { getPBDSSlice } from '../../redux/slice/categories';
 
 export default function PBDSAccountDetails1({navigation}) {
  
-useEffect(() => {
-console.log("HIIII")
-  return () => {
-   
-  };
-}, []);
+  const route = useRoute();
+
+  const {Params1 } = route.params;
 
 const [title, settitle] = useState('');
 
-const [FirstName, setFirstName] = useState('');
-const [lastName, setlastName] = useState('');
+const [FirstName, setFirstName] = useState(Params1?.FirstName);
+const [lastName, setlastName] = useState(Params1?.LastName);
 const [CompName, setCompName] = useState('');
+const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
-const [dob, setdob] = useState('');
-const [PhysicalAddress, setPhysicalAddress] = useState('');
-const [EmailAdd, setEmailAdd] = useState('');
-const [TelePhone, setTelePhone] = useState('');
+const [PhysicalAddress, setPhysicalAddress] = useState(Params1?.Address);
+const [EmailAdd, setEmailAdd] = useState(Params1?.Email);
+const [TelePhone, setTelePhone] = useState(Params1?.PhoneNumber);
 
-const [MobilePhone, setMobilePhone] = useState('');
+const [MobilePhone, setMobilePhone] = useState(Params1?.PhoneNumber);
 
 
 const [ApplicantSign, setApplicantSign] = useState('');
 
 const [ApplicantName, setApplicantName] = useState('');
 const [AppliDate, setAppliDate] = useState('');
+const [dob, setdob] = useState('Date of Birth');
+const showDatePicker = () => {
+  setDatePickerVisibility(true);
+};
+const PBDSDetails  = useSelector(state => state.category.PBDSDetails);
+ const USERDETAIL  = PBDSDetails?.data
+ console.log("USERDETAIL",USERDETAIL)
+const getAllAdressddata = () => {
+  console.log('dataaaaaaar',data)
+
+  let data = {
+    id: Params1.UserId,
+
+  };
+  dispatch(getPBDSSlice(data))
+    .unwrap()
+    .then(res => {
+      console.log("res",res)
+
+
+    })
+    .catch(e => {
+      //  setLoading(false);
+    });
+};
+const hideDatePicker = () => {
+  setDatePickerVisibility(false);
+};
+
+  useEffect(() => {
+    console.log("Params1",Params1);
+
+    getAllAdressddata()
+    const currentDate = new Date(); // Create a new Date object representing the current date and time
+    const dateString = currentDate.toISOString().split('T')[0]; // Convert to ISO format and extract the date part
+    
+    console.log(dateString);
+    setAppliDate(dateString)
+
+    if (Params1?.DOB != ''){
+      setdob(Params1?.DOB)
+    } 
+      return () => {
+       
+      };
+    }, []);
+
+const handleConfirm = (date) => {
+  // console.warn("A date has been picked: ", date.toString());
+  const dateObject = new Date(date.toString());
+  const year = dateObject.getFullYear();
+  const month = String(dateObject.getMonth() + 1).padStart(2, '0'); // Adding 1 because getMonth() returns zero-based months
+  const day = String(dateObject.getDate()).padStart(2, '0');
+  
+  const formattedDate = `${year}-${month}-${day}`;
+  console.log(formattedDate); // Output: 2023-12-13
+
+  setdob(formattedDate)
+  hideDatePicker();
+
+};
+const currentDate = new Date();
+  // Set the maximum selectable date to the current date
+  const maximumDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
 
 const handleBackPress = () => {
   // Add your logic for the "Back" button action here
@@ -78,8 +144,8 @@ const handleNextPress = () => {
     utills.errorAlert('', 'Please Enter Physical Address');
      return;
    }
-   if (utills.isEmptyOrSpaces(MobilePhone)) {
-    utills.errorAlert('','Please Enter telephone Number');
+   if (utills.isEmptyOrSpaces(TelePhone)) {
+    utills.errorAlert('','Please Enter Phone Number');
      return;
     }
     if (utills.isEmptyOrSpaces(EmailAdd)) {
@@ -90,26 +156,31 @@ const handleNextPress = () => {
    let data = {
     // ApplicantName: ApplicantName,
     // ApplicantSign: ApplicantSign,
-    regDate: "2023/11/21",
+    CusId:USERDETAIL?.cusId,
+    AccountNo :USERDETAIL?.AccountNo,
     CompanyName : CompName,
-    firstName : FirstName,
-    surname : lastName,
-    email:EmailAdd,
-    phoneNumber:MobilePhone,
-    dateOfBirth: dob,
-    address:PhysicalAddress,
+    FirstName : FirstName,
+    Surname : lastName,
+    Email:EmailAdd,
+    PhoneNumber:TelePhone,
+    DateOfBirth: dob,
+    Address:PhysicalAddress,
+    RegDate:AppliDate,
+    MobileNumber:MobilePhone,
+    
    
   };
  console.log('value==33', data);
+ //navigation.navigate(SCREENS.CartValueScreen,{From :"PBDS",Service:'Private Bag Delivery Service'})
 
 dispatch(RegisterSlicePBDS(data))
 .unwrap()
 .then(res => {
 console.log('Register res==', res);
-if (res.statusCode == 200){
-  navigation.navigate(SCREENS.CartValueScreen,{From :"PBDS",Service:'Private Bag Delivery Service'})
+if (res.status == true){
+  navigation.navigate(SCREENS.CartValueScreen,{From :"PBDS",Service:'Private Bag Delivery Service',userID:Params1.UserId})
 }else{
-  utills.errorAlert('', res.message);
+  utills.errorAlert('', res.msg);
   return;
 }
 });
@@ -132,7 +203,7 @@ const handlePress = () => {
     <View style={styles.col12}>
             <Text style={styles.Heading}>
             Private Bag Delivery Service Please {' '}
-              <Text style={styles.textDanger}>click</Text> here to sign up
+              {/* <Text style={styles.textDanger}>click</Text> here to sign up */}
             </Text>
           </View>
 
@@ -149,30 +220,89 @@ const handlePress = () => {
 
           
        <EditTextWithLable
-        label="First Name"
+        label="First Name *"
         placeholder="Enter First Name"
         value={FirstName}
         onChangeText={setFirstName}
         keyboardType="default"
       />
         <EditTextWithLable
-        label="Last Name"
+        label="Last Name *"
         placeholder="Enter Last Name"
         value={lastName}
         onChangeText={setlastName}
         keyboardType="default"
       />
     
-       <EditTextWithLable
-        label="Date of Birth"
-        placeholder="Enter Date of Birth"
+       {/* <EditTextWithLable
+        label="Date of Birth *"
+        placeholder="Enter Date of Birth (yyyy-dd-mm)"
         value={dob}
         onChangeText={setdob}
         keyboardType="default"
+      /> */}
+
+<View style={{alignSelf:'flex-start'}}>
+  <Text style={{
+    marginTop: hp('1%'),
+    fontSize: rf(1.8),
+    color: COLORS.Lableheading,
+    fontFamily: FONTFAMILY.Medium,
+    marginLeft:wp('3.5%'),
+    textAlign:'left'
+  }}>Date Of Birth  
+   <Text style={{
+    marginTop: hp('1%'),
+    fontSize: rf(1.8),
+    color: COLORS.red,
+    fontFamily: FONTFAMILY.Medium,
+    marginLeft:wp('3.5%'),
+    textAlign:'left'
+  }}> *  
+  </Text>
+  </Text>
+</View>
+<View style={{
+      alignItems: 'center',
+      marginTop:10,
+      marginBottom:15,
+      borderColor: COLORS.Greyscale,borderRadius:10, borderWidth:2,height: hp('8%'),
+      width : wp('89%'),
+      justifyContent :'space-between',
+      alignContent:'center',
+      flexDirection:'row',
+      paddingHorizontal:10
+    }}>
+
+<Text style={{
+    marginTop: hp('1%'),
+    fontSize: rf(1.8),
+    color:  dob === "Date of Birth" ?  COLORS.Greyscale : COLORS.Content,
+      textAlign:'left',
+     paddingVertical:5,
+  
+     fontFamily: FONTFAMILY.Bold,
+    fontSize: rf(1.8),
+  }}>{dob} 
+  </Text>
+  <TouchableNativeFeedback
+      onPress={showDatePicker}>
+<Image source={IMAGES.Cal_icon1} style={{width:32,height:32,resizeMode:'contain'}}
+ />
+ </TouchableNativeFeedback>
+  <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        maximumDate={maximumDate}
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
       />
+
+    </View>
+   
       
       <EditTextWithLable
-        label="Comapany Name"
+        label="Comapany Name *"
         placeholder="Enter Comapany Name"
         value={CompName}
         onChangeText={setCompName}
@@ -185,7 +315,7 @@ const handlePress = () => {
                 </View>
               </View>
        <EditTextWithLable
-        label="Address"
+        label="Address *"
         placeholder="Enter Address"
         value={PhysicalAddress}
         onChangeText={setPhysicalAddress}
@@ -197,17 +327,9 @@ const handlePress = () => {
         value={EmailAdd}
         onChangeText={setEmailAdd}
         keyboardType="default"
+        // editable={false}
       />
-
-        <EditTextWithLable
-        label="Phone No"
-        placeholder="Enter Phone No"
-        value={TelePhone}
-        onChangeText={setTelePhone}
-        keyboardType='numeric'
-      />
-     
-     <EditTextWithLable
+ <EditTextWithLable
         label="Mobile No"
         placeholder="Enter Mobile No"
         value={MobilePhone}
@@ -215,6 +337,15 @@ const handlePress = () => {
         keyboardType='numeric'
       />
      
+        <EditTextWithLable
+        label="Phone No *"
+        placeholder="Enter Phone No"
+        value={TelePhone}
+        onChangeText={setTelePhone}
+        keyboardType='numeric'
+      />
+     
+    
 
 
 

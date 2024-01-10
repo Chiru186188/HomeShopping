@@ -54,7 +54,7 @@ export default function VerificationScreen({navigation}) {
       otp:  parseInt(code)
 
     };
-console.log('data',data)
+
     // if (!utills.isEmptyOrSpaces(code)) {
     //   utills.errorAlert('', 'Please Enter Code');
     //   return;

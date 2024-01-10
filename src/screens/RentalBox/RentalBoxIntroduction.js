@@ -12,11 +12,14 @@ import GradientBackground from '../../components/GradientBackground';
 import HeaderWithBackButton from '../../components/HeaderWithBackButton';
 import CustomBlueButton from '../../components/CustomBlueButton';
 import Icons, { Icon } from '../../components/Icons';
+import { useRoute } from '@react-navigation/native';
 
 export default function RentalBoxIntroduction({navigation}) {
-  
+  const route = useRoute();
+
+  const {Params1 } = route.params;
 useEffect(() => {
-console.log("HIIII")
+
   return () => {
    
   };
@@ -37,7 +40,7 @@ const handlePress = () => {
           <View style={styles.col11}>
             <Text style={styles.Heading}>
             Private Post Office Box Rental{' '}
-              <Text style={styles.textDanger}>click</Text> here to sign up
+              {/* <Text style={styles.textDanger}>click</Text> here to sign up */}
             </Text>
           </View>
           
@@ -159,7 +162,7 @@ const handlePress = () => {
           {/* </ScrollView> */}
           <CustomBlueButton
           title="Sign up"
-          onPress={() => navigation.navigate(SCREENS.RentalBoxIntroductionSecond)}
+          onPress={() => navigation.navigate(SCREENS.RentalBoxIntroductionSecond,{Params1:Params1})}
          
           textStyle={{fontFamily :FONTFAMILY.Bold,
             fontSize: rf(2.0)}} // Custom text style

@@ -32,6 +32,7 @@ import {
   responsiveFontSize as rf,
   widthPercentageToDP as wp,
 } from './src/common/responsiveFunction';
+import LogoLoader from './src/components/LogoLoader';
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -79,9 +80,7 @@ export default function App() {
     <Provider store={store}>
     <MainNavigation />
     <Toast config={toastConfig} />
-
-      {/* <Toast config={toastConfig} />
-      <LogoLoader /> */}
+      <LogoLoader />
 
     </Provider>
   // </SafeAreaView>

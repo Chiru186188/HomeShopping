@@ -20,19 +20,57 @@ import CheckboxListSingleSelected from '../../components/CheckboxListSingleSelec
 import utills from '../../utills';
 import { RegisterSlicePOBOX } from '../../redux/slice/auth';
 import useRedux from '../../components/useRedux';
+import TouchableNativeFeedback from '../../components/TouchableNativeFeedback';
 // import CustomRadioButtons from '../../components/CustomRadioButtons';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { useRoute } from '@react-navigation/native';
+import { getAllAddressListSlice, getPBDSSlice, getRentalBoxSlice } from '../../redux/slice/categories';
+import { useSelector } from 'react-redux';
 
 export default function RentalBoxAccountDetails1({navigation}) {
   const [selectedLocationValue, setselectedLocationValue] = useState(null);
   const [selectedSizeValue, setselectedSizeValue] = useState("");
   const [selectedSizeValue1, setselectedSizeValue1] = useState('');
-
+  const route = useRoute();
+ 
+  const {Params1 } = route.params;
 useEffect(() => {
-console.log("HIIII")
+
+getAllAdressddata()
+const currentDate = new Date(); // Create a new Date object representing the current date and time
+const dateString = currentDate.toISOString().split('T')[0]; // Convert to ISO format and extract the date part
+console.log("Params1",Params1)
+if (Params1?.DOB != ''){
+  setdob(Params1?.DOB)
+} 
+console.log(dateString);
+setAppliDate(dateString)
   return () => {
    
   };
 }, []);
+
+const RentalBoxDetails  = useSelector(state => state.category.RentalBoxDetails);
+ const USERDETAIL  = RentalBoxDetails?.data?.data
+ console.log("USERDETAIL",USERDETAIL)
+const getAllAdressddata = () => {
+  console.log('dataaaaaaar',data)
+
+  let data = {
+    id: Params1.UserId,
+
+  };
+  dispatch(getRentalBoxSlice(data))
+    .unwrap()
+    .then(res => {
+      console.log("res",res)
+
+
+    })
+    .catch(e => {
+      //  setLoading(false);
+    });
+};
 const LocationList2 = ['General Post Office',
   'Welches Polyclinic',
  'Western Polyclinic', 
@@ -44,17 +82,17 @@ const LocationList2 = ['General Post Office',
  ];
 const [selectedSize, setselectedSize] = useState(null);
 const [selectedLocation, setsselectedLocation] = useState(null);
+const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
 const [title, settitle] = useState('');
 
-const [FirstName, setFirstName] = useState('');
-const [lastName, setlastName] = useState('');
+const [FirstName, setFirstName] = useState(Params1?.FirstName);
+const [lastName, setlastName] = useState(Params1?.LastName);
 
-const [dob, setdob] = useState('');
-const [PhysicalAddress, setPhysicalAddress] = useState('');
-const [EmailAdd, setEmailAdd] = useState('');
+const [PhysicalAddress, setPhysicalAddress] = useState(Params1?.Address);
+const [EmailAdd, setEmailAdd] = useState(Params1?.Email);
 
-const [MobilePhone, setMobilePhone] = useState('');
+const [MobilePhone, setMobilePhone] = useState(Params1?.PhoneNumber);
 
 
 const [ApplicantSign, setApplicantSign] = useState('');
@@ -64,6 +102,34 @@ const [AppliDate, setAppliDate] = useState('');
 const [Address1, setAddress1] = useState('');
 const [Address2, setAddress2] = useState('');
 const [Address3, setAddress3] = useState('');
+
+const [dob, setdob] = useState('Date of Birth');
+const showDatePicker = () => {
+  setDatePickerVisibility(true);
+};
+
+const hideDatePicker = () => {
+  setDatePickerVisibility(false);
+};
+
+const handleConfirm = (date) => {
+  // console.warn("A date has been picked: ", date.toString());
+  const dateObject = new Date(date.toString());
+  const year = dateObject.getFullYear();
+  const month = String(dateObject.getMonth() + 1).padStart(2, '0'); // Adding 1 because getMonth() returns zero-based months
+  const day = String(dateObject.getDate()).padStart(2, '0');
+  
+  const formattedDate = `${year}-${month}-${day}`;
+  console.log(formattedDate); // Output: 2023-12-13
+
+  setdob(formattedDate)
+  hideDatePicker();
+
+};
+const currentDate = new Date();
+  // Set the maximum selectable date to the current date
+  const maximumDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+
 
 const handleBackPress = () => {
   // Add your logic for the "Back" button action here
@@ -107,10 +173,10 @@ const handleNextPress = () => {
      return;
    }
    let data = {
-    ApplicantName: ApplicantName,
-    ApplicantSign: ApplicantSign,
-    regDate: "2023/11/21",
-    // authPerson : ApplicantName,
+    applicantName: ApplicantName,
+    applicantSign: ApplicantSign,
+    regDate: AppliDate,
+    cusId : USERDETAIL.cusId,
     firstName : FirstName,
     surname : lastName,
     email: EmailAdd,
@@ -122,17 +188,23 @@ const handleNextPress = () => {
     additionalHouseholdAddress3: Address3,
     desiredLocation: selectedLocationValue,
     requestedLB: selectedSizeValue1,
+    accountNo:USERDETAIL.accountNo,
+    subscriptionDueDate:USERDETAIL.subscriptionDueDate,
+    openingAmount:USERDETAIL.openingAmount,
+    userId:Params1.UserId
+
   };
  console.log('value==33', data);
+  // navigation.navigate(SCREENS.CartValueScreen,{From :"Post Office Box",Service:'Private Post Office Box Rental SERVICE'})
 
 dispatch(RegisterSlicePOBOX(data))
 .unwrap()
 .then(res => {
 console.log('Register res==', res);
-if (res.statusCode == 200){
-  navigation.navigate(SCREENS.CartValueScreen,{From :"Post Office Box",Service:'Private Post Office Box Rental SERVICE'})
+if (res.status == true){
+  navigation.navigate(SCREENS.CartValueScreen,{From :"Post Office Box",Service:'Private Post Office Box Rental SERVICE',userID:Params1.UserId})
 }else{
-  utills.errorAlert('', res.message);
+  utills.errorAlert('', res.msg);
   return;
 }
 });
@@ -177,44 +249,103 @@ const handlePress = () => {
 
           
        <EditTextWithLable
-        label="First Name of Primary Rental"
+        label="First Name of Primary Rental *"
         placeholder="Enter First Name of Primary Rental"
         value={FirstName}
         onChangeText={setFirstName}
         keyboardType="default"
       />
          <EditTextWithLable
-        label="Last Name of Primary Rental"
+        label="Last Name of Primary Rental *"
         placeholder="Enter Last Name of Primary Rental"
         value={lastName}
         onChangeText={setlastName}
         keyboardType="default"
       />
     
-       <EditTextWithLable
-        label="Date of Birth"
-        placeholder="Enter Date of Birth"
+       {/* <EditTextWithLable
+        label="Date of Birth *"
+        placeholder="Enter Date of Birth (yyyy-dd-mm)"
         value={dob}
         onChangeText={setdob}
         keyboardType="default"
+      /> */}
+
+<View style={{alignSelf:'flex-start'}}>
+  <Text style={{
+    marginTop: hp('1%'),
+    fontSize: rf(1.8),
+    color: COLORS.Lableheading,
+    fontFamily: FONTFAMILY.Medium,
+    marginLeft:wp('3.5%'),
+    textAlign:'left'
+  }}>Date Of Birth  
+   <Text style={{
+    marginTop: hp('1%'),
+    fontSize: rf(1.8),
+    color: COLORS.red,
+    fontFamily: FONTFAMILY.Medium,
+    marginLeft:wp('3.5%'),
+    textAlign:'left'
+  }}> *  
+  </Text>
+  </Text>
+</View>
+<View style={{
+      alignItems: 'center',
+      marginTop:10,
+      marginBottom:15,
+      borderColor: COLORS.Greyscale,borderRadius:10, borderWidth:2,height: hp('8%'),
+      width : wp('89%'),
+      justifyContent :'space-between',
+      alignContent:'center',
+      flexDirection:'row',
+      paddingHorizontal:10
+    }}>
+
+<Text style={{
+    marginTop: hp('1%'),
+    fontSize: rf(1.8),
+    color:  dob === "Date of Birth" ?  COLORS.Greyscale : COLORS.Content,
+      textAlign:'left',
+     paddingVertical:5,
+  
+     fontFamily: FONTFAMILY.Bold,
+    fontSize: rf(1.8),
+  }}>{dob} 
+  </Text>
+  <TouchableNativeFeedback
+      onPress={showDatePicker}>
+<Image source={IMAGES.Cal_icon1} style={{width:32,height:32,resizeMode:'contain'}}
+ />
+ </TouchableNativeFeedback>
+  <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        maximumDate={maximumDate}
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
       />
+
+    </View>
+   
       
        <EditTextWithLable
-        label="Physical Address"
+        label="Physical Address *"
         placeholder="Enter Physical Address"
         value={PhysicalAddress}
         onChangeText={setPhysicalAddress}
         keyboardType="default"
       />
         <EditTextWithLable
-        label="Telephone No"
+        label="Telephone No *"
         placeholder="Enter Telephone No"
         value={MobilePhone}
         onChangeText={setMobilePhone}
         keyboardType='numeric'
       />
       <EditTextWithLable
-        label="Email Address"
+        label="Email Address *"
         placeholder="Enter Email Address"
         value={EmailAdd}
         onChangeText={setEmailAdd}
@@ -249,7 +380,10 @@ const handlePress = () => {
 
 <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
         <View style={styles.col8}>
-            <Text  style={styles.Left500BOLDText}>Please Indicate size of P.O. Box Required</Text>
+            <Text  style={styles.Left500BOLDText}>Please Indicate size of P.O. Box Required
+            <Text  style={[styles.Left500BOLDText,{color :'red'}]}> *</Text>
+
+            </Text>
               </View>
                             </View>
 <View style={{alignSelf:'flex-start'}}>
@@ -260,7 +394,10 @@ const handlePress = () => {
         
 <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
-                  <Text  style={styles.Left500BOLDText}>Please Indicate Desired Box Location</Text>
+                  <Text  style={styles.Left500BOLDText}>Please Indicate Desired Box Location
+                  <Text  style={[styles.Left500BOLDText,{color :'red'}]}> *</Text>
+
+                  </Text>
                 </View>
               </View>
 <View style={{alignSelf:'flex-start'}}>
@@ -427,7 +564,7 @@ const styles = StyleSheet.create({
   },
    Left500BOLDText: {
     fontFamily: FONTFAMILY.Bold,
-    fontSize:rf(1.8),
+    fontSize:rf(1.7),
     textAlign: 'left',
   },
   Left500BOLDTextWhite: {

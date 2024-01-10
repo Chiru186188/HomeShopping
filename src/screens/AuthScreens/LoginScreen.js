@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View,Platform, Linking,NativeModules, Image, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View,Platform, Linking,NativeModules, Image, TouchableOpacity, Alert} from 'react-native';
 import React from 'react';
 import {COLORS, CONSTANTS, FONTFAMILY, IMAGES, SCREENS, SIZES, STYLES} from '../../constants/them';
 import {
@@ -20,19 +20,36 @@ import useRedux from '../../components/useRedux';
 import { LoginSlice } from '../../redux/slice/auth';
 
 export default function LoginScreen({navigation}) {
-  const [email, setemail] = useState('marciar@caribcable.com');
-  const [pwd, setupwd] = useState('Admin@123');
+  const [email, setemail] = useState('Robert90@yopmail.com');
+  const [pwd, setupwd] = useState('Cw@123456');
   const [isChecked, setIsChecked] = useState(false);
   const {dispatch} = useRedux();
 
 useEffect(() => {
-console.log("HIIII")
+
   return () => {
    
   };
 }, []);
 const handlePress = () => {
 };
+const gotoSubscription = (userData) =>{
+  let Getdata = {
+    FirstName:userData?.firstName,
+    LastName:userData?.lastName,
+    DOB:utills.getDateBeforeT(userData?.dob),
+    Gender:userData?.gender,
+    Address:userData?.address,
+    POBox:userData?.poBox,
+    Email:userData?.email,
+    IRD:userData?.ird,
+    Password:"",
+    ConfirmPassword:"",
+    PhoneNumber:userData?.phoneNumber,
+    UserId:userData?.userID,
+  };
+   navigation.navigate(SCREENS.SelectServicesSubscription,{Params1 : Getdata})
+}
 
 const LoginApi = async () => {
       let data = {
@@ -41,10 +58,8 @@ const LoginApi = async () => {
       Password: pwd,
       RememberMe : isChecked 
     };
-     console.log('data==', data);
-    if (utills.isEmptyOrSpaces(email)) {
-      // console.log('value==33', email);
 
+    if (utills.isEmptyOrSpaces(email)) {
       utills.errorAlert('', 'Please Enter Email');
       return;
     }
@@ -56,8 +71,10 @@ const LoginApi = async () => {
       utills.errorAlert('', 'Please Enter Password');
       return;
     }
-    // await utills.saveStringToAsyncStorage('LoginbyID', "yes")
-    // await utills.saveStringToAsyncStorage('FromLogin', "Yes")
+    
+    // navigation.navigate(SCREENS.DashBoard);
+    await utills.saveStringToAsyncStorage('LoginbyID', "yes")
+    await utills.saveStringToAsyncStorage('FromLogin', "Yes")
 
     dispatch(LoginSlice(data))
       .unwrap()
@@ -65,11 +82,35 @@ const LoginApi = async () => {
         if (res.success == true){
           console.log('Login res==', res.data);
 
+if (res.data.services == null){
+
+
+  Alert.alert(
+    'No Active Plan',
+    `Please Buy Service Plan First`,
+    [
+      {
+        text: 'OK',
+        onPress: () => {
+          gotoSubscription(res.data)
+        },
+
+        // onPress: (gotoSubscription(res.data)),
+      },
+    ],
+    { cancelable: false }
+  );
+
+return
+
+ 
+}
+
 if(res.data.ispayment === true){
   navigation.navigate(SCREENS.DashBoard);
 
 }else{
-  navigation.navigate(SCREENS.CartValueScreen,{From :"HS",Service:'Home Shopping Services'})
+  navigation.navigate(SCREENS.CartValueScreen,{From :"",Service:'',userID:res?.data?.userID})
 }
 
         }else{
@@ -144,7 +185,7 @@ if(res.data.ispayment === true){
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => {
-              navigation.navigate(SCREENS.SelectServices);
+              navigation.navigate(SCREENS.RegistrationPage);
             }}>
             <Text
               style={[

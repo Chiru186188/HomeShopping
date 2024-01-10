@@ -11,15 +11,18 @@ import { useEffect,useState } from 'react';
 import GradientBackground from '../../../components/GradientBackground';
 import HeaderWithBackButton from '../../../components/HeaderWithBackButton';
 import CustomBlueButton from '../../../components/CustomBlueButton';
+import { useRoute } from '@react-navigation/native';
 
 export default function HomeShopIntroduction({navigation}) {
   const [email, setemail] = useState('');
   const [pwd, setupwd] = useState('');
   const [isChecked, setIsChecked] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
+  const route = useRoute();
 
+  const {Params1 } = route.params;
 useEffect(() => {
-console.log("HIIII")
+
   return () => {
    
   };
@@ -39,8 +42,8 @@ const handlePress = () => {
 
           <View style={styles.col12}>
             <Text style={styles.Heading}>
-              Home Shopping (ocean freight) service Please{' '}
-              <Text style={styles.textDanger}>click</Text> here to sign up
+              Home Shopping (ocean freight) service{' '}
+              {/* <Text style={styles.textDanger}>click</Text> here to sign up */}
             </Text>
           </View>
           
@@ -158,7 +161,7 @@ const handlePress = () => {
           {/* </ScrollView> */}
           <CustomBlueButton
           title="Sign up"
-          onPress={() => navigation.navigate(SCREENS.HomeShopIntroductionSecond)}
+          onPress={() => navigation.navigate(SCREENS.HomeShopIntroductionSecond ,{Params1:Params1})}
          
           textStyle={{fontFamily :FONTFAMILY.Bold,
             fontSize: rf(2.0)}} // Custom text style

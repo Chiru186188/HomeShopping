@@ -17,11 +17,6 @@ export const API = {
 
 export const requestGet = (url, extraHeaders = {}) => {
   return new Promise((resolve, reject) => {
-console.log(url);
-console.log(extraHeaders);
-
-console.log(base_url+url);
-
 axios.get(`${base_url}${url}`, {
   headers: {
           Accept: 'application/json',

@@ -42,7 +42,7 @@ export default function SelectServices({navigation}) {
     setSelectedService(service);
   };
 useEffect(() => {
-console.log("HIIII")
+
   return () => {
    
   };
@@ -137,10 +137,6 @@ const styles = StyleSheet.create({
     gap:20,
     paddingBottom:30
   },
-
-  
-
-  
 
  serviceItem: {
   padding: 12,

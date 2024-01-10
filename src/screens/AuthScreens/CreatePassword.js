@@ -73,7 +73,7 @@ export default function CreatePassword({navigation}) {
 
 
     };
-console.log('data',data)
+
    
     
     dispatch(ResetPasswordSlice(data))

@@ -34,6 +34,8 @@ function EditText_WithBackgroundColor(props) {
           multiline={props.description ? true : false}
           showSoftInputOnFocus
           secureTextEntry={props.password ? showPassword : false}
+          numberOfLines={100}
+          ellipsizeMode="tail"
           onFocus={() => {
             setIsFocused(true);
           }}

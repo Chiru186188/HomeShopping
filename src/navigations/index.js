@@ -44,6 +44,20 @@ import SelectedServices from '../screens/AuthScreens/SelectedServices';
 import ForgotPwd from '../screens/AuthScreens/ForgotPwd';
 import VerificationScreen from '../screens/AuthScreens/VerificationScreen';
 import CreatePassword from '../screens/AuthScreens/CreatePassword';
+import PaymentGatwayScreenNew from '../screens/SideMenuScrees/PaymentGatwayScreen.js/PaymentGatwayScreenNew';
+import RegistrationPage from '../screens/AuthScreens/HomeShoppingSignUp/RegistrationPage';
+import SelectServicesSubscription from '../screens/AuthScreens/SelectServicesSubscription';
+import LinkOpenScreen from '../screens/SideMenuScrees/LinkOpenScreen';
+import ReportLinkOpenScreen from '../screens/SideMenuScrees/ReportLinkOpenScreen';
+import EZAccountDetail from '../screens/AuthScreens/HomeShoppingSignUp/EZAccountDetail';
+import RentalBoxAccountDetail from '../screens/AuthScreens/HomeShoppingSignUp/RentalBoxAccountDetail';
+import POCDSAccountDetail from '../screens/AuthScreens/HomeShoppingSignUp/POCDSAccountDetail';
+import PBDSAccountDetail from '../screens/AuthScreens/HomeShoppingSignUp/PBDSAccountDetail';
+import PDFViewer from '../screens/SideMenuScrees/PDFViewer';
+import AccountTransactionHistoryDetails from '../screens/AuthScreens/HomeShoppingSignUp/AccountTransactionHistoryDetails';
+import AccountSummary from '../screens/AuthScreens/HomeShoppingSignUp/AccountSummary';
+import HSInvoiceUplaodpackages from '../screens/SideMenuScrees/HSInvoiceUplaodpackages';
+import ContactUs from '../screens/AuthScreens/ContactUs';
 
 const Stack = createStackNavigator();
 
@@ -51,7 +65,7 @@ function MainNavigation() {
   const ref = useRef()
 
 React.useEffect(() => {
-console.log("HIII")
+
  }, []);
 
   return (
@@ -98,6 +112,20 @@ console.log("HIII")
         <Stack.Screen name={SCREENS.ForgotPwd} component={ForgotPwd} options={{headerShown: false,gestureEnabled:false}} />
         <Stack.Screen name={SCREENS.VerificationScreen} component={VerificationScreen} options={{headerShown: false,gestureEnabled:false}} />
         <Stack.Screen name={SCREENS.CreatePassword} component={CreatePassword} options={{headerShown: false,gestureEnabled:false}} />
+        <Stack.Screen name={SCREENS.PaymentGatwayScreenNew} component={PaymentGatwayScreenNew} options={{headerShown: false,gestureEnabled:false}} />
+        <Stack.Screen name={SCREENS.RegistrationPage} component={RegistrationPage} options={{headerShown: false,gestureEnabled:false}} />
+        <Stack.Screen name={SCREENS.SelectServicesSubscription} component={SelectServicesSubscription} options={{headerShown: false,gestureEnabled:false}} />
+        <Stack.Screen name={SCREENS.LinkOpenScreen} component={LinkOpenScreen} options={{headerShown: false,gestureEnabled:false}} />
+        <Stack.Screen name={SCREENS.ReportLinkOpenScreen} component={ReportLinkOpenScreen} options={{headerShown: false}}/>
+        <Stack.Screen name={SCREENS.EZAccountDetail} component={EZAccountDetail} options={{headerShown: false}}/>
+        <Stack.Screen name={SCREENS.RentalBoxAccountDetail} component={RentalBoxAccountDetail} options={{headerShown: false}}/>
+        <Stack.Screen name={SCREENS.POCDSAccountDetail} component={POCDSAccountDetail} options={{headerShown: false}}/>
+        <Stack.Screen name={SCREENS.PBDSAccountDetail} component={PBDSAccountDetail} options={{headerShown: false}}/>
+        <Stack.Screen name={SCREENS.PDFViewer} component={PDFViewer} options={{headerShown: false}}/>
+        <Stack.Screen name={SCREENS.AccountTransactionHistoryDetails} component={AccountTransactionHistoryDetails} options={{headerShown: false}}/>
+        <Stack.Screen name={SCREENS.AccountSummary} component={AccountSummary} options={{headerShown: false}}/>
+        <Stack.Screen name={SCREENS.HSInvoiceUplaodpackages} component={HSInvoiceUplaodpackages} options={{headerShown: false}}/>
+        <Stack.Screen name={SCREENS.ContactUs} component={ContactUs} options={{headerShown: false}}/>
 
       </Stack.Navigator>
     </NavigationContainer>

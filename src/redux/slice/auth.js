@@ -11,6 +11,7 @@ const initialState = {
   userData:null,
 };
 
+
 const authSlice = createSlice({
   name: 'authSlice',
   initialState,
@@ -41,12 +42,35 @@ const authSlice = createSlice({
   },
 });
 
+export const RegisterSlice = createAsyncThunk(
+  API_URL.SIGNUPAPI,
+  async (data, thunk) => {
+    try {
+      thunk.dispatch(saveIsLoading(true));
+      console.log('API_URL.SIGNUPAPI',API_URL.SIGNUPAPI)
+
+      const response = await requestPost(API_URL.SIGNUPAPI, data,true);
+      console.log('response',response)
+      thunk.dispatch(saveIsLoading(false));
+      return response;
+    } catch (error) {
+      thunk.dispatch(saveIsLoading(false));
+   
+     console.log('RegisterSlice error', error);
+         
+            console.log('RegisterSliceHS error.response.data.message', error.response.data.message);
+
+     utillsJs.errorAlert('',error.response.data.message)
+      throw error;
+    }
+  },
+);
 export const RegisterSliceHS = createAsyncThunk(
     API_URL.SIGNUPHS,
     async (data, thunk) => {
       try {
         thunk.dispatch(saveIsLoading(true));
-        console.log('data',data)
+        
         const response = await requestPost(API_URL.SIGNUPHS, data,true);
         console.log('response',response)
         thunk.dispatch(saveIsLoading(false));
@@ -69,7 +93,7 @@ export const RegisterSliceHS = createAsyncThunk(
     async (data, thunk) => {
       try {
         thunk.dispatch(saveIsLoading(true));
-        console.log('data',data)
+        
         const response = await requestPost(API_URL.SIGNUPEZ, data,true);
         console.log('response',response)
         thunk.dispatch(saveIsLoading(false));
@@ -91,7 +115,7 @@ export const RegisterSliceHS = createAsyncThunk(
     async (data, thunk) => {
       try {
         thunk.dispatch(saveIsLoading(true));
-        console.log('data',data)
+        
         const response = await requestPost(API_URL.SIGNUPPOBOX, data,true);
         console.log('response',response)
         thunk.dispatch(saveIsLoading(false));
@@ -114,7 +138,7 @@ export const RegisterSliceHS = createAsyncThunk(
     async (data, thunk) => {
       try {
         thunk.dispatch(saveIsLoading(true));
-        console.log('data',data)
+        
         const response = await requestPost(API_URL.SIGNUPPBDS, data,true);
         console.log('response',response)
         thunk.dispatch(saveIsLoading(false));
@@ -131,22 +155,43 @@ export const RegisterSliceHS = createAsyncThunk(
       }
     },
   );
+  export const RegisterSlicePOCDS = createAsyncThunk(
+    API_URL.SIGNUPPOCDS,
+    async (data, thunk) => {
+      try {
+        thunk.dispatch(saveIsLoading(true));
+        
+        const response = await requestPost(API_URL.SIGNUPPOCDS, data,true);
+        console.log('response',response)
+        thunk.dispatch(saveIsLoading(false));
+        return response;
+      } catch (error) {
+        thunk.dispatch(saveIsLoading(false));
+     
+       console.log('RegisterSlicePOCDS error', error);
+           
+              console.log('RegisterSlicePOCDS error.response.data.message', error.response.data.message);
 
+       utillsJs.errorAlert('',error.response.data.message)
+        throw error;
+      }
+    },
+  );
   export const OrderSaveSlice = createAsyncThunk(
     API_URL.SAVEORDER,
     async (data, thunk) => {
       try {
-        // thunk.dispatch(saveIsLoading(true));
+         thunk.dispatch(saveIsLoading(true));
         const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
         const extraHeaders = {
           Authorization: `Bearer ${accessToken}`,
         };
         const response = await requestPost(API_URL.SAVEORDER, data,true,extraHeaders);
         console.log('response',response)
-        // thunk.dispatch(saveIsLoading(false));
+        thunk.dispatch(saveIsLoading(false));
         return response;
       } catch (error) {
-        // thunk.dispatch(saveIsLoading(false));
+       thunk.dispatch(saveIsLoading(false));
         console.log('OrderSaveSlice error', error);
         console.log('OrderSaveSlice error.response.data.message', error.response.data.message);
         utillsJs.errorAlert('',error.response.data.message)
@@ -220,6 +265,30 @@ export const RegisterSliceHS = createAsyncThunk(
         thunk.dispatch(saveIsLoading(true));
         const response = await requestPost(API_URL.FORGOTPWD, data,true);
         
+        thunk.dispatch(saveIsLoading(false));
+
+        return response;
+      } catch (error) {
+        console.log('ForgotPwdSlice error', error);
+        thunk.dispatch(saveIsLoading(false));
+
+        utillsJs.errorAlert('',error.response.data.message)
+                thunk.dispatch(saveIsLoading(false));
+
+        throw error;
+      }
+    },
+  );
+
+
+  export const PymentResponseSlice = createAsyncThunk(
+    API_URL.GetRedirectPaymentResponse,
+    async (data, thunk) => {
+      try {
+        thunk.dispatch(saveIsLoading(true));
+        // const response = await requestPost`${API_URL.GetRedirectPaymentResponse}${'paymentID='}${data.paymentID}${'&payload='}${data.payload}`, data,true);
+        const response = await requestGet(`${API_URL.GetRedirectPaymentResponse}${'paymentID='}${data.paymentID}${'&payload='}${data.payload}`);
+
         thunk.dispatch(saveIsLoading(false));
 
         return response;
@@ -679,15 +748,15 @@ export const SendOtpSlice = createAsyncThunk(
   API_URL.SENDOTP,
   async (data, thunk) => {
     try {
-      // thunk.dispatch(saveIsLoading(true));
+       thunk.dispatch(saveIsLoading(true));
 /// mobileNumber: Phone,
 //deviceToken : value !== null ? value : 'cCi2nVXxQTOxnnKU-sqwYb:APA91bHS4sz3YZm7nCrLWWF2t-mKwXTUwcCitpWnzMl5SFsH2d-2ubXrHwmBboE3ePpyM4FexZneIMU1zyTFJIwpafDmJ8gxYeTkcbv6Z_DEfZ1Y3tdT5BCgIUgGORK63iFl-a1-ei2c'
 console.log(data)
       const response = requestGet(`${API_URL.SENDOTP}${data.mobileNumber}${'&deviceToken='}${data.deviceToken}`);
-      // thunk.dispatch(saveIsLoading(false));
+     thunk.dispatch(saveIsLoading(false));
       return response;
     } catch (error) {
-      // thunk.dispatch(saveIsLoading(false));
+      thunk.dispatch(saveIsLoading(false));
 
       console.log('SendOtpSlice error', error.response);
       utillsJs.errorAlert('',error.response.data.message)
@@ -720,12 +789,14 @@ export const SendOtpSlice1 = createAsyncThunk(
   API_URL.SENDOTP1,
   async (data, thunk) => {
     try {
-      // thunk.dispatch(saveIsLoading(true));
+       thunk.dispatch(saveIsLoading(true));
       const response = requestGet(`${API_URL.SENDOTP1}${data.mobileNumber}${'&deviceToken='}${data.deviceToken}`);
-      // thunk.dispatch(saveIsLoading(false));
+       thunk.dispatch(saveIsLoading(false));
       return response;
     } catch (error) {
       console.log('SendOtpSlice1 error', error);
+      thunk.dispatch(saveIsLoading(false));
+
       utillsJs.errorAlert('',error.response.data.message)
       throw error;
     }

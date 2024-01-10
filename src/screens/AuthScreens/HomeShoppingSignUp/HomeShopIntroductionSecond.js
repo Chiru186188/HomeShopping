@@ -13,12 +13,15 @@ import HeaderWithBackButton from '../../../components/HeaderWithBackButton';
 import CustomRadioButtons from '../../../components/CustomRadioButtons';
 import CustomButtons from '../../../components/CustomButtons';
 import utills from '../../../utills';
+import { useRoute } from '@react-navigation/native';
 // import CustomRadioButtons from '../../../components/CustomRadioButtons';
 
 export default function HomeShopIntroductionSecond({navigation}) {
- 
+  const route = useRoute();
+
+  const {Params1 } = route.params;
 useEffect(() => {
-console.log("HIIII")
+
   return () => {
    
   };
@@ -49,7 +52,7 @@ const [selectedOption, setSelectedOption] = useState(null);
 
 
 
-    navigation.navigate(SCREENS.HomeShopAccountDetails1,{From:"HS"})
+    navigation.navigate(SCREENS.HomeShopAccountDetails1,{From:"HS",Params1:Params1})
   };
 const handlePress = () => {
 };

@@ -24,7 +24,7 @@ export default function Depositepayment({navigation}) {
   const [isChecked, setIsChecked] = useState(false);
 
 useEffect(() => {
-console.log("HIIII")
+
   return () => {
    
   };

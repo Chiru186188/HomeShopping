@@ -12,7 +12,7 @@ import GradientBackground from '../../../components/GradientBackground';
 import HeaderWithBackButton from '../../../components/HeaderWithBackButton';
 import EditText_WithBackgroundColor from '../../../components/EditText_WithBackgroundColor';
 import CustomButtons from '../../../components/CustomButtons';
-import { useRoute } from '@react-navigation/native';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import Icons, { Icon } from '../../../components/Icons';
 import { ColorSpace } from 'react-native-reanimated';
 // import CustomRadioButtons from '../../../components/CustomRadioButtons';
@@ -33,46 +33,269 @@ import {
   History_Icon8
   
 } from '../../../components/Svg';
+import { useSelector } from 'react-redux';
+import { EditHSCustomerDetailsSlice, PrintReportSlice, PrintTransactionReportSlice, getAccountHistorySlice, getCustomerDetailsSlice } from '../../../redux/slice/categories';
+import useRedux from '../../../components/useRedux';
+import utills from '../../../utills';
+import TouchableNativeFeedback from '../../../components/TouchableNativeFeedback';
 
 export default function HSAccountDetail({navigation}) {
   const route = useRoute();
-//   const { From } = route.params;
+  const {dispatch} = useRedux();
+  const userData = useSelector(state => state.auth.userData);
+  const [AccountId, setAccountId] = useState('');
+  const [CustId, setCustId] = useState('');
+  const [enableText, setenableText] = useState(true);
+
+   //const { From ,FromID} = route.params;
 const [open, setOpen] = useState(false);
 const [value, setValue] = useState(null);
 const [items, setItems] = useState([
-  {label: 'User1', value: 'User1'},
-  {label: 'User2', value: 'User2'},
-  {label: 'User3', value: 'User3'},
+  // {label: 'User1', value: 'User1'},
+  // {label: 'User2', value: 'User2'},
+  // {label: 'User3', value: 'User3'},
 
-  {label: 'User4', value: 'User4'},
+  // {label: 'User4', value: 'User4'},
  
 ]);
 useEffect(() => {
+  getCustomerdata()
   return () => {
    
   };
 }, []);
+
+const handlPrintHistory = () => {
+//?CustomerId=4236&AccountId=3671&type=Hs
+
+  let data = {
+    CustomerId: CustId,//userData?.userID,
+    AccountId:AccountId,
+    type:"Hs"
+  };
+  console.log('dataaaaaaar',data)
+
+  dispatch(PrintReportSlice(data))
+    .unwrap()
+    .then(res => {
+      console.log("res?",res)
+       if  (res?.statusCode == 200){
+          navigation.navigate(SCREENS.PDFViewer,{item :res?.downloadLink });
+
+        }else{
+          utills.errorAlert(res?.message)
+        }
+
+    })
+    .catch(e => {
+      //  setLoading(false);
+    });
+};
+
+const getCustomerdata = () => {
+ // console.log('FromID',FromID)
+
+  let data = {
+    Id: userData?.userID,
+
+  };
+  console.log('dataaaaaaar',data)
+
+  dispatch(getCustomerDetailsSlice(data))
+    .unwrap()
+    .then(res => {
+      console.log("res?",res)
+
+    //   console.log("res?.aaData[0]?.OpeningAmount",res?.aaData[0]?.OpeningAmount)
+
+   
+     const formattedItems = res?.AccountUser?.map((item) => ({
+      label: item.Text,
+      value: item.Value,
+    }));
+
+    console.log("formattedItems",formattedItems)
+    setItems(formattedItems);
+
+    if (res?.AccountUser?.length > 0){
+  setValue(res?.AccountUser[0]?.Value)
+    }
+
+    setaccountno(res?.aaData[0]?.AccountNo);
+    
+    setaccountOPDate(utills.getDateBeforeT(res?.aaData[0]?.AccountOpeningDate));
+    setaccountOPAmnt(res?.aaData[0]?.OpeningAmount?.toString());
+    setsubscriptionDate(utills.getDateBeforeT(res?.aaData[0]?.SubscriptionDueDate));
+    setaccountStatts(res?.aaData[0]?.AccountStatusName);
+    setFirstName(res?.aaData[0]?.FirstName);
+    setlastName(res?.aaData[0]?.Surname);
+    setPhysicalAddress(res?.aaData[0]?.Address);
+    setPoboxnu(res?.aaData[0]?.POBox);
+    setEmailAdd(res?.aaData[0]?.Email);
+    setMobilePhone(res?.aaData[0]?.PhoneNumber);
+    setAccountId(res?.aaData[0]?.AccountId);
+    setCustId(res?.aaData[0]?.Id);
+
+    getAccountHistory(res?.aaData[0]?.AccountId,res?.aaData[0]?.Id)
+
+
+
+
+    })
+
+
+
+
+
+    .catch(e => {
+      //  setLoading(false);
+    });
+};
+const getAccountHistory = (accountID,custId) => {
+
+  let data = {
+    Id    : accountID,
+    CusId : custId,
+    // sEcho:"1",
+    // iColumns:11,
+    // sSearch:null,
+    // iDisplayLength:25,
+    // iDisplayStart:0,
+    // iSortingCols:1,
+    // sColumns:"TransactionDate%2CTransactionType%2CRefCustomerName%2CParcelNo.%2CRecieptNo%2CParcelDetails%2Ctaxableamount%2CGoodsDescription%2CCashier%2CReceivedBy%2CAction"
+
+  };
+  console.log('dataaaaaaar',data)
+
+  dispatch(getAccountHistorySlice(data))
+    .unwrap()
+    .then(res => {
+      console.log("res",res)
+
+    })
+    .catch(e => {
+      //  setLoading(false);
+    });
+};
+
+
+const CostumerDetails  = useSelector(state => state.category.CostumerDetails);
+const AccountHistory  = useSelector(state => state.category.AccountHistory);
+const AccountHistoryList  = AccountHistory?.aaData;
+
+
+const [isEditing, setIsEditing] = useState(false);
+
+const handleEditPress = () => {
+  setenableText(false)
+  setIsEditing(true);
+};
+
+const handleSavePress = () => {
+  // Add logic to save the changes made
+
+
+
+  let data = {
+    CusId: CustId,//userData?.userID,
+    FirstName:FirstName,
+    Surname:lastName,
+    Email:EmailAdd,
+    AdditionalEmail:"",
+    PhoneNumber:MobilePhone,
+    Address:PhysicalAddress,
+    POBox : Poboxnu,
+  IsInsured: false,
+  // IRDNumber: IRDNumber,
+  IsCommercialCustomer: false
+
+
+  };
+  console.log('dataaaaaaar',data)
+
+  dispatch(EditHSCustomerDetailsSlice(data))
+    .unwrap()
+    .then(res => {
+      console.log("res?",res)
+      setenableText(true)
+
+      setIsEditing(false);
+//
+ utills.confirmMessageAlert('Updated','Customer Details Updated Successfully.')
+
+    })
+    .catch(e => {
+      //  setLoading(false);
+    });
+
+
+
+
+
+};
+//EditHSCustomerDetailsSlice
+
+const handleCancelPress = () => {
+  // Add logic to cancel the editing and revert changes
+  setenableText(true)
+
+  setIsEditing(false);
+};
+
+
+
+
+
+
+console.log("AccountHistory",AccountHistory)
+
+useFocusEffect(
+  React.useCallback(() => {
+    
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      console.log("beforeRemove",e)
+      const originalString = e.target;
+      const arrayOfSubstrings = originalString.split('-');
+      
+      if (e.data.action.type === 'GO_BACK' && arrayOfSubstrings[0]=== 'HSAccountDetail') {
+
+        if (!handleBackGesture()) {
+          e.preventDefault();
+        }
+    }
+   
+    });
+
+    
+    const handleBackGesture = () => {
+      console.log('ooooooo')
+      navigation.navigate(SCREENS.DashBoard)
+
+      //return false;
+    };
+       
+  }, [navigation])
+);
 const [selectedOption, setSelectedOption] = useState(null);
-const [accountno, setaccountno] = useState('');
-const [accountOPDate, setaccountOPDate] = useState('');
-const [accountOPAmount, setaccountOPAmount] = useState('');
-const [subscriptionDate, setsubscriptionDate] = useState('');
-const [accountStatts, setaccountStatts] = useState('');
 
 const [Natinality, setNatinality] = useState('');
 const [fbId, setfbId] = useState('');
 const [IRID, setIRID] = useState('');
 const [homePhone, sethomePhone] = useState('');
 const [workphone, setworkphone] = useState('');
+const [accountno, setaccountno] = useState();
+const [accountOPDate, setaccountOPDate] = useState();
+// const [accountOPAmount, setaccountOPAmount] = useState(CostumerDetails?.aaData?.OpeningAmount);
+const [accountOPAmnt, setaccountOPAmnt] = useState();
 
-const [FirstName, setFirstName] = useState('');
-const [lastName, setlastName] = useState('');
-const [PhysicalAddress, setPhysicalAddress] = useState('');
-const [Poboxnu, setPoboxnu] = useState('');
-const [EmailAdd, setEmailAdd] = useState('');
-
-const [MobilePhone, setMobilePhone] = useState('');
-
+const [subscriptionDate, setsubscriptionDate] = useState();
+const [accountStatts, setaccountStatts] = useState();
+const [FirstName, setFirstName] = useState();
+const [lastName, setlastName] = useState();
+const [PhysicalAddress, setPhysicalAddress] = useState();
+const [Poboxnu, setPoboxnu] = useState();
+const [EmailAdd, setEmailAdd] = useState();
+const [MobilePhone, setMobilePhone] = useState();
 const [expanded, setExpanded] = useState(false); // Initially not expanded
 const [expanded1, setExpanded1] = useState(false); // Initially not expanded
 const [expanded2, setExpanded2] = useState(false); // Initially not expanded
@@ -86,15 +309,23 @@ const handleexpandedPress = () => {
   const handleexpanded2Press = () => {
     setExpanded2(!expanded2); // Toggle the state
   };
-const handleBackPress = () => {
+
+  const handleBackPress = () => {
   // Add your logic for the "Back" button action here
   navigation.goBack()
 };
-const handleNextPress = () => {
+
+  const handleNextPress = () => {
   // Add your logic for the "Next" button action here
-};
-const handlePress = () => {
-};
+  };
+
+  const handlePress = () => {
+  };
+  const handleHistoryReport = () => {
+        
+    navigation.navigate(SCREENS.AccountTransactionHistoryDetails);  
+      
+    };
 const listData = [
     { id: '1', title: 'Item 1' },
     { id: '2', title: 'Item 2' },
@@ -117,11 +348,43 @@ const listData = [
       setOpen={setOpen}
       setValue={setValue}
       setItems={setItems}
+      listMode='SCROLLVIEW'
       placeholder='Select Account User'
       style={{borderColor:'lightgrey', borderWidth:2,borderRadius:15,height: hp('8%'),
+
+
+      
     }}
-      textStyle={{fontFamily:FONTFAMILY.Medium,fontSize:rf(1.8)}}
+      textStyle={{fontFamily:FONTFAMILY.Bold,fontSize:rf(1.8)}}
+      onChangeValue={(selectedItem) => {
+        // Retrieve the index of the selected item
+        const selectedIndex = items.findIndex(item => item.value === selectedItem);
+        
+        // selectedIndex will contain the index of the selected item
+        console.log('Selected item:', selectedItem);
+        console.log('Selected index:', selectedIndex);
+        // console.log('Selected index:Value', CostumerDetails?.aaData[selectedIndex]);
+
+
+    setaccountno(CostumerDetails?.aaData[selectedIndex]?.AccountNo);
+    setaccountOPDate(utills.getDateBeforeT(CostumerDetails?.aaData[selectedIndex]?.AccountOpeningDate));
+    setaccountOPAmnt(CostumerDetails?.aaData[selectedIndex]?.OpeningAmount?.toString());
+    setsubscriptionDate(utills.getDateBeforeT(CostumerDetails?.aaData[selectedIndex]?.SubscriptionDueDate));
+    setaccountStatts(CostumerDetails?.aaData[selectedIndex]?.AccountStatusName);
+    setFirstName(CostumerDetails?.aaData[selectedIndex]?.FirstName);
+    setlastName(CostumerDetails?.aaData[selectedIndex]?.Surname);
+    setPhysicalAddress(CostumerDetails?.aaData[selectedIndex]?.Address);
+    setPoboxnu(CostumerDetails?.aaData[selectedIndex]?.POBox);
+    setEmailAdd(CostumerDetails?.aaData[selectedIndex]?.Email);
+    setMobilePhone(CostumerDetails?.aaData[selectedIndex]?.PhoneNumber);
+    setAccountId(CostumerDetails?.aaData[selectedIndex]?.AccountId);
+    setCustId(CostumerDetails?.aaData[selectedIndex]?.Id);
+    getAccountHistory(CostumerDetails?.aaData[selectedIndex]?.AccountId,CostumerDetails?.aaData[selectedIndex]?.Id)
+
+      }}
     />
+
+    
     </View>
     <ScrollView style= {styles.containerSc}> 
 
@@ -155,6 +418,7 @@ const listData = [
         value={FirstName}
         onChangeText={setFirstName}
         keyboardType="default"
+        disable={enableText}
       />
          <EditText_WithBackgroundColor
         label="Last Name"
@@ -162,6 +426,8 @@ const listData = [
         value={lastName}
         onChangeText={setlastName}
         keyboardType="default"
+        disable={enableText}
+
       />
       <EditText_WithBackgroundColor
         label="Email Address"
@@ -169,6 +435,8 @@ const listData = [
         value={EmailAdd}
         onChangeText={setEmailAdd}
         keyboardType="default"
+        disable={enableText}
+
       />
       <EditText_WithBackgroundColor
         label="Mobile"
@@ -176,6 +444,8 @@ const listData = [
         value={MobilePhone}
         onChangeText={setMobilePhone}
         keyboardType='numeric'
+          disable={enableText}
+
       />
       
     
@@ -185,6 +455,8 @@ const listData = [
         value={PhysicalAddress}
         onChangeText={setPhysicalAddress}
         keyboardType="default"
+        disable={enableText}
+
       />
        <EditText_WithBackgroundColor
         label="P.O. Box Number"
@@ -192,6 +464,8 @@ const listData = [
         value={Poboxnu}
         onChangeText={setPoboxnu}
         keyboardType="default"
+        disable={true}
+
       />
        <EditText_WithBackgroundColor
         label="IRD"
@@ -199,6 +473,8 @@ const listData = [
         value={Poboxnu}
         onChangeText={setPoboxnu}
         keyboardType="default"
+        disable={true}
+
       />
       
 
@@ -228,30 +504,40 @@ const listData = [
         value={accountno}
         onChangeText={setaccountno}
         keyboardType="default"
+        disable={true}
+
       />
          <EditText_WithBackgroundColor
         placeholder="Account opening Date"
         value={accountOPDate}
-        onChangeText={accountOPDate}
+        onChangeText={setaccountOPDate}
         keyboardType="default"
+        disable={true}
+
       />
       <EditText_WithBackgroundColor
         placeholder="Account Opening Amount"
-        value={accountOPAmount}
-        onChangeText={setaccountOPAmount}
+        value={accountOPAmnt}
+        onChangeText={setaccountOPAmnt}
         keyboardType="numeric"
+        disable={true}
+
       />
        <EditText_WithBackgroundColor
         placeholder="Subscription Due Date"
         value={subscriptionDate}
         onChangeText={setsubscriptionDate}
         keyboardType="numeric"
+        disable={true}
+
       />
       <EditText_WithBackgroundColor
         placeholder="Account Status"
         value={accountStatts}
         onChangeText={setaccountStatts}
         keyboardType='default'
+        disable={true}
+
       />
         
 </React.Fragment>
@@ -259,8 +545,11 @@ const listData = [
 
 
 <View style = {styles.rowAc} >
-<View style = {{alignItems:'center'}}>
-<View style={{backgroundColor:COLORS.primary,borderRadius:10,alignItems:'center',width:80,height:80,alignContent:'center',justifyContent:"center"}} >
+<TouchableOpacity style = {{alignItems:'center'}}
+
+onPress={handlPrintHistory} 
+>
+<View style={{backgroundColor:COLORS.primary,borderRadius:10,alignItems:'center',width:60,height:60,alignContent:'center',justifyContent:"center"}} >
 <Image source={IMAGES.PrintReport} style={styles.logo} />
 
 </View>
@@ -268,25 +557,68 @@ const listData = [
 <Text style={styles.Left500Text}>Print</Text>
 <Text style={styles.Left500Text}>History</Text>
 
-</View>
-<View style = {{alignItems:'center'}}>
-<View style={{backgroundColor:COLORS.primary,borderRadius:10,alignItems:'center',width:80,height:80,alignContent:'center',justifyContent:"center"}} >
+</TouchableOpacity>
+<TouchableOpacity
+onPress={handleHistoryReport} 
+
+style = {{alignItems:'center'}}>
+<View style={{backgroundColor:COLORS.primary,borderRadius:10,alignItems:'center',width:60,height:60,alignContent:'center',justifyContent:"center"}} >
 <Image source={IMAGES.HistoryReport} style={styles.logo} />
 
 </View>
-<Text style={styles.Left500Text}>History</Text>
-<Text style={styles.Left500Text}>Report</Text>
+<Text style={styles.Left500Text}>Transactions</Text>
 
-</View>
-<View style = {{alignItems:'center'}}>
-<View style={{backgroundColor:COLORS.primary,borderRadius:10,alignItems:'center',width:80,height:80,alignContent:'center',justifyContent:"center"}} >
+<Text style={styles.Left500Text}
+numberOfLines={2}
+ellipsizeMode='tail'
+>History Report</Text>
+{/* <Text style={styles.Left500Text}>Report</Text> */}
+
+</TouchableOpacity>
+
+{!isEditing ? (
+
+
+
+<TouchableNativeFeedback style = {{alignItems:'center'}}
+onPress={handleEditPress}
+>
+<View style={{backgroundColor:COLORS.primary,borderRadius:10,alignItems:'center',width:60,height:60,alignContent:'center',justifyContent:"center"}} >
 <Image source={IMAGES.EditReport} style={styles.logo} />
 
 </View>
 <Text style={styles.Left500Text}>Edit</Text>
 
+</TouchableNativeFeedback>
+
+) : (
+  <>
+<TouchableNativeFeedback style = {{alignItems:'center'}}
+onPress={handleSavePress}
+
+>
+<View style={{backgroundColor:COLORS.primary,borderRadius:10,alignItems:'center',width:60,height:60,alignContent:'center',justifyContent:"center"}} >
+<Image source={IMAGES.saveIcon} style={styles.logo} />
+
 </View>
+<Text style={styles.Left500Text}>Save</Text>
+
+</TouchableNativeFeedback>
+<TouchableNativeFeedback style = {{alignItems:'center'}}
+onPress={handleCancelPress}
+
+>
+<View style={{backgroundColor:COLORS.red,borderRadius:10,alignItems:'center',width:60,height:60,alignContent:'center',justifyContent:"center"}} >
+<Image source={IMAGES.closeIcon} style={styles.logo} />
+
 </View>
+<Text style={styles.Left500Text}>Cancel</Text>
+
+</TouchableNativeFeedback>
+</>
+  )}
+  
+  </View>
 <TouchableOpacity 
           onPress={handleexpanded2Press} 
           style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,alignContent:'left',borderTopLeftRadius: 10,borderTopRightRadius: 10}]}>
@@ -303,11 +635,62 @@ const listData = [
               {expanded2 && (
 
 <React.Fragment>
+<View style={{width:wp('90%'),alignSelf:'center',flex:1}}>
+<View style={styles.rowList}>
+        <Text style={styles.Left500RegularText}>{'Opening Balance:'}</Text>
+        <Text style={styles.Left500BOLDText}>{CostumerDetails?.OpeningBalance != null ? CostumerDetails?.OpeningBalance : '$0.00'}</Text>
+  
+        </View>
+        <View style={styles.hr}></View>
+        <View style={styles.rowList}>
+        <Text style={styles.Left500RegularText}>{'RegCharges:'}</Text>
+        <Text style={styles.Left500BOLDText}>{CostumerDetails?.RegCharges != null ? CostumerDetails?.RegCharges : '$0.00'}</Text>
+  
+        </View>
+        {/* <View style={styles.hr}></View>
+        <View style={styles.rowList}>
+        <Text style={styles.Left500RegularText}>{'Un-cleared Parcels:'}</Text>
+        <Text style={styles.Left500BOLDText}>{'$20.00 ( frieght, Customs Duty )'}</Text>
+  
+        </View> */}
+
+<View style={styles.hr}></View>
+        <View style={styles.rowList}>
+        <Text style={styles.Left500RegularText}>{'Running Balance:'}</Text>
+        <Text style={styles.Left500BOLDText}>{CostumerDetails?.RunningBalance != null ? CostumerDetails?.RunningBalance : '$0.00'}</Text>
+  
+        </View>
+
+        <View style={styles.hr}></View>
+        <View style={styles.rowList}>
+        <Text style={styles.Left500RegularText}>{'Sub Charges:'}</Text>
+        <Text style={styles.Left500BOLDText}>{CostumerDetails?.SubsCharges != null ? CostumerDetails?.SubsCharges : '$0.00'}</Text>
+  
+        </View>
+        <View style={styles.hr}></View>
+        <View style={styles.rowList}>
+        <Text style={styles.Left500RegularText}>{'Customs Duty:'}</Text>
+        <Text style={styles.Left500BOLDText}>{CostumerDetails?.CustomsCost != null ? CostumerDetails?.CustomsCost : '$0.00'}</Text>
+  
+        </View>
 
 
-
+        <View style={styles.hr}></View>
+        <View style={styles.rowList}>
+        <Text style={styles.Left500RegularText}>{'Frieght:'}</Text>
+        <Text style={styles.Left500BOLDText}>{CostumerDetails?.FreightCost != null ? CostumerDetails?.FreightCost : '$0.00'}</Text>
+  
+        </View>
+        <View style={styles.hr}></View>
+        <View style={styles.rowList}>
+        <Text style={styles.Left500RegularText}>{'Closing Balance:'}</Text>
+        <Text style={styles.Left500BOLDText}>{CostumerDetails?.ClosingBalance != null ? CostumerDetails?.ClosingBalance : '$0.00'}</Text>
+  
+        </View>
+     
+        </View>
 <FlatList
-          data={listData}
+          data={AccountHistoryList}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <CustomListItem item={item} />}
         /> 
@@ -316,13 +699,13 @@ const listData = [
 )}
 
       
-        <View style = {{width:wp('90%')}}>
+        {/* <View style = {{width:wp('90%')}}>
       
 <CustomButtons
         onBackPress={handleBackPress}
         onNextPress={handleNextPress}
       />
-        </View>
+        </View> */}
 
 
 
@@ -336,48 +719,97 @@ const listData = [
 
   );
 }
+
 const CustomListItem = ({ item }) => {
+  const {dispatch} = useRedux();
+const navigation = useNavigation()
+  const dateTime = item?.TransactionDate.split(' ');
+const date = dateTime[0];
+const time = dateTime[1] + ' ' + dateTime[2];
+const receiptNotes = item?.ReceiptNotes;
+
+// Replace <br/> with newline character \n
+const updatedReceiptNotes = receiptNotes.replace(/<br\s*[/]?>/gi, '\n');
+//http://localhost:3480/api/AccountDetailsApi/ViewTransationReportGrid?Tid=77807&tType=HS 
+
+const handlPrintHistoryRow = () => {
+  //?CustomerId=4236&AccountId=3671&type=Hs
+  console.log('HIIII')
+
+    let data = {
+      Tid: item.TransactionId,//userData?.userID,
+      type:"HS"
+    };
+    console.log('dataaaaaaar',data)
+  
+    dispatch(PrintTransactionReportSlice(data))
+      .unwrap()
+      .then(res => {
+        console.log("res?",res)
+         if  (res?.statusCode == 200){
+          navigation.navigate(SCREENS.PDFViewer,{item :res?.downloadLink });
+
+        }else{
+          utills.errorAlert(res?.message)
+        }
+  
+      })
+      .catch(e => {
+        //  setLoading(false);
+      });
+  };
+
+
+
     return (
     <View >
       <View style={{width:wp('90%'),alignSelf:'center'}}>
-        <View style={styles.rowList}>
-        <Text style={styles.Left500RegularText}>{'Opening Balance:'}</Text>
-        <Text style={styles.Left500BOLDText}>{'$10.50'}</Text>
-  
-        </View>
-        <View style={styles.hr}></View>
-        <View style={styles.rowList}>
-        <Text style={styles.Left500RegularText}>{'Membership Dues:'}</Text>
-        <Text style={styles.Left500BOLDText}>{'$10.50'}</Text>
-  
-        </View>
-        <View style={styles.hr}></View>
-        <View style={styles.rowList}>
-        <Text style={styles.Left500RegularText}>{'Un-cleared Parcels:'}</Text>
-        <Text style={styles.Left500BOLDText}>{'$20.00 ( frieght, Customs Duty )'}</Text>
-  
-        </View>
-        <View style={styles.hr}></View>
-        <View style={styles.rowList}>
-        <Text style={styles.Left500RegularText}>{'Closing Balance:'}</Text>
-        <Text style={styles.Left500BOLDText}>{'$92.79'}</Text>
-  
-        </View>
      
         <View style={styles.hr}></View>
+        {/* {(item.TransactionTypeId === "2" || item.TransactionTypeId === "5" || item.TransactionTypeId === "6" || item.TransactionTypeId === "7" || item.TransactionTypeId === "8" || item.TransactionTypeId === "12") && ( */}
+        {/* {(item.OnlinePayAmount != "") && ( */}
+        {/* {(item.TransactionTypeId === "2" || item.TransactionTypeId === "5" || item.TransactionTypeId === "6" || item.TransactionTypeId === "7" || item.TransactionTypeId === "8" || item.TransactionTypeId === "12") && ( */}
+       
+       {(item.TransactionTypeId != "10" && item.TransactionTypeId != "9" && item.TransactionTypeId != "4" && item.TransactionTypeId != "3" && item.TransactionTypeId != "1" && item.TransactionTypeId != "11" )&& (
+       
+       <View style={styles.rowList2}>
+        <Text style={styles.Left500TextMedum}>{}</Text>
+
+        <TouchableNativeFeedback
+        onPress={handlPrintHistoryRow} 
+
+        style={{backgroundColor:COLORS.primary,borderRadius:7,alignItems:'center',width:30,height:30,alignContent:'center',justifyContent:"center"}} >
+<Image source={IMAGES.PrintReport} style={{
+    width: 18,
+    height: 18,
+  }} />
+
+</TouchableNativeFeedback>      
+     
+        </View>
+
+)}
+
+
 
         <View style={styles.rowList2}>
         <View style={styles.rowAA}>
        < History_Icon1></History_Icon1>
-{/* <Image source={IMAGES.Cal_icon1} style={{width:24,height:24,resizeMode:'contain'}} /> */}
-     <Text style={styles.Left500TextMedum}>{'17-07-2023'}</Text>
-  
+
+<View>
+  <Text style={styles.Left500TextMedum}>{date}</Text>
+  <Text style={styles.Left500TextMedum}>{time}</Text>
+</View>
         </View>  
         <View style={styles.rowAA}>
         {/* <Image source={IMAGES.cod_icon2} style={{width:24,height:24,resizeMode:'contain'}} /> */}
         < History_Icon2 />
 
-    <Text style={styles.Left500TextMedum}>{'Cash on delivery'}</Text>
+    <Text style={styles.Left500TextMedum}
+    
+    >{item.TransactionType + "-" +item.EntryType}
+    
+    </Text>
   
         </View>
 
@@ -390,7 +822,10 @@ const CustomListItem = ({ item }) => {
         < History_Icon3 />
 
     
-     <Text style={styles.Left500TextMedum}>{'#45677'}</Text>
+     <Text style={styles.Left500TextMedum}
+         >{item.RefCustomerName}
+         
+    </Text>
   
         </View>  
         <View style={styles.rowAA}>
@@ -401,27 +836,28 @@ const CustomListItem = ({ item }) => {
 
     
             
-    <Text style={styles.Left500TextMedum}>{'P278345'}</Text>
+    <Text style={styles.Left500TextMedum}>{item.ParcelsList}</Text>
   
         </View>
 
         </View>
 
+
+
         <View style={styles.rowList2}>
         <View style={styles.rowAA}>
-        {/* <Image source={IMAGES.Doc_icon5} style={{width:24,height:24,resizeMode:'contain'}} /> */}
         < History_Icon5 />
 
 
 
-     <Text style={styles.Left500TextMedum}>{'R56747'}</Text>
+     <Text style={styles.Left500TextMedum}>{item.TransactionId}</Text>
   
         </View>  
         <View style={styles.rowAA}>
         {/* <Image source={IMAGES.Wallet_icon6} style={{width:24,height:24,resizeMode:'contain'}} /> */}
         < History_Icon6 />
 
-    <Text style={styles.Left500TextMedum}>{'$45'}</Text>
+    <Text style={styles.Left500TextMedum}>{item.TotalAmount}</Text>
   
         </View>
 
@@ -435,18 +871,18 @@ const CustomListItem = ({ item }) => {
         < History_Icon7 />
 
     
-     <Text style={styles.Left500TextMedum}>{'Eva Hodge'}</Text>
+     <Text style={styles.Left500TextMedum}>{item.CashierName}</Text>
   
         </View>  
         <View style={styles.rowAA}>
         < History_Icon8 />
 
-    <Text style={styles.Left500TextMedum}>{'Rudy Webster'}</Text>
+    <Text style={styles.Left500TextMedum}>{item.ReceivedByName}</Text>
   
         </View>
 
         </View>
-        <Text style={[styles.Left500TextMedum,{paddingHorizontal:10,marginBottom:25}]}>{'Lorem lpsum is simply dummy text of the printing and type typesetting industry.'}</Text>
+        <Text style={[styles.Left500TextMedum,{paddingHorizontal:10,marginBottom:25}]}>{updatedReceiptNotes}</Text>
 
       </View>
       <View style={styles.hr2}></View>
@@ -532,7 +968,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
 justifyContent:'space-around',
 marginVertical:30,
-paddingHorizontal:20,
+// paddingHorizontal:20,
 width:wp('90%')
 },
   col12: {
@@ -558,8 +994,8 @@ width:wp('90%')
     
   },
   logo: {
-    width: 40,
-    height: 40,
+    width: 32,
+    height: 32,
   },
   logo1: {
     height: 120,

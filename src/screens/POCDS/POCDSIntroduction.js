@@ -11,12 +11,15 @@ import { useEffect,useState } from 'react';
 import GradientBackground from '../../components/GradientBackground';
 import HeaderWithBackButton from '../../components/HeaderWithBackButton';
 import CustomBlueButton from '../../components/CustomBlueButton';
+import { useRoute } from '@react-navigation/native';
 
 export default function POCDSIntroduction({navigation}) {
-  
+  const route = useRoute();
+
+  const {Params1 } = route.params;
 
 useEffect(() => {
-console.log("HIIII")
+
   return () => {
    
   };
@@ -177,7 +180,7 @@ const handlePress = () => {
           {/* </ScrollView> */}
           <CustomBlueButton
           title="Sign up"
-          onPress={() => navigation.navigate(SCREENS.POCDSIntroductionSecond)}
+          onPress={() => navigation.navigate(SCREENS.POCDSIntroductionSecond,{Params1:Params1})}
          
           textStyle={{fontFamily :FONTFAMILY.Bold,
             fontSize: rf(2.0)}} // Custom text style

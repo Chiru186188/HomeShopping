@@ -30,11 +30,11 @@ function EditTextWithLable(props) {
   const hasAsterisk = props.label.includes('*');
   useEffect(() => {
     if (hasAsterisk) {
-      console.log(props.label)
+      // console.log(props.label)
       const modifiedString = props.label.replace('*', "");
-console.log(modifiedString);
+// console.log(modifiedString);
       props.label = modifiedString
-      console.log(props.label)
+      // console.log(props.label)
       setchngedLabl(modifiedString)
     }
   }, [props.label, hasAsterisk]);

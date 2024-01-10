@@ -37,7 +37,10 @@ const CustomHeader = ({onPress, title}) => {
     />
       </TouchableOpacity>
 
-      <Text style={styles.text1}>{title}</Text>
+      <Text
+      numberOfLines={2}
+      ellipsizeMode='tail'
+      style={styles.text1}>{title}</Text>
 
       <TouchableOpacity
         style={styles.container}

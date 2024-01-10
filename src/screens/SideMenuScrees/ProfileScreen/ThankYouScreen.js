@@ -22,7 +22,7 @@ import CustomHeader from '../../../components/CustomHeader';
 export default function ThankYouScreen({navigation}) {
  
 useEffect(() => {
-console.log("HIIII")
+
   return () => {
    
   };

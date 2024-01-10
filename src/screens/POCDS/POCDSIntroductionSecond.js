@@ -12,16 +12,20 @@ import GradientBackground from '../../components/GradientBackground';
 import HeaderWithBackButton from '../../components/HeaderWithBackButton';
 import CustomRadioButtons from '../../components/CustomRadioButtons';
 import CustomButtons from '../../components/CustomButtons';
+import { useRoute } from '@react-navigation/native';
 // import CustomRadioButtons from '../../components/CustomRadioButtons';
 
 export default function POCDSIntroductionSecond({navigation}) {
  
 useEffect(() => {
-console.log("HIIII")
+
   return () => {
    
   };
 }, []);
+const route = useRoute();
+
+  const {Params1 } = route.params;
 const [selectedOption, setSelectedOption] = useState(null);
 
   const options = [
@@ -39,7 +43,7 @@ const [selectedOption, setSelectedOption] = useState(null);
   
   const handleNextPress = () => {
     // Add your logic for the "Next" button action here
-     navigation.navigate(SCREENS.POCDSAccountDetails1)
+     navigation.navigate(SCREENS.POCDSAccountDetails1,{Params1:Params1})
   };
 const handlePress = () => {
 };

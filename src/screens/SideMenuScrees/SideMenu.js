@@ -16,6 +16,7 @@ import Icons, { Icon } from '../../components/Icons';
 import CustomHeader from '../../components/CustomHeader';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
+import utills from '../../utills';
 
 export default function SideMenu({navigation}) {
   const [email, setemail] = useState('');
@@ -24,7 +25,7 @@ export default function SideMenu({navigation}) {
   const userData = useSelector(state => state.auth.userData);
 
 useEffect(() => {
-console.log("HIIII")
+
   return () => {
    
   };
@@ -47,8 +48,9 @@ const menus = [
       imageSource: IMAGES.HSServiceIcon,
       subMenuItems: [
         { label: 'Hs Package status & Invoice upload', imageSource: IMAGES.HSPSinvoiveicon },
-        { label: 'Account Details', imageSource: IMAGES.AccountDetailsicon },
-        // Add more submenu items as needed
+        { label: 'New Subscriptions', imageSource: IMAGES.HSPSinvoiveicon },
+        { label: 'Account Summary', imageSource: IMAGES.AccountDetailsicon },
+        // Add more submenu items as neededAccountSummary
       ],
     },
     {
@@ -75,7 +77,13 @@ const menus = [
         subMenuItems: [
           { label: 'User Profile', imageSource: IMAGES.UserProfileIcon },
           { label: 'Change Password', imageSource: IMAGES.CPIcon },
-          { label: 'Logout', imageSource: IMAGES.LogutIcon },
+        ],
+      },
+      {
+        label: 'Logout',
+        imageSource: IMAGES.LogutIcon,
+        subMenuItems: [
+         
         ],
       },
   
@@ -93,9 +101,11 @@ const menus = [
   }} />
 
   <View>
-  <Text style={styles.txt}>{userData.firstName + " " + userData.lastName}</Text>
-  <Text style={styles.txt1}>{userData.email}</Text>
+  <Text style={styles.txt}>{userData?.firstName + " " + userData?.lastName}</Text>
+  <Text style={styles.txt1}>{userData?.email}</Text>
 
+{/* <Text style={styles.txt}>Marcia & Alwyn</Text>
+  <Text style={styles.txt1}>marciar@caribcable.com</Text> */}
 
   </View>
   <View style={{alignSelf:'flex-start'}}>
@@ -141,6 +151,8 @@ const menus = [
 
 const CustomMenu = ({ label, imageSource, subMenuItems }) => {
 const navigation = useNavigation()
+const userData = useSelector(state => state.auth.userData);
+
   const TapSubMenu= (ItemName) => {
 
     if(ItemName==="Home Shopping parcel & Subscriptions"){
@@ -160,8 +172,8 @@ const navigation = useNavigation()
     else  if(ItemName==="User Profile"){
       navigation.replace(SCREENS.Userprofile);
     }
-    else  if(ItemName==="Account Details"){
-      navigation.replace(SCREENS.HSAccountDetail);
+    else  if(ItemName==="Account Summary"){
+      navigation.replace(SCREENS.AccountSummary);
     }
     else  if(ItemName==="Logout"){
       navigation.replace(SCREENS.WelcomScreen);
@@ -170,7 +182,26 @@ const navigation = useNavigation()
       navigation.replace(SCREENS.ChangePassword);
     }
     else  if(ItemName==="Hs Package status & Invoice upload"){
-      navigation.replace(SCREENS.SelectedServices);
+      navigation.replace(SCREENS.HSInvoiceUplaodpackages);
+
+    }
+    else  if(ItemName==="New Subscriptions"){
+      let Getdata = {
+        FirstName:userData?.firstName,
+    LastName:userData?.lastName,
+    DOB:utills.getDateBeforeT(userData?.dob),
+    Gender:userData?.gender,
+    Address:userData?.address,
+    POBox:userData?.poBox,
+    Email:userData?.email,
+    IRD:userData?.ird,
+    Password:"",
+    ConfirmPassword:"",
+    PhoneNumber:userData?.phoneNumber,
+    UserId:userData?.userID,
+      };
+      // navigation.navigate(SCREENS.SelectServicesSubscription,{Params1 : Getdata})
+      navigation.replace(SCREENS.SelectServicesSubscription,{Params1 : Getdata});
     }
   };
   const TapbMenu= (ItemName) => {
@@ -178,7 +209,10 @@ const navigation = useNavigation()
     if(ItemName==="Home"){
       navigation.replace(SCREENS.DashBoard);
     } else  if(ItemName==="Contact Us"){
-      navigation.replace(SCREENS.DashBoard);
+      navigation.replace(SCREENS.ContactUs);
+    }
+    else  if(ItemName==="Logout"){
+      navigation.replace(SCREENS.WelcomScreen);
     }
    else{
       setIsExpanded(!isExpanded)
@@ -267,7 +301,7 @@ paddingVertical:30
   },
   txt: {
     fontFamily: FONTFAMILY.Bold,
-    fontSize: rf(2.3),
+    fontSize: rf(2.0),
     color: COLORS.Heading,
     textAlign: 'left',
     marginTop: hp('1.8%'),
@@ -283,7 +317,7 @@ paddingVertical:30
   },
   txt1: {
     fontFamily: FONTFAMILY.SemiBold,
-    fontSize: rf(2.0),
+    fontSize: rf(1.8),
     color: COLORS.white,
     textAlign: 'left',
   },

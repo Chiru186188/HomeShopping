@@ -29,7 +29,7 @@ export default function PostOfficeBox({navigation}) {
   const [isChecked, setIsChecked] = useState(false);
 
 useEffect(() => {
-console.log("HIIII")
+
   return () => {
    
   };

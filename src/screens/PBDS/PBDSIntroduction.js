@@ -12,11 +12,16 @@ import GradientBackground from '../../components/GradientBackground';
 import HeaderWithBackButton from '../../components/HeaderWithBackButton';
 import CustomBlueButton from '../../components/CustomBlueButton';
 import Icons, { Icon } from '../../components/Icons';
+import { useRoute } from '@react-navigation/native';
 
 export default function PBDSIntroduction({navigation}) {
-  
+  const route = useRoute();
+
+  const {Params1 } = route.params;
+
+
 useEffect(() => {
-console.log("HIIII")
+
   return () => {
    
   };
@@ -36,8 +41,8 @@ const handlePress = () => {
 
           <View style={styles.col11}>
             <Text style={styles.Heading}>
-            Private Bag Delivery Service Please {' '}
-              <Text style={styles.textDanger}>click</Text> here to sign up
+            Private Bag Delivery Service{' '}
+              {/* <Text style={styles.textDanger}>Please click</Text> here to sign up */}
             </Text>
           </View>
           
@@ -47,7 +52,7 @@ const handlePress = () => {
             <Image source={IMAGES.PBDSlogo} style={styles.image} />
             <Text style={[styles.Left500Text,{margin:16}]}>This service is targeted specifically to our business clientele who require on time delivery and collection of their important mail.
 
-</Text>
+            </Text>
 
 
           
@@ -92,7 +97,7 @@ const handlePress = () => {
           {/* </ScrollView> */}
           <CustomBlueButton
           title="Sign up"
-          onPress={() => navigation.navigate(SCREENS.PBDSAccountDetails1)}
+          onPress={() => navigation.navigate(SCREENS.PBDSAccountDetails1,{Params1 :Params1})}
          
           textStyle={{fontFamily :FONTFAMILY.Bold,
             fontSize: rf(2.0)}} // Custom text style

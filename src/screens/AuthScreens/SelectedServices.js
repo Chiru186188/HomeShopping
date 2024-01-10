@@ -41,7 +41,7 @@ export default function SelectedServices({navigation}) {
     setSelectedService(service);
   };
 useEffect(() => {
-console.log("HIIII")
+
   return () => {
    
   };

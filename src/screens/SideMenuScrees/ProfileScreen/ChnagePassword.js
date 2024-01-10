@@ -18,12 +18,13 @@ import CustomButtonsBAndS from '../../../components/CustomButtonsBAndS';
 import { useRoute } from '@react-navigation/native';
 import CustomHeader from '../../../components/CustomHeader';
 import { ChangePasswordSlice } from '../../../redux/slice/auth';
+import useRedux from '../../../components/useRedux';
 // import CustomRadioButtons from '../../../components/CustomRadioButtons';
 
 export default function ChangePassword({navigation}) {
  
 useEffect(() => {
-console.log("HIIII")
+
   return () => {
    
   };
@@ -45,6 +46,7 @@ const [NCpwd, setNCpwd] = useState('');
     // Add your logic for the "Next" button action here
    // Changepwd()
   };
+  const {dispatch} = useRedux();
 
 
   const Changepwd = async () => {
@@ -57,7 +59,7 @@ const [NCpwd, setNCpwd] = useState('');
       utills.errorAlert('', 'Invalid Code');
       return;
     }
-    if (utills.isEmptyOrSpaces(pwd)) {
+    if (utills.isEmptyOrSpaces(Cpwd)) {
       utills.errorAlert('', 'Please Enter Password');
       return;
     }
@@ -65,7 +67,7 @@ const [NCpwd, setNCpwd] = useState('');
       utills.errorAlert('', 'Please Enter New Password');
       return;
     }
-    if (pwd.length < 6) {
+    if (Cpwd.length < 6) {
       utills.errorAlert('Invalid Password! ', 'It should be minimum 6 Digit');
       return;
     }
@@ -73,7 +75,7 @@ const [NCpwd, setNCpwd] = useState('');
       utills.errorAlert('Invalid Password! ', 'It should be minimum 6 Digit');
       return;
     }
-    if (pwd != Npwd) {
+    if (NCpwd != Npwd) {
       utills.errorAlert('', 'Password Should be Same as New Password');
       return;
     }
@@ -90,7 +92,7 @@ const [NCpwd, setNCpwd] = useState('');
 
 
     };
-console.log('data',data)
+
    
     
     dispatch(ChangePasswordSlice(data))

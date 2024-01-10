@@ -17,7 +17,7 @@ import CustomButtons from '../../components/CustomButtons';
 export default function EMSIntroductionSecond({navigation}) {
  
 useEffect(() => {
-console.log("HIIII")
+
   return () => {
    
   };

@@ -18,6 +18,17 @@ class utils {
       {cancelable: false},
     );
   }
+  confirmMessageAlert(title, msg,) {
+    Alert.alert(
+      title,
+      msg,
+      [
+        
+        {text: 'Ok', onPress: () =>'success' },
+      ],
+      {cancelable: false},
+    );
+  }
 
 
    saveStringToAsyncStorage = async (key, value) => {
@@ -174,6 +185,22 @@ class utils {
       }
     return str.join('&');
   }
+
+
+
+  getDateBeforeT(dateTimeString) {
+    // console.log("dateTimeString",dateTimeString)
+
+    const components = dateTimeString?.split('T');
+    // console.log("components",components)
+    if (components?.length > 0) {
+      return components[0];
+    } else {
+      return null; // Invalid date format
+    }
+  }
+
+  
   getTimeAgoString(givenDateString) {
     const givenDate = new Date(givenDateString);
     const currentDate = new Date(); // Current date

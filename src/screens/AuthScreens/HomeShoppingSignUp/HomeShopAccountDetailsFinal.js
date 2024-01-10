@@ -25,18 +25,26 @@ export default function HomeShopAccountDetailsFinal({navigation}) {
  
 useEffect(() => {
 console.log("HIIII",Params1)
+console.log("LoginParam",LoginParam)
+
+const currentDate = new Date(); // Create a new Date object representing the current date and time
+const dateString = currentDate.toISOString().split('T')[0]; // Convert to ISO format and extract the date part
+
+console.log(dateString);
+setAppliDate(dateString)
+setApplicantName(Params1.firstName + " " + Params1.surname)
+setApplicantSign(Params1.firstName)
   return () => {
    
   };
 }, []);
 const [selectedOption, setSelectedOption] = useState(null);
 
- const [ApplicantSign, setApplicantSign] = useState('');
- const route = useRoute();
- const { From ,Params1} = route.params;
-const [ApplicantName, setApplicantName] = useState('');
+const [ApplicantSign, setApplicantSign] = useState();
+const route = useRoute();
+const { From ,Params1,LoginParam} = route.params;
+const [ApplicantName, setApplicantName] =  useState();
 const [AppliDate, setAppliDate] = useState('');
-
 const {dispatch} = useRedux();
 
   const handleBackPress = () => {
@@ -74,15 +82,24 @@ const {dispatch} = useRedux();
       let data = {
         applicantName: ApplicantName,
         applicantSign: ApplicantSign,
-        date: "20/11/2023",
+        date: AppliDate,
         authPerson : ApplicantName,
-        oceanfreight:selectedOption
+        oceanfreight:selectedOption,
+        userId:LoginParam.UserId
       };
      console.log('value==33', data);
-     
-
-      const mergedParams = { ...Params1, ...data };
+     const mergedParams = { ...Params1, ...data };
       console.log('mergedParams',mergedParams)
+
+      // if (From === "HS"){
+      //   navigation.navigate(SCREENS.CartValueScreen,{From :"HS",Service:'Home Shopping'})
+
+      // }else{
+      //   navigation.navigate(SCREENS.CartValueScreen,{From :"EZ",Service:'E-Zone'})
+
+      // }
+
+
     // navigation.navigate(SCREENS.DashBoard);
       if (From === "HS")
 {
@@ -90,10 +107,10 @@ const {dispatch} = useRedux();
   .unwrap()
   .then(res => {
     console.log('Register res==', res);
-    if (res.statusCode == 200){
-      navigation.navigate(SCREENS.DashBoard);
+    if (res.status == true){
+      navigation.navigate(SCREENS.CartValueScreen,{From :"HS",Service:'Home Shopping',userID:LoginParam.UserId})
     }else{
-      utills.errorAlert('', res.message);
+      utills.errorAlert('', res.msg);
       return;
     }
   });
@@ -103,7 +120,7 @@ const {dispatch} = useRedux();
   .then(res => {
     console.log('Register res==', res);
     if (res.statusCode == 200){
-      navigation.navigate(SCREENS.DashBoard);
+      navigation.navigate(SCREENS.CartValueScreen,{From :"EZ",Service:'E-Zone',userID:LoginParam.UserId})
     }else{
       utills.errorAlert('', res.message);
       return;
@@ -375,6 +392,7 @@ const styles = StyleSheet.create({
     color: COLORS.CancelRED,
     fontSize:rf(1.8),
     fontFamily: FONTFAMILY.Medium,
+    //textAlign:'justify'
   },
   textblue: {
     color: COLORS.brightBLUE,
