@@ -186,7 +186,7 @@ const handleNextPress = async () => {
       HomeMobile:homePhone,
       WorkMobile:workphone,
       PhoneNumber:MobilePhone,
-      AccountNo:EZACCOUNT,
+      eZoneAcctNo:EZACCOUNT,
 
     };
 
@@ -239,7 +239,7 @@ const handleNextPress = async () => {
       placeholder="Enter EZone Account"
       />
     </View>
-) :             <Image source={IMAGES.Ezone1} style={styles.logo1} />
+) :             null
 }
 
 <View style={{alignSelf:'flex-start'}}>

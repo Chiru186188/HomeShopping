@@ -145,6 +145,33 @@ export const RegisterSliceHS = createAsyncThunk(
     },
   );
 
+  export const RegisterEZONESLICE = createAsyncThunk(
+    API_URL.LOGINEZONEACC,
+    async (data, thunk) => {
+      try {
+        thunk.dispatch(saveIsLoading(true));
+        const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
+        const extraHeaders = {
+          Authorization: `Bearer ${accessToken}`,
+        };
+        const response = await requestPost(API_URL.LOGINEZONEACC, data,true,extraHeaders);
+        console.log('response',response)
+        thunk.dispatch(saveIsLoading(false));
+        return response;
+      } catch (error) {
+        thunk.dispatch(saveIsLoading(false));
+     
+       console.log('RegisterEZONESLICE error', error);
+           
+              console.log('RegisterEZONESLICE error.response.data.message', error.response.data.message);
+
+       utillsJs.errorAlert('',error.response.data.message)
+        throw error;
+      }
+    },
+  );
+
+
   export const RegisterSlicePBDS = createAsyncThunk(
     API_URL.SIGNUPPBDS,
     async (data, thunk) => {

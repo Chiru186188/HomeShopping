@@ -17,11 +17,16 @@ import CustomHeader from '../../components/CustomHeader';
 import { ScrollView } from 'react-native-gesture-handler';
 import CustomButtons from '../../components/CustomButtons';
 import CustomButtonsBAndP from '../../components/CustomButtonsBAndP';
+import { RegisterEZONESLICE } from '../../redux/slice/auth';
+import { useSelector } from 'react-redux';
+import utills from '../../utills';
+import useRedux from '../../components/useRedux';
 
 export default function EZonepayment({navigation}) {
-  const [account, setaccount] = useState('');
-  const [RefNo, setRefNo] = useState('');
+  const [account, setaccount] = useState('atul1000000@gmail.com');
+  const [Passsword, setPasssword] = useState('Admin@123');
   const [isChecked, setIsChecked] = useState(false);
+  const {dispatch} = useRedux();
 
 useEffect(() => {
 
@@ -38,9 +43,42 @@ const handleBackPress = () => {
   navigation.goBack()
 };
 
+const userData = useSelector(state => state.auth.userData);
+
 const handleNextPress = () => {
   // Add your logic for the "Next" button action here
-  navigation.navigate(SCREENS.PaymentGatwayScreen)
+
+  if (utills.isEmptyOrSpaces(account)) {
+    utills.errorAlert('', 'Please Enter Account Number');
+     return;
+   }
+ 
+   if (utills.isEmptyOrSpaces(Passsword)) {
+    utills.errorAlert('', 'Please Enter Passsword');
+     return;
+   }
+  
+   let data = {
+    // ApplicantName: ApplicantName,
+    // ApplicantSign: ApplicantSign,
+    UserID :userData?.userID,
+    UserName: account,
+    Password :Passsword,
+    
+    
+   
+  };
+ console.log('value==33', data);
+ //navigation.navigate(SCREENS.CartValueScreen,{From :"PBDS",Service:'Private Bag Delivery Service'})
+
+dispatch(RegisterEZONESLICE(data))
+.unwrap()
+.then(res => {
+console.log('RegisterEZONESLICE res==', res);
+
+});
+ 
+
 };
 const GoToNext = () => {
 }
@@ -73,9 +111,9 @@ const GoToNext = () => {
       />
        <EditTextWithLable
         label="Password *"
-        placeholder="Enter Reference No/Note Description"
-        value={RefNo}
-        onChangeText={setRefNo}
+        placeholder="Enter Password"
+        value={Passsword}
+        onChangeText={setPasssword}
         keyboardType="default"
       />
 

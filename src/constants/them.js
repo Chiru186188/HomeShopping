@@ -2198,7 +2198,8 @@ export const API_URL = {
   SIGNUPEZ: 'AccountApi/EzoneRegisterApiAsync14',
   SIGNUPPOBOX: 'AccountApi/PostOfficeBoxRegisterApiAsync14',
   SIGNUPPBDS: 'AccountApi/PBDSRegisterApiAsync14',
-  
+  LOGINEZONEACC: 'PayOnlineApi/PaymentsEzoneModalSubmit',
+
   SubscriptionServices: 'SubsacriptionsApi/GetIndex12?UserId=',
   GetRedirectPaymentResponse: 'PayOnlineApi/GetRedirectPaymentResponse11?',
   GetCustomerAllTransaction: 'AccountDetailsApi/GetCustomerAllTransaction3',
