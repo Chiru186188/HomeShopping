@@ -58,9 +58,11 @@ useFocusEffect(
 
     <View style={styles.container}>
     <Image source={IMAGES.logoHS} style={{
-    width: 130,
-    height: 130,
-  }} />
+    width: 150,
+    height: 150,
+    resizeMode: 'contain'
+  }} 
+  />
 
       <View>
         {/* <Logoimage style={{alignSelf: 'center'}} /> */}
@@ -86,6 +88,8 @@ useFocusEffect(
         <CustomBlueButton
           title="Sign up"
           onPress={() => navigation.navigate(SCREENS.RegistrationPage)}
+          IconName={"input"}
+
           buttonStyle={styles.signUpButton} // Custom button style
           textStyle={{fontFamily :FONTFAMILY.Bold,
             fontSize: rf(2.0)}} // Custom text style
@@ -93,6 +97,8 @@ useFocusEffect(
         <CustomBlueButton
           title="Login"
           onPress={() => navigation.navigate(SCREENS.LoginScreen)}
+          IconName={"login"}
+
           buttonStyle={styles.loginButton} // Custom button style
           textStyle={{fontFamily :FONTFAMILY.Bold,
             fontSize: rf(2.0)}}         />

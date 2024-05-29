@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View,Platform, Linking,NativeModules, Image, TouchableOpacity, ScrollView, FlatList} from 'react-native';
+import {StyleSheet, Text, View,Platform, Linking,NativeModules, Image, TouchableOpacity, ScrollView, FlatList, ActivityIndicator} from 'react-native';
 import React from 'react';
  import {COLORS, CONSTANTS, FONTFAMILY, IMAGES, SCREENS, SIZES, STYLES} from '../../../constants/them';
 import {
@@ -34,7 +34,7 @@ import {
   
 } from '../../../components/Svg';
 import { useSelector } from 'react-redux';
-import { EditPBDSCustomerDetailsSlice, PrintReportSlice, PrintTransactionReportSlice, getAccountHistorySlice, getCustomerDetailsSlice, getPBDSAccountHistorySlice, getPBDSCustomerDetailsSlice, getRBCustomerDetailsSlice, getRZAccountHistorySlice } from '../../../redux/slice/categories';
+import { EditPBDSCustomerDetailsSlice, PrintReportSlice, PrintTransactionReportSlice, getAccountHistorySlice, getCustomerDetailsSlice, getPBDSAccountHistorySlice, getPBDSCustomerDetailsSlice, getRBCustomerDetailsSlice, getRZAccountHistorySlice, savePBDSAccountHistory, savePBDSCostumerDetails } from '../../../redux/slice/categories';
 import useRedux from '../../../components/useRedux';
 import utills from '../../../utills';
 import TouchableNativeFeedback from '../../../components/TouchableNativeFeedback';
@@ -67,23 +67,29 @@ const [openLocation, setOpenLocation] = useState(false);
 const [valueLocation, setValueLocation] = useState(null);
 const [itemsLocation, setItemsLocation] = useState([
 ]);
+
+const [currentPage, setCurrentPage] = useState(1);
+const [totalRecords, setTotalRecords] = useState(0);
+const [loading, setLoading] = useState(false);
+
+
+
+
 useEffect(() => {
+  dispatch(savePBDSCostumerDetails(null))
+
   getCustomerdata()
   return () => {
-   
+    dispatch(savePBDSAccountHistory(null))
   };
 }, []);
 
 const handlPrintHistory = () => {
-//?CustomerId=4236&AccountId=3671&type=Hs
-
   let data = {
     CustomerId: CustId,//userData?.userID,
     AccountId:AccountId,
     type:"Pbds"
   };
-  //console.log('dataaaaaaar',data)
-
   dispatch(PrintReportSlice(data))
     .unwrap()
     .then(res => {
@@ -97,34 +103,26 @@ const handlPrintHistory = () => {
 
     })
     .catch(e => {
-      //  setLoading(false);
     });
 };
 
 const getCustomerdata = () => {
- // console.log('FromID',FromID)
 
   let data = {
     Id: userData?.userID,
 
   };
-  //console.log('dataaaaaaar',data)
-
   dispatch(getPBDSCustomerDetailsSlice(data))
     .unwrap()
     .then(res => {
       console.log("res?",res)
 
-    //   console.log("res?.aaData?.OpeningAmount",res?.aaData?.OpeningAmount)
-
-   
      const formattedItems = res?.CusId?.map((item) => ({
       label: item.Text,
       value: item.Value,
     }));
 
-   // console.log("formattedItems",formattedItems)
-    setItems(formattedItems);
+  setItems(formattedItems);
 
     if (res?.CusId?.length > 0){
   setValue(res?.CusId[0]?.Value)
@@ -134,28 +132,12 @@ const getCustomerdata = () => {
       label: item.Text,
       value: item.Value,
     }));
-
-   // console.log("formattedItems",formattedItems2)
     setitemsStatusMenu(formattedItems2);
     console.log("res?.aaData?.AccountStatus",res?.aaData?.AccountStatus)
     if (res?.AccountStatus?.length > 0){
   setvalueStatusMenu(res?.aaData?.AccountStatus?.toString())
     }
-
-  //   const formattedItems3 = res?.DeliveryAddress?.map((item) => ({
-  //     label: item.Text,
-  //     value: item.Value,
-  //   }));
-
-  //  // console.log("formattedItems",formattedItems3)
-  //   setItemsLocation(formattedItems3);
-
-  //   if (res?.DeliveryAddress?.length > 0){
-  // setvalueStatusMenu(res?.DeliveryAddress[0]?.Value)
-  //   }
-
     setaccountno(res?.aaData?.AccountNo);
-    
     setaccountOPDate(utills.getDateBeforeT(res?.aaData?.AccountOpeningDate));
     setaccountOPAmnt(res?.aaData?.OpeningAmount?.toString());
     setsubscriptionDate(utills.getDateBeforeT(res?.aaData?.SubscriptionDueDate));
@@ -170,70 +152,152 @@ const getCustomerdata = () => {
     setCustId(res?.aaData?.Id);
     setisChargable(res?.aaData?.IsChargeable)
     setChequePS(res?.aaData?.IsChequePaymentStop)
-
-// setAllotedPoboxnuPoboxnu(res?.aaData?.LetterBoxCode)
-// setAdd1(res?.aaData?.AdditionalHouseholdAddress1);
-// setAdd2(res?.aaData?.AdditionalHouseholdAddress2);
-// setAdd3(res?.aaData?.AdditionalHouseholdAddress3);
 getAccountHistory(res?.aaData?.AccountId)
 
     
-})
-
-
-
-
-
-    .catch(e => {
-      //  setLoading(false);
+}).catch(e => {
     });
 };
-const getAccountHistory = (accountID) => {
+// const getAccountHistory = (accountID) => {
 
+//   let data = {
+//     Id    : accountID,
+//     iDisplayStart: 0,
+//     iDisplayLength : 20
+//   };
+//   console.log('dataaaaaaar',data)
+
+//   dispatch(getPBDSAccountHistorySlice(data))
+//     .unwrap()
+//     .then(res => {
+//       console.log("res",res)
+
+//     })
+//     .catch(e => {
+//     });
+// };
+
+
+
+
+// const getAccountHistory = (accountID, page = 1) => {
+//   let data = {
+//     Id: accountID,
+//     iDisplayStart: (page - 1),  // Assuming 20 records per page, adjust as needed
+//     iDisplayLength: 2
+//   };
+
+//   dispatch(getPBDSAccountHistorySlice(data))
+//     .unwrap()
+//     .then(res => {
+//       console.log("res", res);
+
+//       // Update the total records when the first page is fetched
+//       if (page === 1) {
+//         console.log("res?.iTotalRecords", res?.iTotalRecords);
+
+//         setTotalRecords(res?.iTotalRecords || 0);
+//       }
+//     })
+//     .catch(e => {
+//       // Handle errors
+//     });
+// };
+// const handleLoadMore = () => {
+//   console.log("HIII")
+//   console.log("AccountHistoryList.length",AccountHistoryList.length)
+//   console.log("totalRecords",totalRecords)
+
+//   if (AccountHistoryList.length < totalRecords) {
+//     const nextPage = currentPage + 1;
+//     getAccountHistory(AccountId, nextPage);
+//     setCurrentPage(nextPage);
+//   }
+// };
+
+
+
+const getAccountHistory = (accountID, page = 1) => {
   let data = {
-    Id    : accountID,
-    // CusId : custId,
-    // sEcho:"1",
-    // iColumns:11,
-    // sSearch:null,
-    // iDisplayLength:25,
-    // iDisplayStart:0,
-    // iSortingCols:1,
-    // sColumns:"TransactionDate%2CTransactionType%2CRefCustomerName%2CParcelNo.%2CRecieptNo%2CParcelDetails%2Ctaxableamount%2CGoodsDescription%2CCashier%2CReceivedBy%2CAction"
-
+    Id: accountID,
+    iDisplayStart: (page - 1) * 20,  // Assuming 2 records per page, adjust as needed
+    iDisplayLength: 20
   };
-  console.log('dataaaaaaar',data)
+
+  setLoading(true);
 
   dispatch(getPBDSAccountHistorySlice(data))
     .unwrap()
     .then(res => {
-      console.log("res",res)
+      console.log("res", res);
 
+      // Update the total records when the first page is fetched
+      if (page === 1) {
+        console.log("res?.iTotalRecords", res?.iTotalRecords);
+        setTotalRecords(res?.iTotalRecords || 0);
+        setAccountHistoryList(res?.aaData)
+      }else{
+        setAccountHistoryList(prevList => [...prevList, ...res?.aaData]);
+      }
+
+      // Assuming `AccountHistoryList` is an array, you might want to append new data
+      // instead of replacing it entirely
+    //  setAccountHistoryList(prevList => [...prevList, ...res?.aaData]);
     })
     .catch(e => {
-      //  setLoading(false);
+      // Handle errors
+    })
+    .finally(() => {
+      setLoading(false);
     });
+};
+
+const handleLoadMore = () => {
+  if (AccountHistoryList.length < totalRecords && !loading) {
+    const nextPage = currentPage + 1;
+    getAccountHistory(AccountId, nextPage);
+    setCurrentPage(nextPage);
+  }
 };
 
 
 const CostumerDetails  = useSelector(state => state.category.PBDSCostumerDetails);
 const AccountHistory  = useSelector(state => state.category.PBDSAccountHistory);
-const AccountHistoryList  = AccountHistory?.aaData;
+const AccountHistoryListDetail  = AccountHistory?.aaData;
+const [AccountHistoryList, setAccountHistoryList] = useState([]);
 
-// console.log("AccountHistory",AccountHistory)
 const [isEditing, setIsEditing] = useState(false);
-
 const handleEditPress = () => {
   setenableText(false)
   setIsEditing(true);
 };
 
 const handleSavePress = () => {
-  // Add logic to save the changes made
-
   console.log('CostumerDetails',CostumerDetails)
 
+  // if (utills.isEmptyOrSpaces(FirstName)) {
+  //   utills.errorAlert('', 'Please Enter First Name');
+  //   return;
+  // }
 
+  if (utills.isEmptyOrSpaces(MobilePhone)) {
+    utills.errorAlert('', 'Please Enter Phone Number');
+    return;
+  }
+  if (utills.isEmptyOrSpaces(EmailAdd)) {
+    utills.errorAlert('', 'Please Enter Email Id');
+    return;
+  }
+
+  if (!utills.validateEmail(EmailAdd)) {
+    utills.errorAlert('', 'Invalid Email');
+    return;
+  }
+  
+  // if (utills.isEmptyOrSpaces(PhysicalAddress)) {
+  //   utills.errorAlert('', 'Please Enter Address');
+  //   return;
+  // }
   let data = {
     CusId: CustId,//userData?.userID,
     FirstName:FirstName,
@@ -266,20 +330,12 @@ Id:0
 
     })
     .catch(e => {
-      //  setLoading(false);
     });
 
-
-
-
-
 };
-//EditHSCustomerDetailsSlice
 
 const handleCancelPress = () => {
-  // Add logic to cancel the editing and revert changes
   setenableText(true)
-
   setIsEditing(false);
 };
 useFocusEffect(
@@ -303,8 +359,6 @@ useFocusEffect(
     const handleBackGesture = () => {
       console.log('ooooooo')
       navigation.navigate(SCREENS.DashBoard)
-
-      //return false;
     };
        
   }, [navigation])
@@ -318,9 +372,7 @@ const [homePhone, sethomePhone] = useState('');
 const [workphone, setworkphone] = useState('');
 const [accountno, setaccountno] = useState();
 const [accountOPDate, setaccountOPDate] = useState();
-// const [accountOPAmount, setaccountOPAmount] = useState(CostumerDetails?.customerBalance?.aaData?.OpeningAmount);
 const [accountOPAmnt, setaccountOPAmnt] = useState();
-
 const [subscriptionDate, setsubscriptionDate] = useState();
 const [accountStatts, setaccountStatts] = useState();
 const [FirstName, setFirstName] = useState();
@@ -347,18 +399,13 @@ const handleexpandedPress = () => {
   const handleexpanded2Press = () => {
     setExpanded2(!expanded2); // Toggle the state
   };
-
   const handleBackPress = () => {
-  // Add your logic for the "Back" button action here
   navigation.goBack()
 };
-
   const handleNextPress = () => {
-  // Add your logic for the "Next" button action here
   };
   const handleHistoryReport = () => {
-        
-    navigation.navigate(SCREENS.AccountTransactionHistoryDetails);  
+        navigation.navigate(SCREENS.AccountTransactionHistoryDetails);  
       
     };
   const handlePress = () => {
@@ -367,7 +414,6 @@ const handleexpandedPress = () => {
 const listData = [
     { id: '1', title: 'Item 1' },
     { id: '2', title: 'Item 2' },
-    // Add more items as needed
   ];
   return (
      <GradientBackground>
@@ -377,7 +423,8 @@ const listData = [
       justifyContent: 'center',
       paddingHorizontal:15,
       marginTop:25,
-
+      //zIndex: 1, // Add zIndex to ensure the dropdown appears above other elements
+      position: 'relative'
     }}>
       <DropDownPicker
       open={open}
@@ -388,51 +435,18 @@ const listData = [
       setItems={setItems}
       listMode='SCROLLVIEW'
       placeholder='Select Account User'
-      style={{borderColor:'lightgrey', borderWidth:2,borderRadius:15,height: hp('8%'),
-
-
-      
+      style={{borderColor:'lightgrey', borderWidth:2,borderRadius:15,height: hp('8%'),  
     }}
       textStyle={{fontFamily:FONTFAMILY.Bold,fontSize:rf(1.8)}}
-    //   onChangeValue={(selectedItem) => {
-    //     // Retrieve the index of the selected item
-    //     const selectedIndex = items.findIndex(item => item.value === selectedItem);
-        
-    //     // selectedIndex will contain the index of the selected item
-    //     console.log('Selected item:', selectedItem);
-    //     console.log('Selected index:', selectedIndex);
-    //     // console.log('Selected index:Value', CostumerDetails?.customerBalance?.aaData[selectedIndex]);
-
-
-    // setaccountno(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.AccountNo);
-    // setaccountOPDate(utills.getDateBeforeT(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.AccountOpeningDate));
-    // setaccountOPAmnt(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.OpeningAmount?.toString());
-    // setsubscriptionDate(utills.getDateBeforeT(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.SubscriptionDueDate));
-    // setaccountStatts(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.AccountStatusName);
-    // setFirstName(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.FirstName);
-    // setlastName(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.Surname);
-    // setPhysicalAddress(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.Address);
-    // setPoboxnu(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.POBox);
-    // setEmailAdd(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.Email);
-    // setMobilePhone(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.PhoneNumber);
-    // setAccountId(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.AccountId);
-    // setCustId(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.Id);
-    // getAccountHistory(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.AccountId,CostumerDetails?.customerBalance?.aaData[selectedIndex]?.Id)
-
-    //   }}
+    
     />
 
-    
     </View>
     <ScrollView style= {styles.containerSc}> 
 
    
     <View style={styles.container}>
-    {/* <ScrollView> */}
- 
-
-
-{/* // onPress={handlePress} */}
+   
           <TouchableOpacity 
           onPress={handleexpandedPress} 
           style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,alignContent:'left',borderTopLeftRadius: 10,borderTopRightRadius: 10}]}>
@@ -456,7 +470,8 @@ const listData = [
         value={FirstName}
         onChangeText={setFirstName}
         keyboardType="default"
-        disable={enableText}
+        disable={true}
+        isRequired={true}
       />
          <EditText_WithBackgroundColor
         label="Last Name"
@@ -465,7 +480,7 @@ const listData = [
         onChangeText={setlastName}
         keyboardType="default"
         disable={true}
-
+        isRequired={true}
       />
       <EditText_WithBackgroundColor
         label="Email Address"
@@ -473,8 +488,8 @@ const listData = [
         value={EmailAdd}
         onChangeText={setEmailAdd}
         keyboardType="default"
-        disable={true}
-
+        disable={enableText}
+        isRequired={true}
       />
       <EditText_WithBackgroundColor
         label="Mobile"
@@ -483,91 +498,19 @@ const listData = [
         onChangeText={setMobilePhone}
         keyboardType='numeric'
           disable={enableText}
-
+          maxLength={10}
+          isRequired={true}
       />
-      
-    
        <EditText_WithBackgroundColor
         label="Address"
         placeholder="Address"
         value={PhysicalAddress}
         onChangeText={setPhysicalAddress}
         keyboardType="default"
-        disable={enableText}
-
-      />
-       {/* <EditText_WithBackgroundColor
-        label="P.O. Box Number"
-        placeholder="P.O. Box Number"
-        value={Poboxnu}
-        onChangeText={setPoboxnu}
-        keyboardType="default"
         disable={true}
 
       />
-       <EditText_WithBackgroundColor
-        label="IRD"
-        placeholder="IRD"
-        value={Poboxnu}
-        onChangeText={setPoboxnu}
-        keyboardType="default"
-        disable={true}
-
-      /> */}
-       {/* <EditText_WithBackgroundColor
-        label="Alloted P.O. Box Number"
-        placeholder="Alloted P.O. Box Number"
-        value={AllotedPoboxnu}
-        onChangeText={setAllotedPoboxnuPoboxnu}
-        keyboardType="default"
-        disable={true}
-
-      /> */}
-
-
-
-
-{/* <DropDownPicker
-      open={openLocation}
-      value={valueLocation}
-      items={itemsLocation}
-      setOpen={setOpenLocation}
-      setValue={setValueLocation}
-      setItems={setItemsLocation}
-      listMode='SCROLLVIEW'
-      placeholder='Select location'
-      style={{backgroundColor:COLORS.lightGreySelection, borderWidth:0,borderRadius:10,height: hp('8%'),width:wp('86%'),marginHorizontal:15,marginTop:10      
-    }}
-      textStyle={{fontFamily:FONTFAMILY.Bold,fontSize:rf(1.8)}}
-      onChangeValue={(selectedItem) => {
-        // Retrieve the index of the selected item
-        const selectedIndex = items.findIndex(item => item.value === selectedItem);
-        
-        // selectedIndex will contain the index of the selected item
-        console.log('Selected item:', selectedItem);
-        console.log('Selected index:', selectedIndex);
-        // console.log('Selected index:Value', CostumerDetails?.customerBalance?.aaData[selectedIndex]);
-
-
-    setaccountno(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.AccountNo);
-    setaccountOPDate(utills.getDateBeforeT(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.AccountOpeningDate));
-    setaccountOPAmnt(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.OpeningAmount?.toString());
-    setsubscriptionDate(utills.getDateBeforeT(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.SubscriptionDueDate));
-    setaccountStatts(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.AccountStatusName);
-    setFirstName(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.FirstName);
-    setlastName(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.Surname);
-    setPhysicalAddress(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.Address);
-    setPoboxnu(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.POBox);
-    setEmailAdd(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.Email);
-    setMobilePhone(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.PhoneNumber);
-    setAccountId(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.AccountId);
-    setCustId(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.Id);
-    getAccountHistory(CostumerDetails?.customerBalance?.aaData[selectedIndex]?.AccountId,CostumerDetails?.customerBalance?.aaData[selectedIndex]?.Id)
-
-      }}
-    /> */}
-
-
+       
 </React.Fragment>
 )}
 
@@ -595,7 +538,7 @@ const listData = [
         onChangeText={setaccountno}
         keyboardType="default"
         disable={true}
-
+        isRequired={true}
       />
          <EditText_WithBackgroundColor
         placeholder="Account opening Date"
@@ -603,7 +546,7 @@ const listData = [
         onChangeText={setaccountOPDate}
         keyboardType="default"
         disable={true}
-
+        isRequired={true}
       />
       <EditText_WithBackgroundColor
         placeholder="Account Opening Amount"
@@ -611,7 +554,7 @@ const listData = [
         onChangeText={setaccountOPAmnt}
         keyboardType="numeric"
         disable={true}
-
+        isRequired={true}
       />
        <EditText_WithBackgroundColor
         placeholder="Subscription Due Date"
@@ -619,18 +562,30 @@ const listData = [
         onChangeText={setsubscriptionDate}
         keyboardType="numeric"
         disable={true}
-
+        isRequired={true}
       
       />
-{/* <EditText_WithBackgroundColor
-        placeholder="Account Status"
-        value={accountStatts}
-        onChangeText={setaccountStatts}
-        keyboardType='default'
-        disable={true}
 
-      /> */}
+<View style={{alignSelf:'flex-start',paddingHorizontal:15}}>
+          <Text  style={{
+    marginTop: hp('2%'),
+    fontSize: rf(1.8),
+    color: COLORS.Lableheading,
+    fontFamily: FONTFAMILY.Medium,
+    marginLeft:wp('1%'),
+    textAlign:'left'
 
+  }}>Account Status
+            {/* <Text  style={[styles.Left500BOLDText,{color :'red'}]}> *</Text> */}
+
+            </Text>
+            </View>
+
+<View style={{
+ 
+}}
+  pointerEvents={enableText ? 'none' : 'auto'} // Disable the entire View if enableText is true
+>
 <DropDownPicker
       open={openStatusMenu}
       value={valueStatusMenu}
@@ -646,90 +601,7 @@ const listData = [
     //  
     />
 
-
-          
-          
-          <TouchableOpacity
-            // activeOpacity={0.8}
-            style={styles.typeBoxContainer1}
-            onPress={() => {
-              setisChargable(!isChargable);
-            }}>
-<Text
-            style={[
-              styles.txt3,
-              {
-                fontSize: rf(1.6),
-                fontFamily: FONTFAMILY.Bold,
-              },
-            ]}>
-            Chargeable
-          </Text>
-
-            <Icons
-              name={isChargable ? 'checkbox-active' : 'checkbox-passive'}
-              style={styles.icon}
-              Type={Icon.Fontisto}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            // activeOpacity={0.8}
-            style={styles.typeBoxContainer1}
-            onPress={() => {
-              setChequePS(!isChequePS);
-            }}>
-<Text
-            style={[
-              styles.txt3,
-              {
-                fontSize: rf(1.6),
-                fontFamily: FONTFAMILY.Bold,
-              },
-            ]}>
-            Is Cheque Payment Stop
-
-          </Text>
-
-            <Icons
-              name={isChequePS ? 'checkbox-active' : 'checkbox-passive'}
-              style={styles.icon}
-              Type={Icon.Fontisto}
-            />
-          </TouchableOpacity>
-
-
-
-      {/* <Text style={styles.Heading}>
-              
-Additional Household Addressees           </Text> */}
-      {/* <EditText_WithBackgroundColor
-        placeholder="Address 1"
-        value={Add1}
-        onChangeText={setAdd1}
-        keyboardType='default'
-        disable={true}
-
-      /> */}
-{/* 
-<EditText_WithBackgroundColor
-        placeholder="Address 2"
-        value={Add2}
-        onChangeText={setAdd2}
-        keyboardType='default'
-        disable={true}
-
-      /> */}
-       {/* <EditText_WithBackgroundColor
-        placeholder="Address 3"
-        value={Add3}
-        onChangeText={setAdd3}
-        keyboardType='default'
-        disable={true}
-
-      /> */}
-       
-        
+</View>
 </React.Fragment>
 )}
 
@@ -756,19 +628,15 @@ style = {{alignItems:'center'}}>
 <Image source={IMAGES.HistoryReport} style={styles.logo} />
 
 </View>
-<Text style={styles.Left500Text}>Transactions</Text>
+<Text style={styles.Left500Text}>Online System</Text>
 
 <Text style={styles.Left500Text}
 numberOfLines={2}
 ellipsizeMode='tail'
->History Report</Text>
-{/* <Text style={styles.Left500Text}>Report</Text> */}
-
+>Payments Report</Text>
 </TouchableOpacity>
 
 {!isEditing ? (
-
-
 
 <TouchableNativeFeedback style = {{alignItems:'center'}}
 onPress={handleEditPress}
@@ -831,44 +699,11 @@ onPress={handleCancelPress}
         <Text style={styles.Left500BOLDText}>{CostumerDetails?.customerBalance?.OpeningBalance != null ? CostumerDetails?.customerBalance?.OpeningBalance : '$0.00'}</Text>
   
         </View>
+       
         <View style={styles.hr}></View>
         <View style={styles.rowList}>
-        <Text style={styles.Left500RegularText}>{'RegCharges:'}</Text>
+        <Text style={styles.Left500RegularText}>{'Membership Dues:'}</Text>
         <Text style={styles.Left500BOLDText}>{CostumerDetails?.customerBalance?.RegCharges != null ? CostumerDetails?.customerBalance?.RegCharges : '$0.00'}</Text>
-  
-        </View>
-        {/* <View style={styles.hr}></View>
-        <View style={styles.rowList}>
-        <Text style={styles.Left500RegularText}>{'Un-cleared Parcels:'}</Text>
-        <Text style={styles.Left500BOLDText}>{'$20.00 ( frieght, Customs Duty )'}</Text>
-  
-        </View> */}
-
-<View style={styles.hr}></View>
-        <View style={styles.rowList}>
-        <Text style={styles.Left500RegularText}>{'Running Balance:'}</Text>
-        <Text style={styles.Left500BOLDText}>{CostumerDetails?.customerBalance?.RunningBalance != null ? CostumerDetails?.customerBalance?.RunningBalance : '$0.00'}</Text>
-  
-        </View>
-
-        <View style={styles.hr}></View>
-        <View style={styles.rowList}>
-        <Text style={styles.Left500RegularText}>{'Sub Charges:'}</Text>
-        <Text style={styles.Left500BOLDText}>{CostumerDetails?.customerBalance?.SubsCharges != null ? CostumerDetails?.customerBalance?.SubsCharges : '$0.00'}</Text>
-  
-        </View>
-        <View style={styles.hr}></View>
-        <View style={styles.rowList}>
-        <Text style={styles.Left500RegularText}>{'Customs Duty:'}</Text>
-        <Text style={styles.Left500BOLDText}>{CostumerDetails?.customerBalance?.CustomsCost != null ? CostumerDetails?.customerBalance?.CustomsCost : '$0.00'}</Text>
-  
-        </View>
-
-
-        <View style={styles.hr}></View>
-        <View style={styles.rowList}>
-        <Text style={styles.Left500RegularText}>{'Frieght:'}</Text>
-        <Text style={styles.Left500BOLDText}>{CostumerDetails?.customerBalance?.FreightCost != null ? CostumerDetails?.customerBalance?.FreightCost : '$0.00'}</Text>
   
         </View>
         <View style={styles.hr}></View>
@@ -879,29 +714,23 @@ onPress={handleCancelPress}
         </View>
      
         </View>
-<FlatList
+{/* <FlatList
           data={AccountHistoryList}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <CustomListItem item={item} />}
-        /> 
+        />  */}
 
+<FlatList
+      data={AccountHistoryList}
+      keyExtractor={(item) => item.id}
+      renderItem={({ item }) => <CustomListItem item={item} />}
+      onEndReached={handleLoadMore}
+      onEndReachedThreshold={0.1}
+      ListFooterComponent={() => loading && <ActivityIndicator animating size="large" />}
+    />
 </React.Fragment>
 )}
-
-      
-        {/* <View style = {{width:wp('90%')}}>
-      
-<CustomButtons
-        onBackPress={handleBackPress}
-        onNextPress={handleNextPress}
-      />
-        </View> */}
-
-
-
-
-          {/* </ScrollView> */}
-        
+  
     </View>
    
     </ScrollView>
@@ -917,9 +746,7 @@ const time = dateTime[1];
 const receiptNotes =item?.ReceiptNotes;
 const {dispatch} = useRedux();
 const navigation = useNavigation()
-// Replace <br/> with newline character \n
 const handlPrintHistoryRow = () => {
-  //?CustomerId=4236&AccountId=3671&type=Hs
   console.log('HIIII')
 
     let data = {
@@ -941,15 +768,12 @@ const handlPrintHistoryRow = () => {
   
       })
       .catch(e => {
-        //  setLoading(false);
       });
   };
 const updatedReceiptNotes = receiptNotes?.replace(/<br\s*[/]?>/gi, '\n');
-// const updatedReceiptID = updatedReceiptNotes?.TransactionDate.split(' ');
 let displayReceipt = '';
 
   if (updatedReceiptNotes && updatedReceiptNotes !== '') {
-    // Extract the desired part using regex matching
     const regexMatch = updatedReceiptNotes.match(/(BDS\d+)/);
     displayReceipt = regexMatch ? regexMatch[0] : '';
   }
@@ -989,24 +813,17 @@ height: 18,
         </View>  
         <View style={styles.rowAA}>
         < History_Icon2 />
-
-    <Text style={styles.Left500TextMedum}
-    numberOfLines={2}
-    
+  <View style={{flex:1}}>
+<Text style={styles.Left500TextMedum}
     >{item.TransactionType}
-    
     </Text>
-  
+
+</View>
         </View>
-
         </View>
-
-
         <View style={styles.rowList2}>
         <View style={styles.rowAA}>
         < History_Icon3 />
-
-    
      <Text style={styles.Left500TextMedum}
          >{item.CustomerName}
          
@@ -1014,12 +831,7 @@ height: 18,
   
         </View>  
         <View style={styles.rowAA}>
-        < History_Icon4 />
-
-
-
-    
-            
+        < History_Icon4 />      
     <Text style={styles.Left500TextMedum}>{displayReceipt}</Text>
   
         </View>
@@ -1029,27 +841,59 @@ height: 18,
         <View style={styles.rowList2}>
         <View style={styles.rowAA}>
         < History_Icon5 />
-
-
-
      <Text style={styles.Left500TextMedum}>{item.TransactionId}</Text>
   
         </View>  
         <View style={styles.rowAA}>
         < History_Icon6 />
+        <View>
+        <View>
 
-    <Text style={styles.Left500TextMedum}>{item.TotalAmountWithAdjustment}</Text>
-  
-        </View>
+    {item.TransactionText !== "" && (
+  <View style={{padding:3,flex:1}}>
+  <Text style={styles.Left500TextMedum}>{item.TransactionText}: ${item.TotalAmountWithAdjustment.replace('-', '')}</Text>
+  </View>
+)}
 
-        </View>
+{(item.TransactionTypeId === "2" || item.TransactionTypeId === "5" || item.TransactionTypeId === "6" || item.TransactionTypeId === "7"|| item.TransactionTypeId === "8" || item.TransactionTypeId === "12" )&& (
+<View style={{backgroundColor:COLORS.yellow ,padding:3,flex:1}}>
+<Text style={styles.Left500TextMedum}>Paid Amount: ${item.TotalAmountWithAdjustment.replace('-', '')}</Text>
+</View>
+)
+}
+{(item.TransactionTypeId === "1" || item.TransactionTypeId === "11"|| item.TransactionTypeId === "40"|| item.TransactionTypeId === "42" )&& (
+  <View style={{backgroundColor:COLORS.yellow ,padding:3,flex:1}}>
+<Text style={styles.Left500TextMedum}>Dues_Amount: ${item.TotalAmountWithAdjustment.replace('-', '')}</Text>
+</View>
+)
+}
+{(item.TransactionTypeId === "4" )&& (
+ <View style={{backgroundColor:COLORS.yellow ,padding:3,flex:1}}>
+<Text style={styles.Left500TextMedum}>Adjust Amount: ${item.TotalAmountWithAdjustment.replace('-', '')}</Text>
+ </View>
+)
+}
+{(item.TransactionTypeId === "10" )&& (
+ <View style={{backgroundColor:COLORS.yellow ,padding:3,flex:1}}>
+<Text style={styles.Left500TextMedum}>Cancel Payment: ${item.TotalAmountWithAdjustment.replace('-', '')}</Text>
+ </View>
+)
+}
 
-        <Text style={[styles.Left500TextMedum,{paddingHorizontal:10,marginBottom:25}]}>{updatedReceiptNotes}</Text>
 
-
+{(item.TransactionTypeId === "9" )&& (
+ <View style={{backgroundColor:COLORS.yellow ,padding:3,flex:1}}>
+<Text style={styles.Left500TextMedum}>CF Amount: ${item.TotalAmountWithAdjustment.replace('-', '')}</Text>
+ </View>
+)
+}
+</View>
+</View>
+</View>
+ </View>
+  <Text style={[styles.Left500TextMedum,{paddingHorizontal:10,marginBottom:25}]}>{updatedReceiptNotes}</Text>
       </View>
       <View style={styles.hr2}></View>
-
       </View>
       
     );
@@ -1199,12 +1043,12 @@ width:wp('90%')
   },
   Left500Text: {
     fontFamily: FONTFAMILY.SemiBold,
-    fontSize:rf(1.8),
+    fontSize:rf(1.6),
     textAlign: 'center',
   },
   Left500TextMedum: {
     fontFamily: FONTFAMILY.Medium,
-    fontSize:rf(1.8),
+    fontSize:rf(1.6),
     textAlign: 'left',
   },
    Left500BOLDText: {

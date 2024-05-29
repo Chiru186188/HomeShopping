@@ -96,12 +96,15 @@ export default function ForgotPwd({navigation}) {
 
         <Spacer size={80} />
         <CustomBlueButton
-          title="Submit"
+          title="Send password reset email"
           onPress={() => {
-            // ForgotApi()
-            navigation.navigate(SCREENS.VerificationScreen, { EmailValue: email });
+            // 
+            ForgotApi()
+           // navigation.navigate(SCREENS.VerificationScreen, { EmailValue: email });
          
           }}
+          IconName={"send"}
+
           buttonStyle={styles.loginButton} // Custom button style
           texStyle={{fontFamily :FONTFAMILY.Bold,
             fontSize: rf(2.0)}}         />

@@ -82,6 +82,7 @@ const GoToNext = () => {
 <CustomButtonsBAndP
         onBackPress={handleBackPress}
         onNextPress={handleNextPress}
+        Buttontext={"Submit"}
       />
      </View>
 
@@ -129,6 +130,8 @@ const GoToNext = () => {
         <CustomBlueButton
           title="Proceed To Pay (US$66.67)"
           onPress={GoToNext}
+          IconName={"payment"}
+
           buttonStyle={styles.signUpButton} // Custom button style
           textStyle={{fontFamily :FONTFAMILY.Bold,
             fontSize: rf(1.8)}} // Custom text style

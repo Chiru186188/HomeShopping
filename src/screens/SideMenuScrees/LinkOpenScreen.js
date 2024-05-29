@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, StyleSheet, SafeAreaView } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, SafeAreaView, Alert } from 'react-native';
 import { WebView } from 'react-native-webview';
 import HeaderWithBackButton from '../../components/HeaderWithBackButton';
 import { PymentResponseSlice } from '../../redux/slice/auth';
@@ -7,6 +7,7 @@ import useRedux from '../../components/useRedux';
 import utills from '../../utills';
 import { useNavigation } from '@react-navigation/native';
 import { SCREENS } from '../../constants/them';
+import HeaderWithBackButton2 from '../../components/HeaderWithBackButton2';
 
 
 
@@ -26,11 +27,15 @@ const extractQueryParams = (url) => {
   }
   return {};
 };
+const [apiCalled, setApiCalled] = useState(false);
 
 const handleRedirect = (navState) => {
+  if (apiCalled) return; // If API call has already been made, do nothing
+
   const redirectedUrl = navState.url;
   const urlParams = extractQueryParams(redirectedUrl);
   console.log('PaymentURL!',urlParams);
+  console.log('redirectedUrl!',redirectedUrl);
 
   // Check for success or failure parameters in the extracted params
 
@@ -38,6 +43,7 @@ const handleRedirect = (navState) => {
     // Both payload and paymentId parameters exist in the URL
     console.log('Received payload and paymentId:', urlParams.payload, urlParams.paymentId);
     CallApiForPayment(urlParams)
+    setApiCalled(true); // Set state to indicate API call has been made
     // Perform an API call here using the extracted parameters
     // Replace the placeholder API call with your actual API call
     // yourAPICallFunction(urlParams.payload, urlParams.paymentId)
@@ -87,9 +93,9 @@ const CallApiForPayment = (resp) => {
   .then(res => {
     console.log('PymentResponseSlice res==', res);
     if (res.data?.success == true){
-      utills.successAlert('', res.data?.data?.message);
+      //utills.successAlert('', res.data?.data?.message);
       
-        navigation.navigate(SCREENS.ReportLinkOpenScreen,{item :res.data?.pdfDownload });
+        navigation.navigate(SCREENS.ReportLinkOpenScreen,{From:From,item :res.data?.pdfDownload ,LoginParams:LoginParams});
     }else{  
       utills.errorAlert('', res.message);
       return;
@@ -99,12 +105,27 @@ const CallApiForPayment = (resp) => {
 
 
   const handlePress = () => {
+    Alert.alert(
+      'Payment Required',
+      'You cannot go back without making a payment. Please proceed with the payment.',
+      [
+        {
+          text: 'OK',
+          onPress: () => {
+            // Handle the OK button press, e.g., navigate to the payment screen
+            console.log('User pressed OK');
+          },
+        },
+      ],
+      { cancelable: false } // Prevent closing the alert by tapping outside
+    );
+
   };
-  const { item } = route.params;
+  const { item ,LoginParams,From} = route.params;
 
     return (
       <View style={styles.container}>
-        <HeaderWithBackButton onPress={handlePress} title={'Payment'} />
+        <HeaderWithBackButton2 onPress={handlePress} title={'Payment'} />
 
         <WebView
           source={{ uri: item }} // Replace with your desired URL

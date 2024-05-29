@@ -6,7 +6,8 @@ import {
   responsiveFontSize as rf,
   widthPercentageToDP as wp,
 } from '../common/responsiveFunction';
-function CustomButtonsBAndP({ onBackPress, onNextPress }) {
+import Icons, { Icon } from './Icons';
+function CustomButtonsBAndP({ onBackPress, onNextPress,Buttontext }) {
   return (
     <View style={styles.container}>
       {/* <Button
@@ -26,6 +27,12 @@ function CustomButtonsBAndP({ onBackPress, onNextPress }) {
       style={[styles.buttonL]}
       onPress={onBackPress}
     >
+       <Icons
+    name={"closecircle"}
+    Type={Icon.AntDesign}
+    size={rf(3.0)}
+    color={COLORS.white}
+  />
       <Text style={[styles.buttonText]}>{'Cancel'}</Text>
     </TouchableOpacity>
 
@@ -33,7 +40,13 @@ function CustomButtonsBAndP({ onBackPress, onNextPress }) {
       style={[styles.buttonR]}
       onPress={onNextPress}
     >
-      <Text style={[styles.buttonText]}>{'Proceed to Pay'}</Text>
+       <Icons
+    name={"payment"}
+    Type={Icon.MaterialIcons}
+    size={rf(3.0)}
+    color={COLORS.white}
+  />
+      <Text style={[styles.buttonText]}>{Buttontext}</Text>
     </TouchableOpacity>
     </View>
   );
@@ -54,7 +67,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: COLORS.CancelRED, 
-
+    flexDirection:'row',
+    gap :10
   },
   buttonR: {
     width: wp("40%"),
@@ -63,12 +77,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: COLORS.blueButton, 
-
+    flexDirection:'row',
+    gap :10,
+paddingHorizontal:10
   },
   buttonText: {
     color: 'white',
 fontFamily:FONTFAMILY.SemiBold,
-fontSize:rf(1.8)
+fontSize:rf(1.8),
+// paddingHorizontal:10
   },
 });
 

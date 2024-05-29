@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Alert, BackHandler, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import WelcomScreen from './src/screens/AuthScreens/WelcomeScreen';
 import LoginScreen from './src/screens/AuthScreens/LoginScreen';
 import SelectServices from './src/screens/AuthScreens/SelectServices';
@@ -33,9 +33,142 @@ import {
   widthPercentageToDP as wp,
 } from './src/common/responsiveFunction';
 import LogoLoader from './src/components/LogoLoader';
+import { useEffect } from 'react';
+import NetInfo from '@react-native-community/netinfo';
+import firebase from '@react-native-firebase/app';
+import messaging from '@react-native-firebase/messaging';
+import * as Notifications from 'expo-notifications';
 
 export default function App() {
+  
   const Stack = createStackNavigator();
+
+
+
+
+  const requestUserPermission = async () => {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      console.log("Authorization status:", authStatus);
+      return true;
+    } else {
+      console.log("Permission not granted");
+      return false;
+    }
+  };
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCguaeeNLhzYRxsLU0hsFaYKN01VpruTIs",
+    authDomain: "homeshopping-ab263.firebaseapp.com",
+    databaseURL: "https://homeshopping-ab263.firebaseio.com",
+    projectId: "homeshopping-ab263",
+    storageBucket: "homeshopping-ab263.appspot.com",
+    messagingSenderId: "659819777868",
+    appId: "1:659819777868:web:06d026dadd688efee9c9e9",
+    measurementId: "G-C290P02RFK"
+  };
+
+const Firebase= () => {
+  if (!firebase.apps.length) {
+firebase.initializeApp(firebaseConfig);
+  } else {
+  firebase.app();
+  }
+};
+  
+
+  useEffect(() => {
+    Firebase()
+    const setupNotifications = async () => {
+      const permissionGranted = await requestUserPermission();
+      if (permissionGranted) {
+        const token = await messaging().getToken();
+        console.log("FCM Token:", token);
+      }
+
+      // Set up notification handler
+      Notifications.setNotificationHandler({
+        handleNotification: async () => ({
+          shouldShowAlert: true,
+          shouldPlaySound: true,
+          shouldSetBadge: false,
+        }),
+      });
+
+      // Handle user clicking on a notification
+      const handleNotificationClick = (response) => {
+        const screen = response?.notification?.request?.content?.data?.screen;
+        if (screen) {
+          navigation.navigate(screen);
+        }
+      };
+
+      const notificationClickSubscription = Notifications.addNotificationResponseReceivedListener(
+        handleNotificationClick
+      );
+
+      // Handle background notifications
+      messaging().onNotificationOpenedApp((remoteMessage) => {
+        const screen = remoteMessage?.data?.screen;
+        if (screen) {
+          navigation.navigate(screen);
+        }
+      });
+
+      // Handle notifications that opened the app from a quit state
+      const initialNotification = await messaging().getInitialNotification();
+      if (initialNotification) {
+        const screen = initialNotification?.data?.screen;
+        if (screen) {
+          navigation.navigate(screen);
+        }
+      }
+
+      // Background message handler
+      messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+        const notification = {
+          title: remoteMessage.notification.title,
+          body: remoteMessage.notification.body,
+          data: remoteMessage.data,
+        };
+        await Notifications.scheduleNotificationAsync({
+          content: notification,
+          trigger: null,
+        });
+      });
+
+      // Foreground message handler
+      const handlePushNotification = async (remoteMessage) => {
+        const notification = {
+          title: remoteMessage.notification.title,
+          body: remoteMessage.notification.body,
+          data: remoteMessage.data,
+        };
+        await Notifications.scheduleNotificationAsync({
+          content: notification,
+          trigger: null,
+        });
+      };
+
+      // Listen for foreground messages
+      const unsubscribe = messaging().onMessage(handlePushNotification);
+
+      // Clean up the event listeners
+      return () => {
+        unsubscribe();
+        notificationClickSubscription.remove();
+      };
+    };
+
+    setupNotifications();
+  }, []);
+
+
+  
   const toastConfig = {
     success: props => (
       <BaseToast
@@ -50,8 +183,8 @@ export default function App() {
           fontSize: rf(1.3),
           fontFamily: FONTFAMILY.SemiBold,
         }}
-        style={{backgroundColor: COLORS.chatGreencolor, height: hp('8%') ,width : wp('90%')}}
-        numberOfLines={2}
+        style={{backgroundColor: COLORS.chatGreencolor ,width : wp('90%'),height:hp("8%")}}
+        text2NumberOfLines={100}
         />
     ),
     error: props => (
@@ -67,10 +200,42 @@ export default function App() {
           fontSize: rf(1.3),
           fontFamily: FONTFAMILY.SemiBold,
         }}
-        style={{backgroundColor: COLORS.red, height: hp('8%') ,width : wp('90%')}}
+        style={{backgroundColor: COLORS.red ,width : wp('90%'),height:hp("10%")}}
+        text2NumberOfLines = {100}
       />
     ),
   };
+
+
+
+  const handleNetworkConnectivity = (state) => {
+    if (!state.isConnected) {
+     // Alert.alert('Network Error', 'Please connect to the internet.');
+
+      Alert.alert(
+        'Network Error',
+        'Please connect to the internet and try again.',
+        [
+          {
+            text: 'OK',
+            onPress: () => {
+              NetInfo.addEventListener(handleNetworkConnectivity);
+            },
+          },
+        ],
+      );
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(handleNetworkConnectivity);
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+
   return (
     // <View style={styles.container}>
     // <MainNavigation />

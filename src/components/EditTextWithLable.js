@@ -53,10 +53,14 @@ function EditTextWithLable(props) {
         props.style,
         
         {
-          borderColor:
-            isFocused || props.disable ?  COLORS.primary : COLORS.Greyscale,
+          borderColor: isFocused ? COLORS.primary : COLORS.Greyscale,
+
+          // borderColor:
+          //   isFocused || props.disable ?  COLORS.primary : COLORS.Greyscale,
            // marginTop:isIOS ? hp('1.8%') : hp('2.0%') ,
-        },
+           backgroundColor: props.disable ? COLORS.lightGreySelection : 'white',
+
+          },
       ]}>      
       <TextInput
         {...props}

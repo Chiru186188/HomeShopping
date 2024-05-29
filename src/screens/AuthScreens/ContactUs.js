@@ -52,7 +52,14 @@ const ContactUs = () => {
   const handleNextPress = async () => {
 
 
-
+if(subject === ""){
+  utills.errorAlert("Error","Please Enter Subject")
+  return
+}
+if(message === ""){
+  utills.errorAlert("Error","Please Enter Message")
+  return
+}
     
     console.log('HIIII')
   

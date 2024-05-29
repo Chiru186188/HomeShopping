@@ -20,7 +20,8 @@ import TouchableNativeFeedback from '../../components/TouchableNativeFeedback';
 import { useRoute } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import useRedux from '../../components/useRedux';
-import { getSubscripedServiicesSlices } from '../../redux/slice/categories';
+import { getSubscripedServiicesSlices, saveServiceDetails } from '../../redux/slice/categories';
+import HeaderWithBackButton2 from '../../components/HeaderWithBackButton2';
 
 export default function SelectServicesSubscription({navigation}) {
   const [email, setemail] = useState('');
@@ -28,16 +29,16 @@ export default function SelectServicesSubscription({navigation}) {
   const [isChecked, setIsChecked] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
   const route = useRoute();
-  const {Params1 } = route.params;
+  const {Params1 ,from} = route.params;
   
 
  const ServiceDetails  = useSelector(state => state.category.ServiceDetails);
 // 
-//console.log("ServiceDetails",ServiceDetails)
+console.log("ServiceDetails",ServiceDetails)
 
 const USERDETAIL  = ServiceDetails?.plans
  //
- console.log("USERDETAIL",USERDETAIL)
+// console.log("USERDETAIL",USERDETAIL)
  const getAllServicesDetails = () => {
  
    let data = {
@@ -59,8 +60,8 @@ const USERDETAIL  = ServiceDetails?.plans
   const services = [
     'Home Shopping (ocean freight) Service',
     'Post Office Clearance and Delivery Service',
-    'Private Post Office Box Rental',
-    'eZone (Air) Service',
+    'Post Office Box Rental Service',
+    'eZone Service',
     'Private Bag Delivery Service',
     'Express Mail Service',
    
@@ -88,6 +89,8 @@ const USERDETAIL  = ServiceDetails?.plans
   const {dispatch} = useRedux();
 
 useEffect(() => {
+  dispatch(saveServiceDetails(null))
+  console.log("CALLLL")
   getAllServicesDetails()
   return () => {
    
@@ -107,12 +110,12 @@ const GoToNext = (service) => {
  
   if (service === "Home Shopping (ocean freight) Service"){
 
-    navigation.navigate(SCREENS.HomeShopIntroduction,{Params1 :Params1})
-  } else if(service === "eZone (Air) Service"){
+    navigation.navigate(SCREENS.HomeShopIntroduction,{Params1 :Params1,from})
+  } else if(service === "eZone Service"){
     navigation.navigate(SCREENS.EzoneIntroduction,{Params1 :Params1})
 
   }
-  else if(service === "Private Post Office Box Rental"){
+  else if(service === "Post Office Box Rental Service"){
     navigation.navigate(SCREENS.RentalBoxIntroduction,{Params1 :Params1})
 
   }
@@ -131,6 +134,11 @@ const GoToNext = (service) => {
 
 };
 const handlePress = () => {
+  if (from === "Registration" ||from === "AddMore" ) {
+    navigation.replace(SCREENS.LoginScreen)
+  }else{
+    navigation.goBack()
+  }
 };
 //   return (
 //      <GradientBackground>
@@ -172,7 +180,7 @@ const handlePress = () => {
 //   );
 return (
   <GradientBackground>
-    <HeaderWithBackButton onPress={handlePress} title="Subscription" />
+    <HeaderWithBackButton2 onPress={handlePress} title="Subscription" />
 
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.serviceText1}>Select Service</Text>
@@ -205,7 +213,7 @@ null
               <Image style={styles.serviceItemImage} source={servicesIcons[services.indexOf(service?.name)]} />
               <Text style={styles.serviceText}>{service?.name}</Text>
 
-              {service.unitCostPerYear != 0.0000 ? (
+              {/* {service.unitCostPerYear != 0.0000 ? (
 
               <Text style={styles.serviceText1}>{service.unitCostPerYear+'.00'}
              
@@ -220,7 +228,43 @@ null
   
   
 </Text>
-)}
+)} */}
+
+{service.id !== 3 && service.unitCostPerYear !== 0.0000 ? (
+  <Text style={styles.serviceText1}>
+    {service.unitCostPerYear.toFixed(2)}
+    <Text style={styles.serviceText2}>
+      /annually
+    </Text>
+  </Text>
+) :  (
+  <>
+  
+  {service.id === 3 && (
+      <View>
+      
+        <Text style={styles.serviceText2}>
+          Large Post office Box $ 
+          <Text style={styles.serviceText1}>
+            {" " + ServiceDetails?.largeBoxAmount}
+          </Text>
+        </Text>
+        <Text style={styles.serviceText2}>
+          Medium Post office Box $ 
+          <Text style={styles.serviceText1}>
+            {" " + ServiceDetails?.mediumBoxAmount}
+          </Text>
+        </Text>
+      </View>
+    )}
+  </>
+)
+
+
+}
+
+
+
                 <Text>
   
   
@@ -368,8 +412,8 @@ serviceText1: {
 },
 
 serviceText2: {
-  fontFamily: FONTFAMILY.Regular,
-  fontSize: rf(1.6),
+  fontFamily: FONTFAMILY.Medium,
+  fontSize: rf(1.8),
   color: COLORS.Content,
   marginLeft: 5,
 },

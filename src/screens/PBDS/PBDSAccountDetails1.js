@@ -23,6 +23,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useRoute } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import { getPBDSSlice } from '../../redux/slice/categories';
+import Icons, { Icon } from '../../components/Icons';
 
 export default function PBDSAccountDetails1({navigation}) {
  
@@ -76,7 +77,11 @@ const getAllAdressddata = () => {
 const hideDatePicker = () => {
   setDatePickerVisibility(false);
 };
+const handleClick = () => {
+  Linking.openURL("http://hsstrain.apis.gov.ai/Documents/Private%20Bag%20Delivery%20Service%20Agreement.pdf")
 
+
+};
   useEffect(() => {
     console.log("Params1",Params1);
 
@@ -117,6 +122,8 @@ const handleBackPress = () => {
   // Add your logic for the "Back" button action here
   navigation.goBack()
 };
+const [isChecked, setIsChecked] = useState(false);
+
 const {dispatch} = useRedux();
 
 // const handleNextPress = () => {
@@ -136,10 +143,10 @@ const handleNextPress = () => {
     utills.errorAlert('', 'Please Enter Date of Birth');
      return;
    }
-   if (utills.isEmptyOrSpaces(CompName)) {
-    utills.errorAlert('', 'Please Enter Company Name');
-     return;
-   }
+  //  if (utills.isEmptyOrSpaces(CompName)) {
+  //   utills.errorAlert('', 'Please Enter Company Name');
+  //    return;
+  //  }
    if (utills.isEmptyOrSpaces(PhysicalAddress)) {
     utills.errorAlert('', 'Please Enter Physical Address');
      return;
@@ -151,8 +158,16 @@ const handleNextPress = () => {
     if (utills.isEmptyOrSpaces(EmailAdd)) {
      utills.errorAlert('','Please Enter Email Address');
       return;
+    } 
+    if (!utills.validateEmail(EmailAdd)) {
+      utills.errorAlert('', 'Invalid Email');
+      return;
     }
-   
+    if (isChecked == false){
+
+      utills.errorAlert("Please Agree to the terms")
+      return
+    }
    let data = {
     // ApplicantName: ApplicantName,
     // ApplicantSign: ApplicantSign,
@@ -178,7 +193,7 @@ dispatch(RegisterSlicePBDS(data))
 .then(res => {
 console.log('Register res==', res);
 if (res.status == true){
-  navigation.navigate(SCREENS.CartValueScreen,{From :"PBDS",Service:'Private Bag Delivery Service',userID:Params1.UserId})
+  navigation.navigate(SCREENS.CartValueScreen,{From :"PBDS",Service:'Private Bag Delivery Service',userID:Params1.UserId,LoginParams:Params1})
 }else{
   utills.errorAlert('', res.msg);
   return;
@@ -302,8 +317,8 @@ const handlePress = () => {
    
       
       <EditTextWithLable
-        label="Comapany Name *"
-        placeholder="Enter Comapany Name"
+        label="Company Name"
+        placeholder="Enter Company Name"
         value={CompName}
         onChangeText={setCompName}
         keyboardType="default"
@@ -335,6 +350,8 @@ const handlePress = () => {
         value={MobilePhone}
         onChangeText={setMobilePhone}
         keyboardType='numeric'
+        maxLength={10}
+
       />
      
         <EditTextWithLable
@@ -343,6 +360,7 @@ const handlePress = () => {
         value={TelePhone}
         onChangeText={setTelePhone}
         keyboardType='numeric'
+        maxLength={10}
       />
      
     
@@ -382,6 +400,81 @@ const handlePress = () => {
       />
      
  */}
+
+
+
+<View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
+                <View style={styles.col8}>
+                  <Text  style={styles.Left500BOLDText}>Acknowledgement
+
+</Text>
+                </View>
+                <View style={styles.col4}></View>
+              </View>
+
+              {/* <View style={{paddingHorizontal:20, alignSelf:'flex-start'}}>
+              <Text  style={styles.Left500Text}>Please <Text style={styles.textblue} >click</Text> here to read the Home Shopping service agreement terms and conditions</Text>
+              </View>
+ */}
+        <TouchableNativeFeedback style={{paddingHorizontal:20,marginVertical:10, alignSelf:'flex-start'}}   onPress={handleClick}>
+
+<Text style={{
+    color: COLORS.black,
+    fontSize:rf(1.8),
+    fontFamily: FONTFAMILY.Medium,
+    //textAlign:'justify'
+  }}>Please 
+    <Text style={[styles.textDanger,]}> click
+    </Text>
+
+  <Text style={styles.textNormal}> here to read the Private Bag Delivery Agreement terms and conditions.</Text>
+
+</Text>
+</TouchableNativeFeedback> 
+
+              <View style={{paddingHorizontal:20, alignSelf:'flex-start'}}>
+              <Text  style={styles.textDanger}>By ticking the box / signing below, I acknowledge that I have read all terms and conditions of the Rental Agreement and Schedule of Fees and agree to abide by them.</Text>
+              </View>
+            
+
+              <View style={{
+   marginVertical: 20,
+  
+   flexDirection: 'row',
+   justifyContent: 'flex-start',
+   alignSelf:'flex-start',
+   marginHorizontal:20
+ //  alignItems: 'center',
+ }}>
+          <TouchableOpacity
+            // activeOpacity={0.8}
+            onPress={() => {
+              setIsChecked(!isChecked);
+            }}>
+            <Icons
+              name={isChecked ? 'checkbox-active' : 'checkbox-passive'}
+              style={{
+                fontSize: rf(2.5),
+                color: "darkgreen",
+                marginRight: 10,
+              }}
+              Type={Icon.Fontisto}//
+              size={rf(2.0)}
+            />
+          </TouchableOpacity>
+          <Text style={{
+    fontFamily: FONTFAMILY.Medium,
+    fontSize: rf(1.7),
+    color: COLORS.Lableheading,
+    textAlign: 'left',
+  }}>
+            {' '}I Agree{' '}
+          
+          </Text>
+          
+        </View>
+
+
 
 
         <View style = {{width:wp('90%')}}>

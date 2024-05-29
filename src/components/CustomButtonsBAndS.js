@@ -6,6 +6,7 @@ import {
   responsiveFontSize as rf,
   widthPercentageToDP as wp,
 } from '../common/responsiveFunction';
+import Icons, { Icon } from './Icons';
 function CustomButtonsBAndS({ onBackPress, onNextPress }) {
   return (
     <View style={styles.container}>
@@ -26,6 +27,12 @@ function CustomButtonsBAndS({ onBackPress, onNextPress }) {
       style={[styles.buttonL]}
       onPress={onBackPress}
     >
+       <Icons
+    name={"arrow-back-circle"}
+    Type={Icon.Ionicons}
+    size={rf(3.0)}
+    color={COLORS.white}
+  />
       <Text style={[styles.buttonText]}>{'Back'}</Text>
     </TouchableOpacity>
 
@@ -33,6 +40,12 @@ function CustomButtonsBAndS({ onBackPress, onNextPress }) {
       style={[styles.buttonR]}
       onPress={onNextPress}
     >
+       <Icons
+    name={"save"}
+    Type={Icon.AntDesign}
+    size={rf(3.0)}
+    color={COLORS.white}
+  />
       <Text style={[styles.buttonText]}>{'Submit'}</Text>
     </TouchableOpacity>
     </View>
@@ -46,15 +59,17 @@ const styles = StyleSheet.create({
     paddingVertical: 16, // Adjust the padding as needed
     backgroundColor: 'white', // Change the background color as needed
     borderRadius: 12, // Adjust the border radius as needed
+    gap:10
   },
   buttonL: {
-    width: wp("45%"),
+    width: wp("40%"),
     height: 60,
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: COLORS.CancelRED, 
-
+    flexDirection:'row',
+    gap :10
   },
   buttonR: {
     width: wp("40%"),
@@ -63,7 +78,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: COLORS.blueButton, 
-
+    flexDirection:'row',
+    gap :10
   },
   buttonText: {
     color: 'white',

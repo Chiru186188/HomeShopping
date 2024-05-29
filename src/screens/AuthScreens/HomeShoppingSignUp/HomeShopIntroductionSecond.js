@@ -43,13 +43,12 @@ const [selectedOption, setSelectedOption] = useState(null);
 
   const handleNextPress = () => {
     // Add your logic for the "Next" button action here
-    if (utills.isEmptyOrSpaces(selectedOption)) {
-      console.log('value==33', selectedOption);
-  
-      utills.errorAlert('', 'Please Accept/Reject the terms of Agreements');
-      return;
-    }
+    console.log("selectedOption",selectedOption)
+if (selectedOption == null || selectedOption === "I do not accept the agreement"){
 
+  utills.errorAlert("Please accept the agreement!")
+  return
+}
 
 
     navigation.navigate(SCREENS.HomeShopAccountDetails1,{From:"HS",Params1:Params1})
@@ -63,7 +62,7 @@ const handlePress = () => {
     <ScrollView style= {styles.containerSc}> 
     <View style={styles.container}>
     {/* <ScrollView> */}
-    <View style={[styles.row,{justifyContent:'center',alignItems:'center',width:wp('85%'),gap:10}]}>
+    <View style={[styles.row,{justifyContent:'center',alignItems:'center',width:wp('80%'),gap:10}]}>
             <Image source={IMAGES.logoHS} style={styles.logo} />
             <Image source={IMAGES.HomeShopingImage} style={styles.logo1} />
 
@@ -305,10 +304,12 @@ const styles = StyleSheet.create({
   logo: {
     width: 90,
     height: 90,
+    resizeMode:"contain"
   },
   logo1: {
     height: 90,
     resizeMode:'contain',
+    width : wp("60%")
   },
   fw500Text: {
     fontWeight: '500',

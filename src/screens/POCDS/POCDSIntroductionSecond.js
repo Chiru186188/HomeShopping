@@ -13,6 +13,7 @@ import HeaderWithBackButton from '../../components/HeaderWithBackButton';
 import CustomRadioButtons from '../../components/CustomRadioButtons';
 import CustomButtons from '../../components/CustomButtons';
 import { useRoute } from '@react-navigation/native';
+import utills from '../../utills';
 // import CustomRadioButtons from '../../components/CustomRadioButtons';
 
 export default function POCDSIntroductionSecond({navigation}) {
@@ -43,6 +44,12 @@ const [selectedOption, setSelectedOption] = useState(null);
   
   const handleNextPress = () => {
     // Add your logic for the "Next" button action here
+    console.log("selectedOption",selectedOption)
+    if (selectedOption == null || selectedOption === "I do not accept the agreement"){
+    
+      utills.errorAlert("Please accept the agreement!")
+      return
+    }
      navigation.navigate(SCREENS.POCDSAccountDetails1,{Params1:Params1})
   };
 const handlePress = () => {
@@ -324,13 +331,15 @@ const styles = StyleSheet.create({
     
   },
   logo: {
-    width: 120,
-    height: 120,
+    width: wp("25%"),
+    height: wp("25%"),
     resizeMode:'contain',
   },
   logo1: {
-    height: 120,
+    height: wp("30%"),
     resizeMode:'contain',
+    width : wp("55%")
+    
   },
   fw500Text: {
     fontWeight: '500',

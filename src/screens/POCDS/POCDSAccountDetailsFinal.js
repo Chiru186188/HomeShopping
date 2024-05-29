@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View,Platform, Linking,NativeModules, Image, TouchableOpacity, ScrollView, TextInput} from 'react-native';
+import {StyleSheet, Text, View,Platform, Linking,NativeModules, Image, TouchableOpacity, ScrollView, TextInput, ActivityIndicator} from 'react-native';
 import React from 'react';
  import {COLORS, CONSTANTS, DEFAULTARRAYS, FONTFAMILY, IMAGES, SCREENS, SIZES, STYLES} from '../../constants/them';
 import {
@@ -20,10 +20,13 @@ import utills from '../../utills';
 import CheckboxList from '../../components/CheckboxList';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { getAllAddressListSlice } from '../../redux/slice/categories';
+import { getAllAddressListSlice, saveIsLoading } from '../../redux/slice/categories';
 import { useSelector } from 'react-redux';
 import useRedux from '../../components/useRedux';
-import { RegisterSlicePOCDS } from '../../redux/slice/auth';
+import { LogedInUserSlice, RegisterSlicePOCDS, saveAccessToken, saveUserData } from '../../redux/slice/auth';
+import CheckboxListSingleSelected from '../../components/CheckboxListSingleSelected';
+import TouchableNativeFeedback from '../../components/TouchableNativeFeedback';
+import Icons, { Icon } from '../../components/Icons';
 // import CustomRadioButtons from '../../components/CustomRadioButtons';
 
 export default function POCDSAccountDetailsFinal({navigation}) {
@@ -32,13 +35,10 @@ export default function POCDSAccountDetailsFinal({navigation}) {
   const [radioSelectedEZ, setradioSelectedEZ] = useState(false); // State to track radio button selection
   const [textValueEZ, settextValueEZ] = useState(''); // State to hold text field value
   const [selectedReq, setselectedReq] = useState(''); // State to hold text field value
-
   const [radioSelectedHS, setradioSelectedHS] = useState(false); // State to track radio button selection
   const [textValueHS, settextValueHS] = useState(''); // State to hold text field value
-
-
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState("");
   const [items, setItems] = useState([
     // {label: 'Indian', value: 'Indian'},
     // {label: 'USA', value: 'USA'},
@@ -51,7 +51,20 @@ export default function POCDSAccountDetailsFinal({navigation}) {
   const AllAddressList  = useSelector(state => state.category.AllAddressList);
   // console.log("AllAddressList",AllAddressList?.DeliveryAddress)
   const USERDETAIL  = AllAddressList?.data?.data
-   console.log("USERDETAIL",USERDETAIL?.data)
+   console.log("LoginParam",LoginParam)
+
+
+
+   const [isChecked, setIsChecked] = useState(false);
+
+
+
+   const handleClick = () => {
+     Linking.openURL("http://hsstrain.apis.gov.ai/Documents/POCDS%20AGREEMENT%20Form.pdf")
+
+ 
+   };
+
 
 useEffect(() => {
   getAllAdressddata()
@@ -71,14 +84,32 @@ setApplicantSign(Params1.FirstName)
    
   };
 }, []);
+const [selectedREQValue, setselectedREQValue] = useState("");
 
 const handleSelectionChange = (selectedItems) => {
-  console.log('Selected Items:', selectedItems);
-  setSelectedRequirementOption(selectedItems);
-  const combinedString = selectedItems.join(',');
-setselectedReq(combinedString)
-console.log(combinedString);
+  
   // console.log('Selected Itemssss:', selectedItems);
+
+
+  // if (selectedItems && selectedItems.length > 0) {
+  //   console.log('Selected Items:', selectedItems);
+  //   setSelectedRequirementOption(selectedItems);
+  //   const combinedString = selectedItems.join(',');
+  // setselectedReq(combinedString)
+  // console.log(combinedString);
+  // } else {
+  //   console.log('No selected items');
+  //   // Handle the case where no items are selected
+  // }
+
+  if (selectedItems && selectedItems.length > 0) {
+    console.log('Selected Item:', selectedItems[0]);
+    setselectedREQValue(selectedItems[0]);
+  } else {
+    console.log('No selected items');
+    // Handle the case where no items are selected
+    setselectedREQValue("");
+  }
 
 };
 const RequirmentServices = ['Customs Clearance and delivery on ALL packages received',
@@ -109,16 +140,20 @@ const getAllAdressddata = () => {
     id: LoginParam.UserId,
 
   };
+  console.log("data",data)
   dispatch(getAllAddressListSlice(data))
     .unwrap()
     .then(res => {
-      console.log("res",res)
+     // console.log("res",res)
 
-      const formattedItems = res.Nationality?.map((item) => ({
+      const formattedItems = res.DeliveryAddress?.map((item) => ({
         label: item.Text,
         value: item.Value,
       }));
-      console.log("formattedItems",formattedItems)
+
+      console.log("res",res?.data)
+      settextValueHS(res?.data?.HSAccount)
+    //  console.log("formattedItems",formattedItems)
       setItems(formattedItems);
 
     })
@@ -127,8 +162,29 @@ const getAllAdressddata = () => {
     });
 };
 const handleNextPress = () => {
-  // Add your logic for the "Next" button action here
-  if (utills.isEmptyOrSpaces(ApplicantSign)) {
+
+
+  
+   if(radioSelectedEZ == false && radioSelectedHS == false){
+
+    utills.errorAlert('', 'Please Select at least one Subscribed services Account No');
+    return;
+   }
+   if(radioSelectedEZ == true){
+
+    if (utills.isEmptyOrSpaces(textValueEZ)){
+      utills.errorAlert('', 'Please Enter Ezone Account No');
+      return;
+    }
+   }
+   if(radioSelectedHS == true){
+
+    if (utills.isEmptyOrSpaces(textValueHS)){
+      utills.errorAlert('', 'Please Enter Home Shoping Account No');
+      return;
+    }
+   }
+   if (utills.isEmptyOrSpaces(ApplicantSign)) {
     utills.errorAlert('', 'Please Enter Applicant Signature');
      return;
    }
@@ -142,6 +198,24 @@ const handleNextPress = () => {
      utills.errorAlert('', 'Please Enter Applicant Name');
      return;
    }
+   if (selectedREQValue == "" || selectedREQValue == null){
+    utills.errorAlert('', 'Please Select POCDS requirement');
+    return;
+  }
+
+  if (selectedREQValue == "Customs Clearance and delivery on ALL packages received" || selectedREQValue == "Customs Clearance and delivery on request"){
+   if (value == "" || value == null){
+    utills.errorAlert('', 'Please Select Address');
+    return;
+  }}else{
+    setValue("Zone - 0")
+  }
+  if (isChecked == false){
+
+    utills.errorAlert("Please Agree to the terms")
+    return
+  }
+  
    let data = {
     ApplicantName: ApplicantName,
     ApplicantSign: ApplicantSign,
@@ -150,9 +224,9 @@ const handleNextPress = () => {
     DeliveryAddress:value,
     UserId:LoginParam.UserId,
     CustomerId:USERDETAIL?.CustomerId,
-    DeliveryInstructions:selectedReq,
-    EzoneAccount:textValueEZ,
-    HSAccount:textValueHS
+    DeliveryInstructions:selectedREQValue,
+    EzoneAccount: textValueEZ,
+    HSAccount: textValueHS
 
   };
  console.log('value==33', data);
@@ -162,17 +236,56 @@ const handleNextPress = () => {
   .unwrap()
   .then(res => {
   console.log('Register res==', res);
-  if (res.statusCode == 200){
-   // navigation.navigate(SCREENS.CartValueScreen,{From :"PBDS",Service:'Private Bag Delivery Service'})
-  }else{
+  if (res.status == true){
+  // navigation.navigate(SCREENS.CartValueScreen,{From :"PBDS",Service:'Private Bag Delivery Service'})
+  
+  handleGoToHome()
+}else{
     utills.errorAlert('', res.message);
     return;
   }
+  })
+  .catch(e => {
+      setLoading(false);
   });
    
 
 
 };
+const [loading, setLoading] = useState(false); // State to manage loading status
+
+
+const userData = useSelector(state => state.auth.userData);
+
+const handleGoToHome = async () => {
+  const userId = userData?.userID
+  setLoading(true); // Se
+  let data = {
+  id: userId,
+
+};
+console.log('Go to Login');
+console.log('data',data);
+
+dispatch(saveIsLoading(true))
+dispatch(LogedInUserSlice(data))
+  .unwrap()
+  .then(res => {
+    dispatch(saveIsLoading(false))
+    setLoading(false); // Se
+    console.log('Login ressss==', res);
+    saveAccessToken(res?.token)
+    if (res?.success == true){
+      console.log('Login res==', res.data);
+
+      dispatch(saveUserData(res.data))
+      navigation.replace(SCREENS.DashBoard); 
+      
+  }
+});
+};
+
+
 const handlePress = () => {
 };
   return (
@@ -180,7 +293,10 @@ const handlePress = () => {
     <HeaderWithBackButton onPress={handlePress} title = "Application Form" />
 
     <ScrollView style= {styles.containerSc}> 
+
+ 
     <View style={styles.container}>
+    
     {/* <ScrollView> */}
     <View style={[styles.row,{justifyContent:'center',alignItems:'center',width:wp('85%'),gap:10}]}>
             <Image source={IMAGES.logoHS} style={styles.logo} />
@@ -190,7 +306,10 @@ const handlePress = () => {
 
           <View style={[styles.row,{backgroundColor : COLORS.primary,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
-                  <Text  style={styles.Left500BOLDTextWhite}>Subscribed Services Account #</Text>
+                  <Text  style={styles.Left500BOLDTextWhite}>Subscribed Services Account #
+                  <Text  style={styles.textDanger}> *
+           </Text>
+                  </Text>
                 </View>
               </View>
 
@@ -318,7 +437,11 @@ const handlePress = () => {
 
               <View style={[styles.row,{backgroundColor : COLORS.primary,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
-                  <Text  style={styles.Left500BOLDTextWhite}>POCDS Requirement (Please Click)</Text>
+                  <Text  style={styles.Left500BOLDTextWhite}>POCDS Requirement (Please Click)
+                  
+                  <Text  style={styles.textDanger}> *
+           </Text>
+                  </Text>
                 </View>
               </View>
               <View style={{paddingRight:30, alignSelf:'flex-start'}}>
@@ -339,13 +462,16 @@ const handlePress = () => {
             );
           })} */}
 
-<CheckboxList options={RequirmentServices} onSelectionChange={handleSelectionChange}/>
+{/* <CheckboxList options={RequirmentServices} onSelectionChange={handleSelectionChange}/> */}
+<CheckboxListSingleSelected options={RequirmentServices} onSelectionChange={handleSelectionChange} />
 
 </View>
 
 <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
                   <Text  style={styles.Left500BOLDText}>Physical Address to where packages should be delivered, if desired:
+                  <Text  style={styles.textDanger}> *
+           </Text>
 
 </Text>
                 </View>
@@ -368,7 +494,9 @@ const handlePress = () => {
       justifyContent: 'center',
       paddingHorizontal:10,
       marginTop:10,
-      marginBottom:15
+      marginBottom:15,
+      //zIndex: 1, // Add zIndex to ensure the dropdown appears above other elements
+      position: 'relative'
 
     }}>
       <DropDownPicker
@@ -409,12 +537,65 @@ const handlePress = () => {
               <Text  style={styles.Left500Text}>Please <Text style={styles.textblue} >click</Text> here to read the Home Shopping service agreement terms and conditions</Text>
               </View>
  */}
+        <TouchableNativeFeedback style={{paddingHorizontal:20,marginVertical:20, alignSelf:'flex-start'}}   onPress={handleClick}>
 
+<Text style={{
+    color: COLORS.black,
+    fontSize:rf(1.8),
+    fontFamily: FONTFAMILY.Medium,
+    //textAlign:'justify'
+  }}>Please 
+    <Text style={[styles.textDanger,]}> click
+    </Text>
+
+  <Text style={styles.textNormal}> here to read the Post Office Clearance and Delivery Service agreement terms and condition</Text>
+
+</Text>
+</TouchableNativeFeedback> 
 
               <View style={{paddingHorizontal:20, alignSelf:'flex-start'}}>
-              <Text  style={styles.textDanger}>By signing below the customer acknowledges having read all the terms and conditions and agrees to abide by these operational regulations and is in full agreement to their enforcement for the efficient processing of their Home Shopping packages.</Text>
+              <Text  style={styles.textDanger}>By ticking the box / signing below the customer acknowledges having read all the terms and conditions and agrees to abide by these operational regulations and is in full agreement with their enforcement for the efficient clearance of packages through the General Post Office’s Clearance and Delivery Service (POCDS).</Text>
               </View>
             
+
+              <View style={{
+   marginTop: 10,
+  
+   flexDirection: 'row',
+   justifyContent: 'flex-start',
+   alignSelf:'flex-start',
+   marginHorizontal:20
+ //  alignItems: 'center',
+ }}>
+          <TouchableOpacity
+            // activeOpacity={0.8}
+            onPress={() => {
+              setIsChecked(!isChecked);
+            }}>
+            <Icons
+              name={isChecked ? 'checkbox-active' : 'checkbox-passive'}
+              style={{
+                fontSize: rf(2.5),
+                color: "darkgreen",
+                marginRight: 10,
+              }}
+              Type={Icon.Fontisto}//
+              size={rf(2.0)}
+            />
+          </TouchableOpacity>
+          <Text style={{
+    fontFamily: FONTFAMILY.Medium,
+    fontSize: rf(1.7),
+    color: COLORS.Lableheading,
+    textAlign: 'left',
+  }}>
+            {' '}I Agree{' '}
+          
+          </Text>
+          
+        </View>
+
+
               <EditTextBottomBorder
         placeholder="Name of Authorized Person"
         value={ApplicantName}
@@ -460,6 +641,12 @@ const handlePress = () => {
     </View>
    
     </ScrollView>
+    {loading && (
+                    <View style={styles.loaderContainer}>
+                        {/* Your loader component */}
+                        <ActivityIndicator size="large" color={COLORS.primary} />
+                    </View>
+                )}
      </GradientBackground>
 
   );
@@ -476,7 +663,12 @@ const styles = StyleSheet.create({
     alignSelf:'center'
 
   },
-
+  loaderContainer: {
+    ...StyleSheet.absoluteFillObject, // Position the loader absolute to cover the entire screen
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background to dim the screen
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   containerSub: {
     flex: 1,
     width : wp('88'),
@@ -551,12 +743,15 @@ const styles = StyleSheet.create({
     
   },
   logo: {
-    width: 120,
-    height: 120,
+    width: wp("25%"),
+    height: wp("25%"),
+    resizeMode:'contain',
   },
   logo1: {
-    height: 120,
+    height: wp("30%"),
     resizeMode:'contain',
+    width : wp("55%")
+    
   },
   fw500Text: {
     fontWeight: '500',

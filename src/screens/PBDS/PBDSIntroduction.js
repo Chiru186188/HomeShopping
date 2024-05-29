@@ -96,9 +96,10 @@ const handlePress = () => {
               </View>
           {/* </ScrollView> */}
           <CustomBlueButton
-          title="Sign up"
+          title="Next"
           onPress={() => navigation.navigate(SCREENS.PBDSAccountDetails1,{Params1 :Params1})}
-         
+          IconName={"input"}
+
           textStyle={{fontFamily :FONTFAMILY.Bold,
             fontSize: rf(2.0)}} // Custom text style
         />

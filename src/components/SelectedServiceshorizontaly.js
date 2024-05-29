@@ -17,13 +17,11 @@ export default function SelectedServiceshorizontaly({
   setSelectedService,
 })
 {  
-
  const [ServiceList, setServiceList] = useState([]);
  const [ServiceIconList, setServiceIconList] = useState([]);
  const [ServiceIdList, setServiceIdList] = useState([]);
-
- const userData = useSelector(state => state.auth.userData);
-const navigation = useNavigation()
+  const userData = useSelector(state => state.auth.userData);
+  const navigation = useNavigation()
   // const services = [
   //   'Home Shopping (ocean freight) service',
   //   'eZone (AIR) service',
@@ -155,7 +153,7 @@ setServiceIdList(idArr)
   return (
     <View>
     <FlatList
-    horizontal
+    // horizontal
     data={ServiceList}
     keyExtractor={(item, index) => index.toString()}
     
@@ -169,10 +167,10 @@ setServiceIdList(idArr)
         ]}
         onPress={() => handleServiceSelection(item,index)}
       >
-        <Image
+        {/* <Image
           style={{ height: wp('20%'), width: wp('50%'), resizeMode: 'contain' }}
           source={ServiceIconList[index]}
-        />
+        /> */}
         <Text style={styles.serviceText}>{item}</Text>
       </TouchableOpacity>
     )}
@@ -199,11 +197,9 @@ const styles = StyleSheet.create({
 
   
 
-  
-
  serviceItem: {
   padding: 12,
-  width:wp('80'),
+  width:wp('90'),
   backgroundColor: COLORS.lightGreySelection, // Default background color
   borderWidth: 1,
   borderColor: 'transparent', // Default border color (transparent)

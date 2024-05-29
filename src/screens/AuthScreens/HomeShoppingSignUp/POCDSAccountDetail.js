@@ -34,7 +34,7 @@ import {
   
 } from '../../../components/Svg';
 import { useSelector } from 'react-redux';
-import { EditPOCDSCustomerDetailsSlice, PrintReportSlice, getAccountHistorySlice, getCustomerDetailsSlice, getPOCDSAccountHistorySlice, getPOCDSCustomerDetailsSlice, getRBCustomerDetailsSlice, getRZAccountHistorySlice } from '../../../redux/slice/categories';
+import { EditPOCDSCustomerDetailsSlice, PrintPOCDSReportSlice, PrintReportSlice, getAccountHistorySlice, getCustomerDetailsSlice, getPOCDSAccountHistorySlice, getPOCDSCustomerDetailsSlice, getRBCustomerDetailsSlice, getRZAccountHistorySlice, savePOCDSCostumerDetails } from '../../../redux/slice/categories';
 import useRedux from '../../../components/useRedux';
 import utills from '../../../utills';
 import TouchableNativeFeedback from '../../../components/TouchableNativeFeedback';
@@ -71,6 +71,8 @@ const [valueLocation, setValueLocation] = useState(null);
 const [itemsLocation, setItemsLocation] = useState([
 ]);
 useEffect(() => {
+  dispatch(savePOCDSCostumerDetails(null))
+
   getCustomerdata()
   return () => {
    
@@ -81,13 +83,12 @@ const handlPrintHistory = () => {
 //?CustomerId=4236&AccountId=3671&type=Hs
 
   let data = {
-    CustomerId: CustId,//userData?.userID,
-    AccountId:AccountId,
-    type:"Pocds"
+    ID: CustId,//userData?.userID,
+    
   };
-  console.log('dataaaaaaar',data)
+  // console.log('dataaaaaaar',data)
 
-  dispatch(PrintReportSlice(data))
+  dispatch(PrintPOCDSReportSlice(data))
     .unwrap()
     .then(res => {
       console.log("res?",res)
@@ -114,17 +115,17 @@ const handleHistoryReport = () => {
 
 const getCustomerdata = () => {
  // console.log('FromID',FromID)
+ console.log('userData',userData)
 
   let data = {
-    Id: userData?.userID,
-
+    Id: userData?.userID.toString(),
   };
   console.log('dataaaaaaar',data)
 
   dispatch(getPOCDSCustomerDetailsSlice(data))
     .unwrap()
     .then(res => {
-     // console.log("res?",res)
+     // 
 
     //   console.log("res?.aaData?.OpeningAmount",res?.aaData?.OpeningAmount)
 
@@ -164,10 +165,13 @@ const getCustomerdata = () => {
     if (res?.DeliveryAddress?.length > 0){
   setValueLocation(res?.DeliveryAddress[0]?.Value)
     }
+    console.log("res?",res?.aaData)
+
     setHSaccountno(res?.aaData?.HSAccount);
 
     setEZaccountno(res?.aaData?.EzoneAccount);
-    
+    setEZaccountno1(res?.aaData?.EzoneAccount);
+
     setaccountOPDate(utills.getDateBeforeT(res?.aaData?.AccountOpeningDate));
     setaccountOPAmnt(res?.aaData?.OpeningAmount?.toString());
     setsubscriptionDate(utills.getDateBeforeT(res?.aaData?.SubscriptionDueDate));
@@ -224,7 +228,7 @@ const CostumerDetails  = useSelector(state => state.category.POCDSCostumerDetail
 const AccountHistory  = useSelector(state => state.category.POCDSAccountHistory);
 const AccountHistoryList  = AccountHistory?.aaData;
 
-console.log("AccountHistory",AccountHistory)
+// console.log("AccountHistory",AccountHistory)
 
 
 const [isEditing, setIsEditing] = useState(false);
@@ -261,7 +265,7 @@ const handleSavePress = () => {
 
 
   };
-  console.log('dataaaaaaar',data)
+  // console.log('dataaaaaaar',data)
 
   dispatch(EditPOCDSCustomerDetailsSlice(data))
     .unwrap()
@@ -329,6 +333,7 @@ const [homePhone, sethomePhone] = useState('');
 const [workphone, setworkphone] = useState('');
 const [HSaccountno, setHSaccountno] = useState();
 const [EZaccountno, setEZaccountno] = useState();
+const [EZaccountno1, setEZaccountno1] = useState();
 
 const [accountOPDate, setaccountOPDate] = useState();
 // const [accountOPAmount, setaccountOPAmount] = useState(CostumerDetails?.aaData?.aaData?.OpeningAmount);
@@ -386,7 +391,8 @@ const listData = [
       justifyContent: 'center',
       paddingHorizontal:15,
       marginTop:25,
-
+      //zIndex: 1, // Add zIndex to ensure the dropdown appears above other elements
+      position: 'relative'
     }}>
       <DropDownPicker
       open={open}
@@ -465,7 +471,8 @@ const listData = [
         value={FirstName}
         onChangeText={setFirstName}
         keyboardType="default"
-        disable={enableText}
+        isRequired={true}
+        disable={true}
       />
          <EditText_WithBackgroundColor
         label="Last Name"
@@ -473,7 +480,9 @@ const listData = [
         value={lastName}
         onChangeText={setlastName}
         keyboardType="default"
-        disable={enableText}
+        isRequired={true}
+
+        disable={true}
 
       />
       <EditText_WithBackgroundColor
@@ -482,7 +491,9 @@ const listData = [
         value={EmailAdd}
         onChangeText={setEmailAdd}
         keyboardType="default"
-        disable={true}
+        isRequired={true}
+
+        disable={enableText}
 
       />
       <EditText_WithBackgroundColor
@@ -492,6 +503,8 @@ const listData = [
         onChangeText={setMobilePhone}
         keyboardType='numeric'
           disable={enableText}
+          maxLength={10}
+          isRequired={true}
 
       />
       
@@ -503,6 +516,7 @@ const listData = [
         onChangeText={setPhysicalAddress}
         keyboardType="default"
         disable={true}
+        isRequired={true}
 
       />
        {/* <EditText_WithBackgroundColor
@@ -574,6 +588,23 @@ const listData = [
 
     //   }}
     /> */}
+
+<View style={{alignSelf:'flex-start',paddingHorizontal:15}}>
+          <Text  style={{
+    marginTop: hp('2%'),
+    fontSize: rf(1.8),
+    color: COLORS.Lableheading,
+    fontFamily: FONTFAMILY.Medium,
+    marginLeft:wp('1%'),
+    textAlign:'left'
+
+  }}>Delivery Village
+            <Text  style={[styles.Left500BOLDText,{color :'red'}]}> *</Text>
+
+            </Text>
+            </View>
+            <View  pointerEvents={'none'} // Disable the entire View if enableText is true
+>
 <DropDownPicker
       open={openLocation}
       value={valueLocation}
@@ -586,10 +617,9 @@ const listData = [
       style={{backgroundColor:COLORS.lightGreySelection, borderWidth:0,borderRadius:10,height: hp('8%'),width:wp('86%'),marginHorizontal:15,marginTop:10      
     }}
       textStyle={{fontFamily:FONTFAMILY.Bold,fontSize:rf(1.8)}}
-  
     />
 
-
+</View>
 </React.Fragment>
 )}
 
@@ -616,16 +646,18 @@ const listData = [
         value={EZaccountno}
         onChangeText={setEZaccountno}
         keyboardType="default"
-        disable={enableText}
+        // disable={enableText && (EZaccountno1 == "0" || EZaccountno1 == "")}
+        // disable={enableText && (EZaccountno1 == "0" || EZaccountno1 == "")}
+        disable={true}
 
       />
        <EditText_WithBackgroundColor
-        
+
         placeholder="HS Account"
         value={HSaccountno}
         onChangeText={setHSaccountno}
         keyboardType="default"
-        disable={enableText}
+        disable={true}
 
       />
          <EditText_WithBackgroundColor
@@ -706,7 +738,7 @@ onPress={handlPrintHistory}
 </View>
 
 <Text style={styles.Left500Text}>Print</Text>
-<Text style={styles.Left500Text}>History</Text>
+<Text style={styles.Left500Text}>Invoice</Text>
 
 
 </TouchableOpacity>
@@ -718,12 +750,12 @@ style = {{alignItems:'center'}}>
 <Image source={IMAGES.HistoryReport} style={styles.logo} />
 
 </View>
-<Text style={styles.Left500Text}>Transactions</Text>
+<Text style={styles.Left500Text}>Online System</Text>
 
 <Text style={styles.Left500Text}
 numberOfLines={2}
 ellipsizeMode='tail'
->History Report</Text>
+>Payments Report</Text>
 {/* <Text style={styles.Left500Text}>Report</Text> */}
 
 </TouchableOpacity>
@@ -1142,7 +1174,7 @@ width:wp('90%')
   },
   Left500TextMd: {
     fontFamily: FONTFAMILY.SemiBold,
-    fontSize:rf(1.8),
+    fontSize:rf(1.6),
     textAlign: 'left',
     paddingHorizontal:10
   },

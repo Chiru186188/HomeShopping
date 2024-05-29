@@ -11,6 +11,7 @@ import {COLORS, FONTFAMILY, SCREENS} from '../constants/them';
 import Icons, {Icon} from './Icons';
 
 import {useNavigation} from '@react-navigation/native';
+import utills from '../utills';
 
 const CustomHeader = ({onPress, title}) => {
   const navigation = useNavigation();
@@ -46,7 +47,9 @@ const CustomHeader = ({onPress, title}) => {
         style={styles.container}
         onPress={
           () => 
-        navigation.goBack()}
+       // navigation.goBack()
+       utills.confirmMessageAlert("Under Development")
+      }
         >
         {/* <Svg /> */}
 

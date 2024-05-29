@@ -147,6 +147,7 @@ export default function CreatePassword({navigation}) {
             //  Resetpwd()
           }}         
           buttonStyle={styles.loginButton} // Custom button style
+          IconName={"save"}
           textStyle={{fontFamily :FONTFAMILY.Bold,
           fontSize: rf(2.0)}}         
           />

@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View,Platform, Linking,NativeModules, Image, TouchableOpacity, ScrollView} from 'react-native';
+import {StyleSheet, Text, View,Platform, Linking,NativeModules, Image, TouchableOpacity, ScrollView, TextInput} from 'react-native';
 import React from 'react';
  import {COLORS, CONSTANTS, DEFAULTARRAYS, FONTFAMILY, IMAGES, SCREENS, SIZES, STYLES} from '../../../constants/them';
 import {
@@ -40,7 +40,7 @@ const formattedItemsT = DEFAULTARRAYS.TitleList?.map((item) => ({
 }));
 console.log("formattedItems",formattedItemsT)
 setItemsT(formattedItemsT);
-
+setValue("Anguilla")
 
 if (Params1?.DOB != ''){
   setdob(Params1?.DOB)
@@ -51,9 +51,10 @@ if (Params1?.DOB != ''){
 }, []);
 
 const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+const [EZACCOUNT, setEZACCOUNT] = useState("");
 
 const [open, setOpen] = useState(false);
-const [value, setValue] = useState(null);
+const [value, setValue] = useState("Anguilla");
 const [items, setItems] = useState(
 //   [
 //   {label: 'Indian', value: 'Indian'},
@@ -152,33 +153,40 @@ const handleNextPress = async () => {
       utills.errorAlert('', 'Please Enter  Physical Address');
       return;
     }
-    if (utills.isEmptyOrSpaces(Poboxnu)) {
-      utills.errorAlert('', 'Please Enter P.O. Box Number');
+    // if (utills.isEmptyOrSpaces(Poboxnu)) {
+    //   utills.errorAlert('', 'Please Enter P.O. Box Number');
+    //   return;
+    // }
+  
+    if (!utills.validateEmail(EmailAdd)) {
+      utills.errorAlert('', 'Invalid Email');
       return;
     }
     if (utills.isEmptyOrSpaces(EmailAdd)) {
       utills.errorAlert('', 'Please Enter Email Address');
       return;
     }
+    
     if (utills.isEmptyOrSpaces(MobilePhone)) {
       utills.errorAlert('', 'Please Enter Mobile Number');
       return;
     }
 
     let data = {
-      title: valueT,
-      firstName:FirstName,
-      surname:lastName,
-      dob:dob,
-      nationality:value,
-      physicalAddress:PhysicalAddress,
-      poBox:Poboxnu,
-      email:EmailAdd,
-      facebookId:fbId,
-      instaId:instaid,
-      homeMobile:homePhone,
-      workMobile:workphone,
-      phoneNumber:MobilePhone,
+      Title: valueT,
+      FirstName:FirstName,
+      Surname:lastName,
+      DOB:dob,
+      Nationality:value,
+      PhysicalAddress:PhysicalAddress,
+      POBox:Poboxnu,
+      Email:EmailAdd,
+      FacebookId:fbId,
+      InstaId:instaid,
+      HomeMobile:homePhone,
+      WorkMobile:workphone,
+      PhoneNumber:MobilePhone,
+      AccountNo:EZACCOUNT,
 
     };
 
@@ -193,7 +201,7 @@ const handleNextPress = async () => {
     <ScrollView style= {styles.containerSc}> 
     <View style={styles.container}>
     {/* <ScrollView> */}
-    <View style={[styles.row,{justifyContent:'center',alignItems:'center',width:wp('85%'),gap:10}]}>
+    <View style={[styles.row,{justifyContent:'center',alignItems:'center',width:wp('85%'),gap:5}]}>
             <Image source={IMAGES.logoHS} style={styles.logo} />
             {From === 'HS' ? (
   <Image source={IMAGES.HomeShopingImage} style={styles.logo1} />
@@ -216,6 +224,23 @@ const handleNextPress = async () => {
         onChangeText={settitle}
         keyboardType="default"
       /> */}
+
+
+        
+{From != 'HS' ? (
+
+<View style={styles1.container}>
+      <Text style={styles1.label}>
+        Account # <Text style={styles1.highlight}>AXA</Text>
+      </Text>
+      <TextInput style={styles1.input}
+      onChangeText={setEZACCOUNT}
+      value={EZACCOUNT}
+      placeholder="Enter EZone Account"
+      />
+    </View>
+) :             <Image source={IMAGES.Ezone1} style={styles.logo1} />
+}
 
 <View style={{alignSelf:'flex-start'}}>
   <Text style={{
@@ -242,8 +267,9 @@ const handleNextPress = async () => {
       justifyContent: 'center',
       paddingHorizontal:10,
       marginTop:10,
-      marginBottom:15
-
+      marginBottom:15,
+      //zIndex: 1, // Add zIndex to ensure the dropdown appears above other elements
+      position: 'relative' // Set position to 'relative' to control the positioning
     }}>
       <DropDownPicker
       open={openT}
@@ -388,8 +414,9 @@ const handleNextPress = async () => {
       justifyContent: 'center',
       paddingHorizontal:10,
       marginTop:10,
-      marginBottom:15
-
+      marginBottom:15,
+      //zIndex: 1, // Add zIndex to ensure the dropdown appears above other elements
+      position: 'relative'
     }}>
       <DropDownPicker
       open={open}
@@ -425,7 +452,7 @@ const handleNextPress = async () => {
         keyboardType="default"
       />
        <EditTextWithLable
-        label="P.O. Box Number *"
+        label="P.O. Box Number"
         placeholder="Enter P.O. Box Number"
         value={Poboxnu}
         onChangeText={setPoboxnu}
@@ -496,6 +523,8 @@ const handleNextPress = async () => {
         value={MobilePhone}
         onChangeText={setMobilePhone}
         keyboardType='numeric'
+        maxLength={10}
+
       />
       
         <View style = {{width:wp('90%')}}>
@@ -595,12 +624,15 @@ const styles = StyleSheet.create({
     
   },
   logo: {
-    width: 90,
-    height: 90,
+    width: wp("25%"),
+    height: wp("25%"),
+    resizeMode:'contain',
   },
   logo1: {
-    height: 120,
+    height: wp("30%"),
     resizeMode:'contain',
+    width : wp("55%")
+    
   },
   fw500Text: {
     fontWeight: '500',
@@ -676,7 +708,34 @@ marginBottom:25
 
 
 });
-
+const styles1 = StyleSheet.create({
+  container: {
+    margin: 20,
+    flexDirection:'row',
+    width:wp("87%")
+  },
+  label: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  input: {
+    flex:1,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    fontSize: 18,
+    color: 'black',
+    paddingHorizontal:5
+  },
+  highlight: {
+    color: 'red',
+  },
+  redLine: {
+    height: 4,
+    backgroundColor: 'red',
+    marginTop: -1, // Adjust this to align properly with the input border
+  },
+});
 
 
 

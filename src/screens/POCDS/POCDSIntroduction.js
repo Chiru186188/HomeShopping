@@ -12,6 +12,7 @@ import GradientBackground from '../../components/GradientBackground';
 import HeaderWithBackButton from '../../components/HeaderWithBackButton';
 import CustomBlueButton from '../../components/CustomBlueButton';
 import { useRoute } from '@react-navigation/native';
+import Icons, { Icon } from '../../components/Icons';
 
 export default function POCDSIntroduction({navigation}) {
   const route = useRoute();
@@ -80,73 +81,313 @@ const handlePress = () => {
           <View style={styles.col11}>
           
             <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginTop:10,alignContent:'left'}]}>
-                <View style={styles.col8}>
-                  <Text  style={styles.Left500BOLDText}>Zone, Location, Delivery Customs Fee</Text>
-                </View>
+                {/* <View style={styles.col8}>
+               
+                  <View style={styles.row}>
+              <Image source={IMAGES.ZoneIcon} style={{width:18,height:18}} />
+
+       <Text style={styles.myTextGreyBold}>Zone
+</Text>
+</View>
+<View style={styles.row}>
+<Icons
+      name={'location'}
+      Type={Icon.Entypo}
+      size={rf(2.4)}
+      color={COLORS.black}
+    />
+       <Text style={styles.myTextGreyBold}>Location
+</Text>
+</View>
+<View style={styles.row}>
+              <Image source={IMAGES.AmountIcon} style={{width:18,height:18}} />
+
+       <Text style={styles.myTextGreyBold}>Customs Clearance & Delivery Fee
+</Text>
+</View>
+               
+                </View> */}
                 <View style={styles.col4}></View>
               </View>
             
             <View style={styles.col12}>
            
               <View style={styles.col12}>
-                <Text style={styles.myTextGrey}>0 Pick Up
+              <View style={styles.row}>
+              {/* <Image source={IMAGES.ZoneIcon} style={{width:18,height:18}} /> */}
+              <Text style={styles.myTextGreyBold}> ZONE -
 </Text>
+       <Text style={styles.myTextGreyBold}>0 Pick Up
+</Text>
+</View>
+                
+<View style={styles.row}>
+<Icons
+      name={'location'}
+      Type={Icon.Entypo}
+      size={rf(2.4)}
+      color={COLORS.black}
+    />
 <Text style={styles.myTextGrey}>General Post Office
 
 
 </Text>
-<Text style={styles.myTextGreyT}>EC$12.00 per package
+</View>
+
+<View style={styles.row}>
+              <Image source={IMAGES.AmountIcon} style={{width:24,height:24}} />
+
+              <Text style={styles.myTextGreyTBold}>EC$12.00 
+              <Text style={styles.myTextGreyT}> per package
 </Text>
+</Text>
+</View>
+
+
                
               </View>
               <View style={styles.hr}></View>
               <View style={styles.col12}>
-                <Text style={styles.myTextGrey}>1
+
+
+              <View style={styles.row}>
+              {/* <Image source={IMAGES.ZoneIcon} style={{width:18,height:18}} /> */}
+              <Text style={styles.myTextGreyBold}> ZONE -
+</Text>
+              <Text style={styles.myTextGreyBold}>1
 
 </Text>
+</View>
+
+               
+<View style={styles.row}>
+<Icons
+      name={'location'}
+      Type={Icon.Entypo}
+      size={rf(2.4)}
+      color={COLORS.black}
+    />
+
+    
                 <Text style={styles.myTextGrey}>Valley central
 </Text>
-<Text style={styles.myTextGreyT}>1st package - EC$20.00
+</View>
+
+
+<View style={styles.row}>
+              <Image source={IMAGES.AmountIcon} style={{width:24,height:24}} />
+
+             
+
+<View>
+
+<Text style={styles.myTextGreyT}>1st package - 
+
+<Text style={styles.myTextGreyTBold}> EC$ 20.00
 </Text>
-<Text style={styles.myTextGreyT}>Each additional package - EC$5.00
 </Text>
+<Text style={styles.myTextGreyT}>Each additional package - 
+
+<Text style={styles.myTextGreyTBold}> EC$ 5.00
+</Text>
+</Text>
+
+</View>
+
+
+</View>
+
+
+
+
+
+
               </View>
               <View style={styles.hr}></View>
               <View style={styles.col12}>
-                <Text style={styles.myTextGrey}>2 EAST
+
+              <View style={styles.row}>
+              {/* <Image source={IMAGES.ZoneIcon} style={{width:18,height:18}} /> */}
+              <Text style={styles.myTextGreyBold}> ZONE -
+</Text>
+              <Text style={styles.myTextGreyBold}>2 EAST
 
 </Text>
-    <Text style={styles.myTextGrey}>Albert Lake Dr. traffic light to Best Buy Supermarket/ Stoney Grounf to Little Dix Round About
+</View>
+
+               
+<View style={styles.row}>
+<Icons
+      name={'location'}
+      Type={Icon.Entypo}
+      size={rf(2.4)}
+      color={COLORS.black}
+    />
+        <Text style={styles.myTextGrey}>Albert Lake Dr. traffic light to Best Buy Supermarket/ Stoney Grounf to Little Dix Round About
 </Text>
-<Text style={styles.myTextGreyT}>1st package - EC$25.00
+</View>
+    
+
+<View style={styles.row}>
+              <Image source={IMAGES.AmountIcon} style={{width:24,height:24}} />
+
+             
+
+<View>
+
+<Text style={styles.myTextGreyT}>1st package - 
+
+<Text style={styles.myTextGreyTBold}> EC$ 25.00
 </Text>
-<Text style={styles.myTextGreyT}>Each additional package - EC$5.00
+</Text>
+<Text style={styles.myTextGreyT}>Each additional package - 
+
+<Text style={styles.myTextGreyTBold}> EC$ 5.00
+</Text>
+</Text>
+
+</View>
 
 
-</Text>
+</View>
               </View>
               <View style={styles.hr}></View>
              
               <View style={styles.col12}>
-                <Text style={styles.myTextGrey}>2 WEST</Text>
-                <Text style={styles.myTextGrey}>George Hill to traffic light in south hill
+
+              <View style={styles.row}>
+              {/* <Image source={IMAGES.ZoneIcon} style={{width:18,height:18}} /> */}
+              <Text style={styles.myTextGreyBold}> ZONE -
 </Text>
-<Text style={styles.myTextGreyT}>1st package - EC$25.00
+              <Text style={styles.myTextGreyBold}>2 WEST</Text>
+</View>
+
+                <View style={styles.row}>
+<Icons
+      name={'location'}
+      Type={Icon.Entypo}
+      size={rf(2.4)}
+      color={COLORS.black}
+    />
+        <Text style={styles.myTextGrey}>George Hill to traffic light in South Hill
 </Text>
-<Text style={styles.myTextGreyT}>Each additional package - EC$5.00
+</View>
+                
+<View style={styles.row}>
+              <Image source={IMAGES.AmountIcon} style={{width:24,height:24}} />
+
+             
+
+<View>
+
+<Text style={styles.myTextGreyT}>1st package - 
+
+<Text style={styles.myTextGreyTBold}> EC$ 25.00
 </Text>
+</Text>
+<Text style={styles.myTextGreyT}>Each additional package - 
+
+<Text style={styles.myTextGreyTBold}> EC$ 5.00
+</Text>
+</Text>
+
+</View>
+
+
+</View>
               </View>
               <View style={styles.hr}></View>
              
-
               <View style={styles.col12}>
-                <Text style={styles.myTextGrey}>3 EAST</Text>
-                <Text style={styles.myTextGrey}>After Best Buy Supermarket/ After Little dix rouad About to tip of East End
+
+<View style={styles.row}>
+{/* <Image source={IMAGES.ZoneIcon} style={{width:18,height:18}} /> */}
+<Text style={styles.myTextGreyBold}> ZONE -
 </Text>
-<Text style={styles.myTextGreyT}>1st package - EC$30.00
+<Text style={styles.myTextGreyBold}>3 EAST</Text>
+</View>
+
+ 
+  <View style={styles.row}>
+<Icons
+name={'location'}
+Type={Icon.Entypo}
+size={rf(2.4)}
+color={COLORS.black}
+/>
+<Text style={styles.myTextGrey}>After Best Buy Supermarket/ After Little Dix Round About to tip of East End
 </Text>
-<Text style={styles.myTextGreyT}>Each additional package - EC$5.00
+</View>
+
+  
+<View style={styles.row}>
+<Image source={IMAGES.AmountIcon} style={{width:24,height:24}} />
+
+
+
+<View>
+
+<Text style={styles.myTextGreyT}>1st package - 
+
+<Text style={styles.myTextGreyTBold}> EC$ 30.00
 </Text>
+</Text>
+<Text style={styles.myTextGreyT}>Each additional package - 
+
+<Text style={styles.myTextGreyTBold}> EC$ 5.00
+</Text>
+</Text>
+
+</View>
+
+
+</View>
+</View>
+<View style={styles.hr}></View>
+              <View style={styles.col12}>
+
+              <View style={styles.row}>
+              {/* <Image source={IMAGES.ZoneIcon} style={{width:18,height:18}} /> */}
+              <Text style={styles.myTextGreyBold}> ZONE -
+</Text>
+              <Text style={styles.myTextGreyBold}>3 WEST</Text>
+</View>
+
+               
+                <View style={styles.row}>
+<Icons
+      name={'location'}
+      Type={Icon.Entypo}
+      size={rf(2.4)}
+      color={COLORS.black}
+    />
+        <Text style={styles.myTextGrey}>West of South Hill traffic light to the tip of West End
+</Text>
+</View>
+
+                
+<View style={styles.row}>
+              <Image source={IMAGES.AmountIcon} style={{width:24,height:24}} />
+
+             
+
+<View>
+
+<Text style={styles.myTextGreyT}>1st package - 
+
+<Text style={styles.myTextGreyTBold}> EC$ 30.00
+</Text>
+</Text>
+<Text style={styles.myTextGreyT}>Each additional package - 
+
+<Text style={styles.myTextGreyTBold}> EC$ 5.00
+</Text>
+</Text>
+
+</View>
+
+
+</View>
               </View>
               <View style={styles.hr}></View>
 
@@ -164,13 +405,26 @@ const handlePress = () => {
           </View>
 
           
-          {/* <View style={[styles.col12,{}]}>
-          <Text style={styles.Left500BOLDText}>POCDS Delivery Zone Map
+          <View style = {{alignItems:'center',gap:10,marginBottom:10,paddingHorizontal:5}}>
+          <Text style={[styles.Left500BOLDText,{color:'red',textAlign:'center'}]}>13% GST will be added to delivery fees
                 </Text>
-                   </View> */}
+                <View style={{backgroundColor:COLORS.BlueSelectionBorder}}>
+                <Text style={[styles.Left500SEMIBOLDText,{paddingHorizontal:10,textAlign:'center'}]}>Overweight charge of EC$1.00 per each additional pound over 40 lbs
+
+                </Text>
+                </View>
+
+                <View style={{backgroundColor:COLORS.lightyellow}}>
+                <Text style={[styles.Left500BOLDText,{paddingHorizontal:10,textAlign:'center'}]}>The Anguilla Post Office reserves the right to change its delivery rates as necessary
+
+
+                </Text>
+                </View>
+                </View>
           <View style={[styles.col12,{marginTop:10}]}>
                 
-              
+          <Text style={[styles.Heading,{color:'black',textAlign:'left'}]}>POCDS Delivery Zone Map
+          </Text>
                 
                 <Image source={IMAGES.POCDSMap} style={styles.imagemap} />
                 
@@ -179,9 +433,10 @@ const handlePress = () => {
       
           {/* </ScrollView> */}
           <CustomBlueButton
-          title="Sign up"
-          onPress={() => navigation.navigate(SCREENS.POCDSIntroductionSecond,{Params1:Params1})}
-         
+          title="Next"
+          onPress={() => navigation.navigate(SCREENS.POCDSAccountDetails1,{Params1:Params1})}
+          IconName={"input"}
+
           textStyle={{fontFamily :FONTFAMILY.Bold,
             fontSize: rf(2.0)}} // Custom text style
         />
@@ -224,6 +479,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   col8: {
+    paddingHorizontal:10,
     flex: 2,
   },
 
@@ -232,17 +488,23 @@ const styles = StyleSheet.create({
 
   row: {
     flexDirection: 'row',
+    gap: 10,
+    alignContent:'center',
+    alignItems:'center'
   },
   row1: {
     flexDirection: 'row',
     gap: 10,
-    paddingHorizontal:20
+    paddingHorizontal:30
    
   },
   col12: {
-    // flex: 1,
+    //
+     flex: 1,
     marginVertical: 10,
-    paddingHorizontal:10
+    paddingHorizontal:20,
+    gap:7
+    // paddingRight:20
     
   },col14: {
     // flex: 1,
@@ -267,10 +529,15 @@ const styles = StyleSheet.create({
     
   },
   logo: {
-    width: 120,
-    height: 120,
+    width: wp("25%"),
+    height: wp("25%"),
     resizeMode:'contain',
-
+  },
+  logo1: {
+    height: wp("30%"),
+    resizeMode:'contain',
+    width : wp("55%")
+    
   },
   logoCheck: {
     width: 30,
@@ -278,10 +545,10 @@ const styles = StyleSheet.create({
     resizeMode:'contain',
 
   },
-  logo1: {
-    height: 120,
-    resizeMode:'contain',
-  },
+  // logo1: {
+  //   height: 120,
+  //   resizeMode:'contain',
+  // },
   fw500Text: {
     fontWeight: '500',
     textAlign: 'center',
@@ -299,6 +566,11 @@ const styles = StyleSheet.create({
    Left500BOLDText: {
     fontFamily: FONTFAMILY.Bold,
     fontSize:rf(1.8),
+    textAlign: 'left',
+  },
+  Left500SEMIBOLDText: {
+    fontFamily: FONTFAMILY.SemiBold,
+    fontSize:rf(1.6),
     textAlign: 'left',
   },
   textDanger: {
@@ -330,6 +602,11 @@ marginBottom:25
     textAlign: 'left',
     fontSize:rf(2.0)
   },
+  myTextGreyBold: {
+    fontFamily: FONTFAMILY.Bold,
+    fontSize:rf(2.0),
+    color: COLORS.Lableheading,
+  },
   myTextGrey: {
     fontFamily: FONTFAMILY.Regular,
     fontSize:rf(1.8),
@@ -340,9 +617,14 @@ marginBottom:25
     fontSize:rf(1.8),
     color: COLORS.Content,
   },
-  myTextGreyBold: {
+  myTextGreyTBold: {
     fontFamily: FONTFAMILY.Bold,
     fontSize:rf(1.8),
+    color: COLORS.Content,
+  },
+  myTextGreyBold: {
+    fontFamily: FONTFAMILY.Bold,
+    fontSize:rf(2.0),
     color: COLORS.Content,
   },
   hr: {

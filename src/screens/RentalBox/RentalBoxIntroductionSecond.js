@@ -13,6 +13,7 @@ import HeaderWithBackButton from '../../components/HeaderWithBackButton';
 import CustomRadioButtons from '../../components/CustomRadioButtons';
 import CustomButtons from '../../components/CustomButtons';
 import { useRoute } from '@react-navigation/native';
+import utills from '../../utills';
 // import CustomRadioButtons from '../../components/CustomRadioButtons';
 
 export default function RentalBoxIntroductionSecond({navigation}) {
@@ -42,6 +43,14 @@ const [selectedOption, setSelectedOption] = useState(null);
   
   const handleNextPress = () => {
     // Add your logic for the "Next" button action here
+    console.log("selectedOption",selectedOption)
+if (selectedOption == null || selectedOption === "I do not accept the agreement"){
+
+  utills.errorAlert("Please accept the agreement!")
+  return
+}
+
+
      navigation.navigate(SCREENS.RentalBoxAccountDetails1,{Params1:Params1})
   };
 const handlePress = () => {
@@ -60,7 +69,8 @@ const handlePress = () => {
 
    
 
-          <Text style={styles.Heading} >Private Post Office Box – Rental Agreement</Text>
+          <Text style={styles.Heading} >Private Post Office Box –</Text>
+          <Text style={styles.Heading} >Rental Agreement</Text>
 
 
           <View style ={{width:wp('88%'),gap:10,marginVertical:20}}> 

@@ -26,6 +26,12 @@ function CustomButtonsBAndPNow({ onBackPress, onNextPress }) {
       style={[styles.buttonL]}
       onPress={onBackPress}
     >
+       <Icons
+    name={"closecircle"}
+    Type={Icon.AntDesign}
+    size={rf(3.0)}
+    color={COLORS.white}
+  />
       <Text style={[styles.buttonText]}>{'Cancel'}</Text>
     </TouchableOpacity>
 
@@ -33,6 +39,12 @@ function CustomButtonsBAndPNow({ onBackPress, onNextPress }) {
       style={[styles.buttonR]}
       onPress={onNextPress}
     >
+       <Icons
+    name={"pay-circle-o1"}
+    Type={Icon.AntDesign}
+    size={rf(3.0)}
+    color={COLORS.white}
+  />
       <Text style={[styles.buttonText]}>{'Pay Now'}</Text>
     </TouchableOpacity>
     </View>
@@ -54,7 +66,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: COLORS.CancelRED, 
-
+    flexDirection:'row',
+    gap :10
   },
   buttonR: {
     width: wp("40%"),
@@ -63,7 +76,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: COLORS.blueButton, 
-
+    flexDirection:'row',
+    gap :10
   },
   buttonText: {
     color: 'white',

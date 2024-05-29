@@ -83,7 +83,7 @@ const isTablet = width >= 768;
     console.log("connected");
    
     stompClient.subscribe(
-      "/user/" + userData.sub + "/queue/messages",
+      "/user/" + userData?.sub + "/queue/messages",
       onMessageReceived
     );
   };

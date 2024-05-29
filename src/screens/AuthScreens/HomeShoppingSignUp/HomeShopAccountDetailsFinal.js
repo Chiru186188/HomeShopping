@@ -19,6 +19,8 @@ import { useRoute } from '@react-navigation/native';
 import utills from '../../../utills';
 import { RegisterSliceEZone, RegisterSliceHS } from '../../../redux/slice/auth';
 import useRedux from '../../../components/useRedux';
+import Icons, { Icon } from '../../../components/Icons';
+import TouchableNativeFeedback from '../../../components/TouchableNativeFeedback';
 // import CustomRadioButtons from '../../../components/CustomRadioButtons';
 
 export default function HomeShopAccountDetailsFinal({navigation}) {
@@ -32,8 +34,8 @@ const dateString = currentDate.toISOString().split('T')[0]; // Convert to ISO fo
 
 console.log(dateString);
 setAppliDate(dateString)
-setApplicantName(Params1.firstName + " " + Params1.surname)
-setApplicantSign(Params1.firstName)
+ setApplicantName(Params1.FirstName + " " + Params1.Surname)
+setApplicantSign(Params1.FirstName)
   return () => {
    
   };
@@ -43,19 +45,50 @@ const [selectedOption, setSelectedOption] = useState(null);
 const [ApplicantSign, setApplicantSign] = useState();
 const route = useRoute();
 const { From ,Params1,LoginParam} = route.params;
-const [ApplicantName, setApplicantName] =  useState();
+const [ApplicantName, setApplicantName] =  useState("");
+const [AuthName, setAuthName] =  useState("");
+
 const [AppliDate, setAppliDate] = useState('');
 const {dispatch} = useRedux();
 
   const handleBackPress = () => {
     // Add your logic for the "Back" button action here
+    navigation.goBack()
+  }; 
+
+  const [isChecked, setIsChecked] = useState(false);
+
+
+
+  const handleClick = () => {
+    // Add your logic for the "Back" button action here
+    // navigation.goBack()
+    if(From == "HS"){
+      Linking.openURL("http://hsstrain.apis.gov.ai/Documents/Home%20Shopping%20Agreement%20Form-%20Final%20March%202022.pdf")
+
+    }
+else{
+  Linking.openURL("http://hsstrain.apis.gov.ai/Documents/eZone%20Agreement%20Form%20March%202022.pdf")
+
+}
+
   };
 
   // const handleNextPress = () => {
   //   // Add your logic for the "Next" button action here
   //   navigation.navigate(SCREENS.CartValueScreen,{From :"HS",Service:'Home Shopping Services'})
   // };
+  const [selectedOptionInsuarance, setselectedOptionInsuarance] = useState(null);
+  const [selectedOptionInsuarance1, setselectedOptionInsuarance1] = useState(null);
 
+  const options = [
+    { label: 'Accept', value: '1' },
+    { label: 'Decline', value: '0' },
+  ];
+  const handleOptionSelect = (option) => {
+
+    setselectedOptionInsuarance(option.value);
+  };
   const handleNextPress = async () => {
   
     
@@ -70,7 +103,7 @@ const {dispatch} = useRedux();
       }
   
       if (utills.isEmptyOrSpaces(ApplicantName)) {
-        utills.errorAlert('', 'Please Enter Applicant Name');
+        utills.errorAlert('', 'Please Enter Name Of Authorized Person');
         return;
       }
      
@@ -78,14 +111,26 @@ const {dispatch} = useRedux();
         utills.errorAlert('', 'Please Select Service');
         return;
       } 
+      if (selectedOptionInsuarance == null){
 
+        utills.errorAlert("Please choose you want to insured or not")
+        return
+      }
+      if (isChecked == false){
+
+        utills.errorAlert("Please Agree to the terms")
+        return
+      }
       let data = {
-        applicantName: ApplicantName,
-        applicantSign: ApplicantSign,
-        date: AppliDate,
-        authPerson : ApplicantName,
+        // ApplicantName: ApplicantName,
+        ApplicantSign: ApplicantSign,
+
+        Signature: ApplicantSign,
+        RegDate: AppliDate,
+        AuthPerson : AuthName,
         oceanfreight:selectedOption,
-        userId:LoginParam.UserId
+        UserId:LoginParam.UserId,
+        Insurance:selectedOptionInsuarance1
       };
      console.log('value==33', data);
      const mergedParams = { ...Params1, ...data };
@@ -107,8 +152,8 @@ const {dispatch} = useRedux();
   .unwrap()
   .then(res => {
     console.log('Register res==', res);
-    if (res.status == true){
-      navigation.navigate(SCREENS.CartValueScreen,{From :"HS",Service:'Home Shopping',userID:LoginParam.UserId})
+    if (res.status == true || res.statusCode == 200){
+      navigation.navigate(SCREENS.CartValueScreen,{From :"HS",Service:'Home Shopping',userID:LoginParam.UserId,LoginParams:LoginParam})
     }else{
       utills.errorAlert('', res.msg);
       return;
@@ -119,8 +164,9 @@ const {dispatch} = useRedux();
   .unwrap()
   .then(res => {
     console.log('Register res==', res);
-    if (res.statusCode == 200){
-      navigation.navigate(SCREENS.CartValueScreen,{From :"EZ",Service:'E-Zone',userID:LoginParam.UserId})
+    if (res.status == true || res.statusCode == 200){
+
+      navigation.navigate(SCREENS.CartValueScreen,{From :"EZ",Service:'E-Zone',userID:LoginParam.UserId,LoginParams:LoginParam})
     }else{
       utills.errorAlert('', res.message);
       return;
@@ -151,8 +197,77 @@ const handlePress = () => {
                 <View style={styles.col4}></View>
               </View>
               <View style={{paddingHorizontal:20, alignSelf:'flex-start'}}>
-              <Text  style={styles.Left500Text}>3387 SW 13th Avenue, Fort Lauderdale, Florida 33315 USA</Text>
+              {/* <Text  style={styles.Left500Text}>3387 SW 13th Avenue, Fort Lauderdale, Florida 33315 USA</Text> */}
+             
+              {From === 'HS' ? 
+  <Text style={styles.Left500Text}>3387 SW 13th Avenue Fort Lauderdale,Florida 33315 USA</Text> :
+  <Text style={styles.Left500Text}>4411 NW 74th Avenue Miami,Florida 33195 USA</Text>}    
               </View>
+              <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
+                <View style={styles.col8}>
+                  <Text  style={styles.Left500BOLDText}>Insurance
+                  <Text  style={[styles.Left500BOLDText,{color:'red'}]}> *
+</Text>
+</Text>
+                </View>
+                <View style={styles.col4}></View>
+                {options.map((item1) => {
+            return (
+              <CustomRadioButtons
+                title={item1.label}
+                setSelected={setselectedOptionInsuarance}
+                onChangeSelected={(data, item1) => {
+                  console.log(data)
+                  console.log(item1)
+                  setselectedOptionInsuarance(data)
+if(data == "Accept"){
+  setselectedOptionInsuarance1("1");
+
+}else{
+  setselectedOptionInsuarance1("0");
+}}}
+selected={selectedOptionInsuarance}
+                style={{ marginStart: 10 ,marginBottom : 7 }}
+              />
+            );
+          })}
+             
+
+              </View>
+
+              {From === 'HS' ? (
+  <>
+    {/* <View style={{paddingHorizontal:20, alignSelf:'flex-start'}}> */}
+    <TouchableNativeFeedback   onPress={handleClick}>
+
+      <Text style={styles.textNormal}>Please 
+          <Text style={[styles.textDanger,]}> click
+          </Text>
+
+        <Text style={styles.textNormal}> here to read the Home Shopping service agreement terms and conditions</Text>
+      
+      </Text>
+      </TouchableNativeFeedback> 
+
+    {/* </View> */}
+  </>
+) : (
+  // <>
+  <TouchableNativeFeedback   onPress={handleClick}>
+
+  <Text style={styles.textNormal}>Please 
+      <Text style={[styles.textDanger]}> click
+      </Text>
+
+    <Text style={styles.textNormal}> here to read the eZone service agreement terms and conditions</Text>
+  
+  </Text>
+  </TouchableNativeFeedback> 
+  // </>
+)}
+
+             
+
               <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left',width : wp('94')}]}>
                 <View style={styles.col8}>
                   <Text  style={styles.Left500BOLDText}>Acknowledgement
@@ -169,9 +284,44 @@ const handlePress = () => {
 
 
               <View style={{paddingHorizontal:20, alignSelf:'flex-start'}}>
-              <Text  style={styles.textDanger}>By signing below the customer acknowledges having read all the terms and conditions and agrees to abide by these operational regulations and is in full agreement to their enforcement for the efficient processing of their Home Shopping packages.</Text>
+              <Text  style={styles.textDanger}>By ticking the box / signing below the customer acknowledges having read all the terms and conditions and agrees to abide by these operational regulations and is in full agreement to their enforcement for the efficient processing of their Home Shopping packages.</Text>
               </View>
-            
+              <View style={{
+   marginTop: 10,
+  
+   flexDirection: 'row',
+   justifyContent: 'flex-start',
+   alignSelf:'flex-start',
+   marginHorizontal:20
+ //  alignItems: 'center',
+ }}>
+          <TouchableOpacity
+            // activeOpacity={0.8}
+            onPress={() => {
+              setIsChecked(!isChecked);
+            }}>
+            <Icons
+              name={isChecked ? 'checkbox-active' : 'checkbox-passive'}
+              style={{
+                fontSize: rf(2.5),
+                color: "darkgreen",
+                marginRight: 10,
+              }}
+              Type={Icon.Fontisto}//
+              size={rf(2.0)}
+            />
+          </TouchableOpacity>
+          <Text style={{
+    fontFamily: FONTFAMILY.Medium,
+    fontSize: rf(1.7),
+    color: COLORS.Lableheading,
+    textAlign: 'left',
+  }}>
+            {' '}I Agree{' '}
+          
+          </Text>
+          
+        </View>
 
       <EditTextBottomBorder
         placeholder="Applicant's signature"
@@ -195,23 +345,27 @@ const handlePress = () => {
                 </View>
               </View>
 
-              <View style={{paddingHorizontal:20, alignSelf:'flex-start'}}>
-              <Text  style={styles.Left500Text}>Person authorized to collect packages on behaif of primary account holder and or secondary user.</Text>
+             <View style={{paddingHorizontal:20, alignSelf:'flex-start'}}>
+              <Text  style={styles.Left500Text}>Person authorized to collect packages on behalf of primary account holder and or secondary user.</Text>
               </View>      
 
 
               <EditTextBottomBorder
         placeholder="Name of Authorized Person"
-        value={ApplicantName}
-        onChangeText={setApplicantName}
+        value={AuthName}
+        onChangeText={setAuthName}
         keyboardType="default"
       />
 
 <View style={styles.containerSub}>
-<View style={{paddingHorizontal:20, alignSelf:'flex-start'}}>
-              <Text  style={styles.Left500Text}>Kindly indicate where you learnt of our Home Shopping (ocean freight) service
+<View style={{backgroundColor :COLORS.primary,padding:10,borderTopRightRadius:10,borderTopLeftRadius:10
+}}>
 
+              <Text  style={styles.Left500Textwhite}>Kindly indicate where you learnt of our Home Shopping (ocean freight) service
 </Text>
+</View>
+<View style={{paddingHorizontal:20, alignSelf:'flex-start',paddingTop:10}}>
+
 
 
 {DEFAULTARRAYS.ApplyList.map((item1) => {
@@ -230,13 +384,7 @@ const handlePress = () => {
               />
             );
           })}
-
-
-
-              </View> 
-
-
-             
+ </View>              
 </View>
 {/* <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,marginVertical:10,alignContent:'left'}]}>
                 <View style={styles.col8}>
@@ -244,32 +392,17 @@ const handlePress = () => {
                 </View>
               </View> */}
         <View style = {{width:wp('90%')}}>
-
-
-      
-  
-
-
-
 <CustomButtonsBAndS
         onBackPress={handleBackPress}
         onNextPress={handleNextPress}
       />
         </View>
-
-
-
-
           {/* </ScrollView> */}
-        
     </View>
-   
     </ScrollView>
      </GradientBackground>
-
   );
 }
-
 const styles = StyleSheet.create({
   containerSc: {
     flex: 1,
@@ -279,7 +412,6 @@ const styles = StyleSheet.create({
     margin:20,
     borderRadius : 15,
     alignSelf:'center'
-
   },
 
   containerSub: {
@@ -289,7 +421,7 @@ const styles = StyleSheet.create({
     backgroundColor :COLORS.lightBlueSelection,
     margin:20,
     borderRadius : 15,
-    paddingVertical:20
+    // paddingVertical:20
   },
 
   container: {
@@ -301,12 +433,10 @@ const styles = StyleSheet.create({
     // borderRadius : 15,
     // padding:15,
     borderRadius : 15,
-
     justifyContent:'flex-start',
     alignItems:'center',
     paddingVertical:15
   },
- 
  
   col4: {
     flex: 1,
@@ -341,27 +471,25 @@ const styles = StyleSheet.create({
   },col14: {
     // flex: 1,
     marginVertical: 10,
-    paddingHorizontal:10
-    
+    paddingHorizontal:10   
   },
   col11: {
      flex: 1,
     marginVertical: 10,
-    
   },
   col13: {
     // flex: 1,
     marginVertical: 10,
     paddingHorizontal:20
-    
   },
   logo: {
-    width: 90,
-    height: 90,
+    width: wp("25%"),
+    height: wp("25%"),
   },
   logo1: {
-    height: 120,
+    height: wp("30%"),
     resizeMode:'contain',
+    width : wp("60%")
   },
   fw500Text: {
     fontWeight: '500',
@@ -390,6 +518,13 @@ const styles = StyleSheet.create({
   },
   textDanger: {
     color: COLORS.CancelRED,
+    fontSize:rf(1.8),
+    fontFamily: FONTFAMILY.Medium,
+    //textAlign:'justify'
+    // marginTop:16
+  },
+  textNormal: {
+    color: COLORS.black,
     fontSize:rf(1.8),
     fontFamily: FONTFAMILY.Medium,
     //textAlign:'justify'
@@ -426,6 +561,12 @@ marginBottom:25
     fontFamily: FONTFAMILY.Medium,
     fontSize:rf(1.8),
     color: COLORS.Content,
+  },
+  Left500Textwhite: {
+    fontFamily: FONTFAMILY.SemiBold,
+    fontSize:rf(1.8),
+    textAlign: 'left',
+    color:'white'
   },
   hr: {
     borderBottomWidth: 1,

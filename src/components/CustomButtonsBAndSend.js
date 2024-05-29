@@ -6,6 +6,7 @@ import {
   responsiveFontSize as rf,
   widthPercentageToDP as wp,
 } from '../common/responsiveFunction';
+import Icons, { Icon } from './Icons';
 function CustomButtonsBAndSend({ onBackPress, onNextPress }) {
   return (
     <View style={styles.container}>
@@ -25,7 +26,14 @@ function CustomButtonsBAndSend({ onBackPress, onNextPress }) {
 <TouchableOpacity
       style={[styles.buttonL]}
       onPress={onBackPress}
-    >
+    >  
+    
+    <Icons
+    name={"closecircle"}
+    Type={Icon.AntDesign}
+    size={rf(3.0)}
+    color={COLORS.white}
+  />
       <Text style={[styles.buttonText]}>{'Cancel'}</Text>
     </TouchableOpacity>
 
@@ -33,6 +41,12 @@ function CustomButtonsBAndSend({ onBackPress, onNextPress }) {
       style={[styles.buttonR]}
       onPress={onNextPress}
     >
+        <Icons
+      name={"messenger-outline"}
+      Type={Icon.MaterialIcons}
+      size={rf(3.0)}
+      color={COLORS.white}
+    />
       <Text style={[styles.buttonText]}>{'Send'}</Text>
     </TouchableOpacity>
     </View>
@@ -55,7 +69,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: COLORS.CancelRED, 
-
+    flexDirection:'row',
+    gap :10
   },
   buttonR: {
     width: wp("40%"),
@@ -64,6 +79,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: COLORS.blueButton, 
+    flexDirection:'row',
+    gap :10
 
   },
   buttonText: {

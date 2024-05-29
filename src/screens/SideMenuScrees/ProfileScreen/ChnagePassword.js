@@ -19,6 +19,7 @@ import { useRoute } from '@react-navigation/native';
 import CustomHeader from '../../../components/CustomHeader';
 import { ChangePasswordSlice } from '../../../redux/slice/auth';
 import useRedux from '../../../components/useRedux';
+import utills from '../../../utills';
 // import CustomRadioButtons from '../../../components/CustomRadioButtons';
 
 export default function ChangePassword({navigation}) {
@@ -44,23 +45,23 @@ const [NCpwd, setNCpwd] = useState('');
 
   const handleNextPress = () => {
     // Add your logic for the "Next" button action here
-   // Changepwd()
+   Changepwd()
   };
   const {dispatch} = useRedux();
 
 
   const Changepwd = async () => {
 
-    if (utills.isEmptyOrSpaces(code)) {
-      utills.errorAlert('', 'Please Enter Code');
-      return;
-    }
-    if (code.length < 6) {
-      utills.errorAlert('', 'Invalid Code');
-      return;
-    }
+    // if (utills.isEmptyOrSpaces(code)) {
+    //   utills.errorAlert('', 'Please Enter Code');
+    //   return;
+    // }
+    // if (code.length < 6) {
+    //   utills.errorAlert('', 'Invalid Code');
+    //   return;
+    // }
     if (utills.isEmptyOrSpaces(Cpwd)) {
-      utills.errorAlert('', 'Please Enter Password');
+      utills.errorAlert('', 'Please Enter Current Password');
       return;
     }
     if (utills.isEmptyOrSpaces(Npwd)) {

@@ -96,7 +96,7 @@ export default function VerificationScreen({navigation}) {
   };
   return (
     <GradientBackground>
-    <HeaderWithBackButton onPress={handlePress} title = "Verificaion" />
+    <HeaderWithBackButton onPress={handlePress} title = "Verification" />
 
     
     <View style={{
@@ -157,7 +157,11 @@ export default function VerificationScreen({navigation}) {
             navigation.navigate(SCREENS.CreatePassword, { EmailValue: EmailValue });
 
           //  VerifyOtp()
-          }}          buttonStyle={styles.loginButton} // Custom button style
+          }}        
+                   IconName={"verified"}
+ 
+          
+          buttonStyle={styles.loginButton} // Custom button style
           textStyle={{fontFamily :FONTFAMILY.Bold,
             fontSize: rf(2.0)}}         />
       </View>

@@ -40,13 +40,16 @@ end
 target 'HOMESHOPPING' do
   use_expo_modules!
   config = use_native_modules!
-
   use_frameworks! :linkage => podfile_properties['ios.useFrameworks'].to_sym if podfile_properties['ios.useFrameworks']
   use_frameworks! :linkage => ENV['USE_FRAMEWORKS'].to_sym if ENV['USE_FRAMEWORKS']
+  # pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
+  permissions_path = "../node_modules/react-native-permissions/ios"
+# print("permissions_path*%@",permissions_path)
+  pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
+  pod 'Permission-PhotoLibrary', :path => "#{permissions_path}/PhotoLibrary"
 
   # Flags change depending on the env values.
   flags = get_default_flags()
-
   use_react_native!(
     :path => config[:reactNativePath],
     :hermes_enabled => podfile_properties['expo.jsEngine'] == nil || podfile_properties['expo.jsEngine'] == 'hermes',

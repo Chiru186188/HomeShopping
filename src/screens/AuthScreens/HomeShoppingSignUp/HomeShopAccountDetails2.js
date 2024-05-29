@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View,Platform, Linking,NativeModules, Image, TouchableOpacity, ScrollView} from 'react-native';
+import {StyleSheet, Text, View,Platform, Linking,NativeModules, Image, TouchableOpacity, ScrollView, Switch} from 'react-native';
 import React from 'react';
  import {COLORS, CONSTANTS, DEFAULTARRAYS, FONTFAMILY, IMAGES, SCREENS, SIZES, STYLES} from '../../../constants/them';
 import {
@@ -17,20 +17,17 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import utills from '../../../utills';
 import TouchableNativeFeedback from '../../../components/TouchableNativeFeedback';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { Colors } from 'react-native/Libraries/NewAppScreen';
+import CustomRadioButtons from '../../../components/CustomRadioButtons';
 
 export default function HomeShopAccountDetails2({navigation}) {
  
-
-
 const [open, setOpen] = useState(false);
-const [value, setValue] = useState(null);
-const [items, setItems] = useState([
- ]);
-
+const [value, setValue] = useState("Anguilla");
+const [items, setItems] = useState([]);
 const [openT, setOpenT] = useState(false);
 const [valueT, setValueT] = useState(null);
-const [itemsT, setItemsT] = useState(
-);
+const [itemsT, setItemsT] = useState();
 const [selectedOption, setSelectedOption] = useState(null);
 const [title, settitle] = useState('');
 const [FirstName, setFirstName] = useState('');
@@ -38,7 +35,7 @@ const [lastName, setlastName] = useState('');
 const [Natinality, setNatinality] = useState('');
 const [PhysicalAddress, setPhysicalAddress] = useState('');
 const [Poboxnu, setPoboxnu] = useState('');
-const [EmailAdd, setEmailAdd] = useState('');
+const [EmailAdd, setEmailAdd] = useState(null);
 const [fbId, setfbId] = useState('');
 const [instaid, setinstaid] = useState('');
 const [homePhone, sethomePhone] = useState('');
@@ -48,21 +45,16 @@ const [dob, setdob] = useState('Date of Birth');
 const showDatePicker = () => {
   setDatePickerVisibility(true);
 };
-
 const hideDatePicker = () => {
   setDatePickerVisibility(false);
 };
-
 const handleConfirm = (date) => {
-  // console.warn("A date has been picked: ", date.toString());
   const dateObject = new Date(date.toString());
   const year = dateObject.getFullYear();
   const month = String(dateObject.getMonth() + 1).padStart(2, '0'); // Adding 1 because getMonth() returns zero-based months
-  const day = String(dateObject.getDate()).padStart(2, '0');
-  
+  const day = String(dateObject.getDate()).padStart(2, '0');  
   const formattedDate = `${year}-${month}-${day}`;
-  console.log(formattedDate); // Output: 2023-12-13
-
+  console.log(formattedDate); 
   setdob(formattedDate)
   hideDatePicker();
 
@@ -85,7 +77,8 @@ const route = useRoute();
     console.log("formattedItems",formattedItems)
     setItems(formattedItems);
     
-    
+    setValue("Anguilla")
+
     const formattedItemsT = DEFAULTARRAYS.TitleList?.map((item) => ({
       label: item.Text,
       value: item.Value,
@@ -106,10 +99,38 @@ const handleBackPress = () => {
 //   navigation.navigate(SCREENS.HomeShopAccountDetailsFinal,{From:From})
 // };
 
+
+const [isEnabled, setIsEnabled] = useState(false); // State to track toggle button
+
+  const toggleButton = () => {
+    setIsEnabled(!isEnabled); // Toggle the state
+  };
+
+  const handleYesPress = () => {
+    // Handle logic when "Yes" is pressed
+    // For example, navigate to the form screen
+    navigation.navigate('FormScreen');
+  };
+
+  const handleNoPress = () => {
+    // Handle logic when "No" is pressed
+    // For example, navigate to the next screen
+    navigation.navigate('NextScreen');
+  };
+
+
+
+
 const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
 const handleNextPress = async () => {
   
+
+if (isEnabled1 == false){
+  handleSkip()
+  return
+}
+
   if (utills.isEmptyOrSpaces(valueT)) {
      utills.errorAlert('', 'Please Enter Title');
       return;
@@ -129,6 +150,11 @@ const handleNextPress = async () => {
       utills.errorAlert('', 'Please Enter Dob');
       return;
     } 
+
+    if ((dob == null) || (dob == "Date of Birth") ) {
+      utills.errorAlert('', 'Please Enter Dob');
+      return;
+    } 
      if (utills.isEmptyOrSpaces(value)) {
       utills.errorAlert('', 'Please Select Natinality');
       return;
@@ -137,10 +163,10 @@ const handleNextPress = async () => {
       utills.errorAlert('', 'Please Enter  Physical Address');
       return;
     }
-    if (utills.isEmptyOrSpaces(Poboxnu)) {
-      utills.errorAlert('', 'Please Enter P.O. Box Number');
-      return;
-    }
+    // if (utills.isEmptyOrSpaces(Poboxnu)) {
+    //   utills.errorAlert('', 'Please Enter P.O. Box Number');
+    //   return;
+    // }
     if (utills.isEmptyOrSpaces(EmailAdd)) {
       utills.errorAlert('', 'Please Enter Email Address');
       return;
@@ -150,37 +176,73 @@ const handleNextPress = async () => {
       return;
     }
     let data = {
-      secondaryTitle: valueT,
-      secondaryFirstName:FirstName,
-      secondarySurname:lastName,
-      secondaryDOB:dob,
-      secondaryNationality:value,
-      secondaryPhysicalAddress:PhysicalAddress,
-      secondaryPOBox:Poboxnu,
-      secondaryEmail:EmailAdd,
-      secondaryFacebookId:fbId,
-      secondaryInstaId:instaid,
-      secondaryHome:homePhone,
-      secondaryWork:workphone,
-      secondaryPhoneNumber:MobilePhone,
+      SecondaryTitle: valueT,
+      SecondaryFirstName:FirstName,
+      SecondarySurname:lastName,
+      SecondaryDOB: dob === "Date of Birth" ? null : dob,
+      SecondaryNationality:value,
+      SecondaryPhysicalAddress:PhysicalAddress,
+      SecondaryPOBox:Poboxnu,
+      SecondaryEmail:EmailAdd,
+      SecondaryFacebookId:fbId,
+      SecondaryInstaId:instaid,
+      SecondaryHome:homePhone,
+      SecondaryWork:workphone,
+      SecondaryPhoneNumber:MobilePhone,
 
     };
 
+const mergedParams = { ...params1, ...data};
+console.log('mergedParams',mergedParams)
+navigation.navigate(SCREENS.HomeShopAccountDetailsFinal,{From:From,Params1:mergedParams,LoginParam:LoginParam})
+  };
+  const options = [
+    { label: 'Yes', value: 'Yes' },
+    { label: 'No', value: 'No' },
+  ];
 
-const mergedParams = { ...params1, ...data };
+  const handleSkip = () => {
+    // Handle the skip action
+    console.log('Skip pressed');
+    console.log('Skip dob',dob);
+
+    let data = {
+      SecondaryTitle: "",
+      SecondaryFirstName:"",
+      SecondarySurname:"",
+      SecondaryDOB: dob === ("Date of Birth" || "") ? "" : dob,
+      SecondaryNationality:"",
+      SecondaryPhysicalAddress:"",
+      SecondaryPOBox:"",
+      SecondaryEmail:"",
+      SecondaryFacebookId:"",
+      SecondaryInstaId:"",
+      SecondaryHome:"",
+      SecondaryWork:"",
+      SecondaryPhoneNumber:"",
+
+    };
+
+const mergedParams = { ...params1, ...data};
 console.log('mergedParams',mergedParams)
 navigation.navigate(SCREENS.HomeShopAccountDetailsFinal,{From:From,Params1:mergedParams,LoginParam:LoginParam})
   };
 
 
+  const [isEnabled1, setIsEnabled1] = useState(false);
 
-
-
+  const toggleSwitch = () => {
+    setIsEnabled1(previousState => !previousState);
+  };
 const handlePress = () => {
 };
   return (
      <GradientBackground>
     <HeaderWithBackButton onPress={handlePress} title = "Application Form" />
+
+
+
+    {/* {selectedOption === 'Yes' && (  // Conditionally render based on the selected option */}
 
     <ScrollView style= {styles.containerSc}> 
     <View style={styles.container}>
@@ -202,14 +264,74 @@ const handlePress = () => {
                 <View style={styles.col4}></View>
               </View>
 
+
+
+              {/* <View style={styles2.container}>
+  <View >
+  <Text style={styles2.text}>Do you have additional account details?</Text>
+
+  </View> */}
+  {/* <View style={styles2.container1}>
+
+
+  {options.map((item1) => {
+            return (
+              <CustomRadioButtons
+                title={item1.label}
+                setSelected={setSelectedOption}
+                onChangeSelected={(data, item1) => {
+                  console.log(data)
+                  setSelectedOption(data);
+                  if  (data === "No"){
+                    handleSkip()
+                  }
+                }}
+                 selected={selectedOption}
+                style={{ marginStart: 10 ,marginBottom : 7 }}
+              />
+            );
+          })}
+
+</View> */}
+  
+
+      {/* <TouchableOpacity onPress={handleSkip}>
+        <View style={styles2.skipButton}>
+          <Text style={styles2.buttonText}>Skip</Text>
+        </View>
+      </TouchableOpacity> */}
+   {/* </View> */}
+
+ <View style={styles2.container}>
+  <View>
+ <Text style={styles2.text}
+ numberOfLines = {2}
+ >Do you have additional </Text>
+  <Text style={styles2.text}
+ numberOfLines = {2}
+ >account details?</Text>
+ </View>
+ <View style={{flexDirection:'row',alignItems:'center'}}>
+      <Switch
+        trackColor={{ false: "#767577", true: "#81b0ff" }}
+        thumbColor={isEnabled1 ? "#f4f3f4" : "#f4f3f4"}
+        ios_backgroundColor="#3e3e3e"
+        onValueChange={toggleSwitch}
+        value={isEnabled1}
+      />
+      <Text style={styles2.text}>{isEnabled1 ? 'Yes' : 'No'}</Text>
+    </View>
+    </View>
+
               {/* <EditTextWithLable
-        label="Title *"
+        label="Title"
         placeholder="Enter Title"
         value={title}
         onChangeText={settitle}
         keyboardType="default"
       /> */}
-
+{isEnabled1 == true && (
+<>
 <View style={{alignSelf:'flex-start'}}>
   <Text style={{
     marginTop: hp('1%'),
@@ -280,7 +402,7 @@ const handlePress = () => {
         keyboardType="default"
       />
        {/* <EditTextWithLable
-        label="Date of Birth *"
+        label="Date of Birth"
         placeholder="Enter Date of Birth(yyyy-mm-dd)"
         value={dob}
         onChangeText={setdob}
@@ -415,7 +537,7 @@ const handlePress = () => {
         keyboardType="default"
       />
        <EditTextWithLable
-        label="P.O. Box Number *"
+        label="P.O. Box Number"
         placeholder="Enter P.O. Box Number"
         value={Poboxnu}
         onChangeText={setPoboxnu}
@@ -484,8 +606,11 @@ const handlePress = () => {
         value={MobilePhone}
         onChangeText={setMobilePhone}
         keyboardType='numeric'
+        maxLength={10}
+
       />
-      
+      </>
+)}
         <View style = {{width:wp('90%')}}>
       
 <CustomButtons
@@ -496,12 +621,12 @@ const handlePress = () => {
 
 
 
-
           {/* </ScrollView> */}
         
     </View>
    
     </ScrollView>
+    {/* )} */}
      </GradientBackground>
 
   );
@@ -585,10 +710,13 @@ const styles = StyleSheet.create({
   logo: {
     width: 90,
     height: 90,
+    resizeMode:'contain',
+
   },
   logo1: {
     height: 120,
     resizeMode:'contain',
+    width:wp("60%")
   },
   fw500Text: {
     fontWeight: '500',
@@ -665,6 +793,51 @@ marginBottom:25
 
 });
 
-
+const styles2 = StyleSheet.create({
+  container: {
+    //
+    flex:1,
+     flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    borderColor:COLORS.yellow,
+    borderWidth:2,
+    width:wp("90%"),
+   // marginHorizontal:15,
+    borderRadius:10,
+    marginBottom:10
+    ,backgroundColor:'white'
+  },
+  container1: {
+    flex:1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    //'
+     padding: 16,
+    // borderColor:COLORS.yellow,
+    // borderWidth:2,
+    // marginHorizontal:15,
+    // borderRadius:10,
+    // marginTop:10
+    backgroundColor:'white'
+  },
+  text: {
+    // fontSize: 18,
+   // marginRight: 16,
+    fontSize : rf(1.8),
+    fontFamily:FONTFAMILY.SemiBold,
+  },
+  skipButton: {
+    backgroundColor: 'blue', // Customize button styles as needed
+    padding: 10,
+    borderRadius: 8,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize : rf(1.8),
+    fontFamily:FONTFAMILY.Medium,
+  },
+});
 
 

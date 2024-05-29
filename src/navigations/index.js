@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {COLORS, CONSTANTS, FONTFAMILY, SCREENS} from '../constants/them';
 import {responsiveFontSize as rf} from '../common/responsiveFunction';
 import WelcomScreen from '../screens/AuthScreens/WelcomeScreen';
@@ -58,20 +58,137 @@ import AccountTransactionHistoryDetails from '../screens/AuthScreens/HomeShoppin
 import AccountSummary from '../screens/AuthScreens/HomeShoppingSignUp/AccountSummary';
 import HSInvoiceUplaodpackages from '../screens/SideMenuScrees/HSInvoiceUplaodpackages';
 import ContactUs from '../screens/AuthScreens/ContactUs';
+import HSpayment from '../screens/SideMenuScrees/HSpayment';
+import ReportLinkOpenScreenNew from '../screens/SideMenuScrees/ReportLinkOpenScreenNew';
+import LinkOpenScreenNEW from '../screens/SideMenuScrees/LinkOpenScreenNEW';
+import PBDSPayments from '../screens/SideMenuScrees/PBDSPayments';
+import CartListpayment from '../screens/SideMenuScrees/CartListpayment';
+import CartListpaymentparcel from '../screens/SideMenuScrees/CartListpaymentparcel';
+import { useDispatch, useSelector } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { saveUserData } from '../redux/slice/auth';
+import SplashScreen from '../components/SplashScreen';
+import { Alert } from 'react-native';
 
 const Stack = createStackNavigator();
 
-function MainNavigation() {
+function MainNavigation({}) {
   const ref = useRef()
+  const userData = useSelector(state => state.auth.userData);
+  const [isLoggedIn, setIsLoggedIn] = useState(null);
 
-React.useEffect(() => {
 
- }, []);
+  // React.useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+      
 
+  //       const isLoggedIns = await AsyncStorage.getItem(CONSTANTS.ISLOGGEDIN);
+  //       console.log("isLoggedIns", isLoggedIns);
+  
+  //       if (isLoggedIns === "Yes") {
+  //         setIsLoggedIn(true);
+  //       }else{
+  //         setIsLoggedIn(false);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //     }
+  //   };
+  
+  //   fetchData();
+  // }, [userData]);
+
+  const dispatcher = useDispatch();
+
+  React.useEffect(() => {
+    const getUserData = async () => {
+      const value = await AsyncStorage.getItem(CONSTANTS.UserData);
+      const firsttime = await AsyncStorage.getItem('firsttime');
+      console.log("firsttime",firsttime)
+  
+      const acesstoken = await AsyncStorage.getItem(CONSTANTS.AccessToken);
+      console.log("acesstoken",acesstoken)
+      const userData = JSON.parse(value);
+      console.log("userData",userData)
+
+      if (userData !== null && userData !== undefined && Object.keys(userData).length > 0) {
+        dispatcher(saveUserData(userData));
+        console.log("Hii1")
+
+        // Navigate to DrawerNavigation if userData is available
+       // ref.current?.navigate(SCREENS.DashBoard);
+
+      
+      
+          const services = userData?.services
+      
+      
+      if(userData?.ispayment === true){
+      
+      
+      
+      
+        const countNonNullOrTrueValues = Object.values(services).filter(value => value !== null && value !== false).length;
+      
+        if (countNonNullOrTrueValues === 1) {
+          console.log('Exactly one value is not null or true.');
+      
+          if  (services?.hsUserId !== null){
+            ref.current?.navigate(SCREENS.HSAccountDetail);
+          } else if  (services?.ezUserId !== null){
+            ref.current?.navigate(SCREENS.EZAccountDetail);
+           } else if  (services?.ltbUserId !== null){
+            ref.current?.navigate(SCREENS.RentalBoxAccountDetail);
+          }else if  (services?.pbdsUserId !== null){
+            ref.current?.navigate(SCREENS.PBDSAccountDetail);
+          }else if  (services?.pocdsUserId == true){
+            ref.current?.navigate(SCREENS.POCDSAccountDetail);
+          }
+        } else {
+          ref.current?.navigate(SCREENS.DashBoard); 
+              }
+      
+      
+        //
+      
+      }else{
+      
+      
+        ref.current?.navigate(SCREENS.CartValueScreen,{From :"Login",Service:'',userID:userData?.userID,LoginParams:userData})
+      }
+
+
+      } else {
+        // Navigate to WelcomScreen if userData is not available
+        console.log("Hii2")
+
+        ref.current?.navigate(SCREENS.WelcomScreen);
+
+    }
+  };
+    getUserData();
+  }, []);
   return (
 
-      <NavigationContainer>
-      <Stack.Navigator initialRouteName={SCREENS.WelcomScreen}>
+    <NavigationContainer ref={ref}>
+        {/* {console.log("isLoggedIn",isLoggedIn)} */}
+      {/* <Stack.Navigator initialRouteName={isLoggedIn == true ? SCREENS.DashBoard : SCREENS.WelcomScreen}> */}
+      <Stack.Navigator
+        screenOptions={{
+          animation: 'slide_from_right',
+          headerTitleStyle: {
+            fontSize: rf(1.8),
+          },
+        }}
+     initialRouteName={SCREENS.SplashScreen}
+      >
+    
+<Stack.Screen
+          name={SCREENS.SplashScreen}
+          component={SplashScreen}
+          options={{headerShown: false}}
+        />
       <Stack.Screen name={SCREENS.WelcomScreen} component={WelcomScreen} options={{headerShown: false}}/>
       <Stack.Screen name={SCREENS.HSAccountDetail} component={HSAccountDetail} options={{headerShown: false}}/>
       <Stack.Screen name={SCREENS.PBDSIntroductionSecond} component={PBDSIntroductionSecond} options={{headerShown: false}}/>
@@ -126,6 +243,12 @@ React.useEffect(() => {
         <Stack.Screen name={SCREENS.AccountSummary} component={AccountSummary} options={{headerShown: false}}/>
         <Stack.Screen name={SCREENS.HSInvoiceUplaodpackages} component={HSInvoiceUplaodpackages} options={{headerShown: false}}/>
         <Stack.Screen name={SCREENS.ContactUs} component={ContactUs} options={{headerShown: false}}/>
+        <Stack.Screen name={SCREENS.HSpayment} component={HSpayment} options={{headerShown: false}}/>
+        <Stack.Screen name={SCREENS.LinkOpenScreenNEW} component={LinkOpenScreenNEW} options={{headerShown: false,gestureEnabled:false}} />
+        <Stack.Screen name={SCREENS.ReportLinkOpenScreenNew} component={ReportLinkOpenScreenNew} options={{headerShown: false}}/>
+        <Stack.Screen name={SCREENS.PBDSPayments} component={PBDSPayments} options={{headerShown: false}}/>
+        <Stack.Screen name={SCREENS.CartListpayment} component={CartListpayment} options={{headerShown: false}}/>
+        <Stack.Screen name={SCREENS.CartListpaymentparcel} component={CartListpaymentparcel} options={{headerShown: false}}/>
 
       </Stack.Navigator>
     </NavigationContainer>

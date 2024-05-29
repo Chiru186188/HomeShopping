@@ -47,7 +47,7 @@ const handlePress = () => {
 
           <View style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,alignContent:'left',width : wp('94')}]}>
               <View style={styles.col8}>
-                <Text style={styles.Left500BOLDText}>Availble at the following Location:</Text>
+                <Text style={styles.Left500BOLDText}>Available at the following Location:</Text>
               </View>
              
             </View>
@@ -161,9 +161,10 @@ const handlePress = () => {
               </View>
           {/* </ScrollView> */}
           <CustomBlueButton
-          title="Sign up"
-          onPress={() => navigation.navigate(SCREENS.RentalBoxIntroductionSecond,{Params1:Params1})}
-         
+          title="Next"
+          onPress={() => navigation.navigate(SCREENS.RentalBoxAccountDetails1,{Params1:Params1})}
+          IconName={"input"}
+
           textStyle={{fontFamily :FONTFAMILY.Bold,
             fontSize: rf(2.0)}} // Custom text style
         />

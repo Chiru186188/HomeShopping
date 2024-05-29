@@ -10,7 +10,7 @@ import {
 import { useEffect,useState } from 'react';
 import CustomBlueButton from '../../components/CustomBlueButton';
 import GradientBackground from '../../components/GradientBackground';
-import HeaderWithBackButton from '../../components/HeaderWithBackButton';
+import HeaderWithBackButton2 from '../../components/HeaderWithBackButton2';
 import EditTextWithLable from '../../components/EditTextWithLable';
 import Icons, { Icon } from '../../components/Icons';
 import CustomHeader from '../../components/CustomHeader';
@@ -20,8 +20,8 @@ import useRedux from '../../components/useRedux';
 import { LoginSlice } from '../../redux/slice/auth';
 
 export default function LoginScreen({navigation}) {
-  const [email, setemail] = useState('Robert90@yopmail.com');
-  const [pwd, setupwd] = useState('Cw@123456');
+  const [email, setemail] = useState('');
+  const [pwd, setupwd] = useState('');
   const [isChecked, setIsChecked] = useState(false);
   const {dispatch} = useRedux();
 
@@ -32,6 +32,7 @@ useEffect(() => {
   };
 }, []);
 const handlePress = () => {
+  navigation.navigate(SCREENS.WelcomScreen)
 };
 const gotoSubscription = (userData) =>{
   let Getdata = {
@@ -48,16 +49,34 @@ const gotoSubscription = (userData) =>{
     PhoneNumber:userData?.phoneNumber,
     UserId:userData?.userID,
   };
-   navigation.navigate(SCREENS.SelectServicesSubscription,{Params1 : Getdata})
+   navigation.navigate(SCREENS.SelectServicesSubscription,{Params1 : Getdata,from:"Login"})
 }
 
 const LoginApi = async () => {
+//   let Getdata = {
+//     FirstName:"",
+//     LastName:"",
+//     DOB:"", 
+//     Gender:"",
+//     Address:"",
+//     POBox:"",
+//     Email:"",
+//     IRD:"",
+//     Password:"",
+//     ConfirmPassword:"",
+//     PhoneNumber:"",
+//     UserId:"",
+//   };
+//   navigation.navigate(SCREENS.RentalBoxAccountDetails1,{Params1:Getdata})
+
+// return;
       let data = {
       username: email,
       email: email,
       Password: pwd,
       RememberMe : isChecked 
     };
+    console.log('Login data==',data);
 
     if (utills.isEmptyOrSpaces(email)) {
       utills.errorAlert('', 'Please Enter Email');
@@ -74,7 +93,6 @@ const LoginApi = async () => {
     
     // navigation.navigate(SCREENS.DashBoard);
     await utills.saveStringToAsyncStorage('LoginbyID', "yes")
-    await utills.saveStringToAsyncStorage('FromLogin', "Yes")
 
     dispatch(LoginSlice(data))
       .unwrap()
@@ -82,7 +100,7 @@ const LoginApi = async () => {
         if (res.success == true){
           console.log('Login res==', res.data);
 
-if (res.data.services == null){
+if (res?.data?.services == null){
 
 
   Alert.alert(
@@ -106,11 +124,52 @@ return
  
 }
 
+
+
+
+const services = res?.data?.services
+
+
 if(res.data.ispayment === true){
-  navigation.navigate(SCREENS.DashBoard);
+
+
+
+
+  const countNonNullOrTrueValues = Object.values(services).filter(value => value !== null && value !== false).length;
+
+  if (countNonNullOrTrueValues === 1) {
+    console.log('Exactly one value is not null or true.');
+
+    if  (services?.hsUserId !== null){
+      navigation.replace(SCREENS.HSAccountDetail);
+    } else if  (services?.ezUserId !== null){
+      navigation.replace(SCREENS.EZAccountDetail);
+     } else if  (services?.ltbUserId !== null){
+      navigation.replace(SCREENS.RentalBoxAccountDetail);
+    }else if  (services?.pbdsUserId !== null){
+      navigation.replace(SCREENS.PBDSAccountDetail);
+    }else if  (services?.pocdsUserId == true){
+      navigation.replace(SCREENS.POCDSAccountDetail);
+    }
+  } else {
+navigation.replace(SCREENS.DashBoard); 
+  
+ AsyncStorage.setItem(CONSTANTS.ISLOGGEDIN,"Yes");
+}
+
+
+  //
 
 }else{
-  navigation.navigate(SCREENS.CartValueScreen,{From :"",Service:'',userID:res?.data?.userID})
+
+
+ 
+  // Check if any value is not null or true
+ 
+
+
+
+  navigation.navigate(SCREENS.CartValueScreen,{From :"Login",Service:'',userID:res?.data?.userID,LoginParams:res?.data})
 }
 
         }else{
@@ -121,15 +180,13 @@ if(res.data.ispayment === true){
       });
   };
 
-
-
   return (
      <GradientBackground>
-    <HeaderWithBackButton onPress={handlePress} title = "Customer Login" />
+    <HeaderWithBackButton2  onPress={() => {
+              navigation.navigate(SCREENS.WelcomScreen);
+            }} title = "Customer Login" />
 
     <View style={styles.container}>
-
-
       <View style={{}}>
         {/* <Logoimage style={{alignSelf: 'center'}} /> */}
         <Text style={styles.txt}>
@@ -137,7 +194,6 @@ if(res.data.ispayment === true){
         </Text>
         <Text style={styles.txt1}>
         If you have an Account, Sign in with your e-mail address</Text>
-               
        
       </View>
   
@@ -202,7 +258,10 @@ if(res.data.ispayment === true){
           onPress={() => {
                //navigation.navigate(SCREENS.DashBoard);
             LoginApi()
-          }}          buttonStyle={styles.loginButton} // Custom button style
+          }}    
+          IconName={"login"}
+
+          buttonStyle={styles.loginButton} // Custom button style
           textStyle={{fontFamily :FONTFAMILY.Bold,
             fontSize: rf(2.0)}}         />
 
@@ -215,7 +274,7 @@ if(res.data.ispayment === true){
             }>
             <Text
               style={
-                styles.txt1
+               [ styles.txt1,{color: "blue"}]
 }>            Forgot password?
             </Text>
           </TouchableOpacity>

@@ -52,24 +52,44 @@ const handlePress = () => {
           
             <Image source={IMAGES.Ezone} style={styles.image} />
             
-            <Text style={[styles.Left500Text,{margin:16}]}>This option is intended for the shipment of small packages from the United States of America by air to Anguilla. Packages can also be shipped to eZone's shipping addresses (eZ Hubs) in Canada and London for final forwarding to Anguilla. For further information on eZone's eZ Hubs, please visit</Text>
+            <Text style={[styles.Left500Text,{margin:16}]}>This option is intended for the shipment of small packages from the United States of America by air to Anguilla. Packages can also be shipped to eZone's shipping addresses (eZ Hubs) in Canada and London for final forwarding to Anguilla. For further information on eZone's eZ Hubs, please visit
+           <TouchableOpacity
+           
+           onPress={() =>
+            Linking.openURL("https://getezone.com/ez-hub/")
+
+            
+            }           >
+            <Text style={[styles.Left500Text,{color:'blue'}]}> https://getezone.com/ez-hub/</Text>
+
+            </TouchableOpacity>
+            </Text>
 
             <View style={styles.col13}>
             <Text style={styles.fw800Text}>Facts:</Text>
             <View style={styles.factsList}>
               <View style={styles.factsItem}>
                 
-                <Text style={styles.Left500Text}>Two to Three shipments weekly into Anguilla Recommended for light and urgently required items</Text>
+                <Text style={styles.Left500Text}>
+                  
+                <Text style={styles.Left500BOLDText}>• </Text>
+                  Two to Three shipments weekly into Anguilla Recommended for light and urgently required items</Text>
               </View>
               <View style={styles.factsItem}>
-                <Text style={styles.Left500Text}>Rates from Miami, USA to Anguilla calculated on actual weight 
+                <Text style={styles.Left500Text}>
+                <Text style={styles.Left500BOLDText}>• </Text>
+                  Rates from Miami, USA to Anguilla calculated on actual weight 
                 </Text>
               </View>
               <View style={styles.factsItem}>
-                <Text style={styles.Left500Text}>Rates from London and Canada calculated on actual or chargeable weight of packages (whichever is greater)</Text>
+                <Text style={styles.Left500Text}>
+                <Text style={styles.Left500BOLDText}>• </Text>
+                  Rates from London and Canada calculated on actual or chargeable weight of packages (whichever is greater)</Text>
               </View>
               <View style={styles.factsItem}>
-                <Text style={styles.Left500Text}>Fast, Easy, Affordable</Text>
+                <Text style={styles.Left500Text}>
+                <Text style={styles.Left500BOLDText}>• </Text>
+                  Fast, Easy, Affordable</Text>
               </View>
             </View>
           </View>
@@ -113,19 +133,32 @@ const handlePress = () => {
             <View style={styles.col12}>
            
               <View style={styles.col12}>
-                <Text style={styles.myTextGrey}>0 – 4 lbs
+                <Text style={styles.myTextGrey}>0 – 2 lbs
 
 </Text>
-                <Text style={styles.myTextGreyT}>$14.60 USD base rate
+                <Text style={styles.myTextGreyT}>$14.60 USD flat rate
 
 </Text>
               </View>
               <View style={styles.hr}></View>
+
+
+              <View style={styles.col12}>
+                <Text style={styles.myTextGrey}>3 – 4 lbs
+
+</Text>
+                <Text style={styles.myTextGreyT}>$6.50 USD per lb
+
+</Text>
+              </View>
+              <View style={styles.hr}></View>
+
+
               <View style={styles.col12}>
                 <Text style={styles.myTextGrey}>5+ lbs
 
 </Text>
-                <Text style={styles.myTextGreyT}>$3.50 USD per additional lb
+                <Text style={styles.myTextGreyT}>$3.50 USD per lb
 
 </Text>
               </View>
@@ -180,9 +213,10 @@ const handlePress = () => {
 
           {/* </ScrollView> */}
           <CustomBlueButton
-          title="Sign up"
-          onPress={() => navigation.navigate(SCREENS.EzonIntroductionSecond,{Params1 :Params1})}
-         
+          title="Next"
+          onPress={() => navigation.navigate(SCREENS.HomeShopAccountDetails1,{From:"EZ",Params1:Params1})}
+          IconName={"input"}
+
           textStyle={{fontFamily :FONTFAMILY.Bold,
             fontSize: rf(2.0)}} // Custom text style
         />

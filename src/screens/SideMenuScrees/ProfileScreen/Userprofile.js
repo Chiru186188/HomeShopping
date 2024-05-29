@@ -141,6 +141,24 @@ const [imageData, setImageData] = useState(null); // Store image data for update
 
 const uploadImage = async () => {
 
+
+if (FirstName === ""){
+  utills('Error','Please Enter First Name')
+  return
+}
+if (lastName === ""){
+  utills('Error','Please Enter Last Name')
+  return
+}
+if (dob === "Date of Birth" || dob == null){
+  utills('Error','Please Select Date of birth')
+  return
+}
+
+if (valueG === "" || valueG == null){
+  utills('Error','Please Select gender')
+  return
+}
   dispatch(saveIsLoading(true))
 const formData = new FormData();
     formData.append("id",  userData?.userID);
@@ -186,7 +204,7 @@ const formData = new FormData();
    //.post('https://api.caribbargains.com/user/uploadimage', formData, config)
 //post
 
-      .post('http://122.176.104.29:7648/api/UserApi/UserProfileApiAsync13', formData, config)
+      .post('http://hsstrain.apis.gov.ai/api/UserApi/UserProfileApiAsync13', formData, config)
       .then(onSuccess)
       .catch(onFailure);
     };
@@ -210,14 +228,24 @@ const formData = new FormData();
   }} /> */}
 
 
-{ imgURl ? (
+{/* { imgURl ? (
         <Image source={{ uri: imgURl }} style={styles.image} />
         ) : imageUri && imageUri.assets && imageUri.assets.length > 0 ? (
         <Image source={{ uri: imageUri.assets[0].uri }} style={styles.image} />
       ) : (
       <Image source={IMAGES.ProfileImage} style={styles.image} />
    
-   )}  
+   )}   */}
+<Image
+  source={
+    imgURl
+      ? { uri: imgURl }
+      : imageUri && imageUri.assets && imageUri.assets.length > 0
+      ? { uri: imageUri.assets[0].uri }
+      : IMAGES.ProfileImage
+  }
+  style={styles.image}
+/>
 
 
   <View style={{flexDirection:'row',alignItems:'center',gap:10}}>
@@ -371,6 +399,8 @@ const formData = new FormData();
 
 <CustomBlueButton
           title="Update profile"
+          IconName={"update"}
+
           onPress={() => {
                //navigation.navigate(SCREENS.DashBoard);
             uploadImage()
@@ -473,9 +503,10 @@ const formData = new FormData();
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
           onImageData = {(data)=>{
-
+console.log("DONE")
             setImageUri(data)
             if (data) {
+              setimgURl(null)
             //  uploadImage(data);
             }else{
             }

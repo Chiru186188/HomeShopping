@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     fontFamily: FONTFAMILY.Regular,
     alignSelf: 'center',
     fontSize: rf(1.6),
-    borderBottomWidth: 1, // Add a bottom border
+   // borderBottomWidth: 1, // Add a bottom border
     borderColor: 'transparent', // Set the initial border color to transparent
   },
   icon: {

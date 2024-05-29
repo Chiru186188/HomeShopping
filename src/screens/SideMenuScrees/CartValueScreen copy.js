@@ -116,6 +116,7 @@ console.log(plansID); // This will log an array containing the extracted id valu
       let data = {
         planIds: idArray,
         userId: 5645,
+        IsInsured:false
       };
       console.log(data); // This will log an array containing the extracted id values
 
@@ -299,6 +300,8 @@ const handlePress = () => {
               <CustomBlueButton
           title={"Proceed To Pay (US" + MySubscriptionsList?.data?.totalAmountAsUSDT + ")"}
           onPress={ProceedToPay}
+          IconName={"payment"}
+
           buttonStyle={{width : wp('45%')}} // Custom button style
           textStyle={{fontFamily :FONTFAMILY.SemiBold,
             fontSize: rf(1.6)}} // Custom text style

@@ -160,9 +160,11 @@ const handlePress = () => {
 
           {/* </ScrollView> */}
           <CustomBlueButton
-          title="Sign up"
-          onPress={() => navigation.navigate(SCREENS.HomeShopIntroductionSecond ,{Params1:Params1})}
-         
+          title="Next"
+          onPress={() =>     navigation.navigate(SCREENS.HomeShopAccountDetails1,{From:"HS",Params1:Params1})
+        }
+          IconName={"input"}
+
           textStyle={{fontFamily :FONTFAMILY.Bold,
             fontSize: rf(2.0)}} // Custom text style
         />

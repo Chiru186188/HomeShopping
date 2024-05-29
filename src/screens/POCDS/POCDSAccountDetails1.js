@@ -19,10 +19,15 @@ import TouchableNativeFeedback from '../../components/TouchableNativeFeedback';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useRoute } from '@react-navigation/native';
 import CustomRadioButtons from '../../components/CustomRadioButtons';
+import { useSelector } from 'react-redux';
 
 export default function POCDSAccountDetails1({navigation}) {
   const route = useRoute();
+  const AllCountries = useSelector(state => state.category.AllCountries);
+  console.log("AllCountries",AllCountries)
 
+ // const AllCountriesdata = AllCountries?.aaData
+  //console.log("AllCountriesdata",AllCountriesdata)
   const options = [
     { label: 'Yes', value: 'Yes' },
     { label: 'No', value: 'No' },
@@ -31,6 +36,13 @@ export default function POCDSAccountDetails1({navigation}) {
 useEffect(() => {
 
 console.log("Params1",Params1)
+// const formattedItems = AllCountriesdata?.map((item) => ({
+//   label: item.Name,
+//   value: item.Name,
+// }));
+// console.log("formattedItems",formattedItems)
+// setItems(formattedItems);
+
 const formattedItems = DEFAULTARRAYS.Nationality?.map((item) => ({
   label: item.Text,
   value: item.Value,
@@ -38,7 +50,7 @@ const formattedItems = DEFAULTARRAYS.Nationality?.map((item) => ({
 console.log("formattedItems",formattedItems)
 setItems(formattedItems);
 
-
+setValue("Anguilla")
 const formattedItemsT = DEFAULTARRAYS.TitleList?.map((item) => ({
   label: item.Text,
   value: item.Value,
@@ -56,7 +68,7 @@ if (Params1?.DOB != ''){
 }, []);
 
 const [open, setOpen] = useState(false);
-const [value, setValue] = useState(null);
+const [value, setValue] = useState("Anguilla");
 const [items, setItems] = useState([
 ]);
 
@@ -142,16 +154,20 @@ const handleNextPress = () => {
     utills.errorAlert('', 'Please Select Natinality');
     return;
   }
-  if (utills.isEmptyOrSpaces(PhysicalAddress)) {
-    utills.errorAlert('', 'Please Enter  Physical Address');
-    return;
-  }
-  if (utills.isEmptyOrSpaces(Poboxnu)) {
-    utills.errorAlert('', 'Please Enter P.O. Box Number');
+  // if (utills.isEmptyOrSpaces(PhysicalAddress)) {
+  //   utills.errorAlert('', 'Please Enter  Physical Address');
+  //   return;
+  // }
+  // if (utills.isEmptyOrSpaces(Poboxnu)) {
+  //   utills.errorAlert('', 'Please Enter P.O. Box Number');
+  //   return;
+  // }
+  if (utills.isEmptyOrSpaces(EmailAdd)) {
+    utills.errorAlert('', 'Please Enter Email Address');
     return;
   }
   if (utills.isEmptyOrSpaces(EmailAdd)) {
-    utills.errorAlert('', 'Please Enter Email Address');
+    utills.errorAlert('', 'Please Enter Email Id');
     return;
   }
   if (utills.isEmptyOrSpaces(MobilePhone)) {
@@ -238,7 +254,9 @@ const handlePress = () => {
       justifyContent: 'center',
       paddingHorizontal:10,
       marginTop:10,
-      marginBottom:15
+      marginBottom:15,
+      //zIndex: 1, // Add zIndex to ensure the dropdown appears above other elements
+      position: 'relative'
 
     }}>
       <DropDownPicker
@@ -370,7 +388,9 @@ const handlePress = () => {
       justifyContent: 'center',
       paddingHorizontal:10,
       marginTop:10,
-      marginBottom:15
+      marginBottom:15,
+      //zIndex: 1, // Add zIndex to ensure the dropdown appears above other elements
+      position: 'relative'
 
     }}>
       <DropDownPicker
@@ -405,7 +425,7 @@ const handlePress = () => {
               </View>
       
        <EditTextWithLable
-        label="P.O. Box Number *"
+        label="P.O. Box Number"
         placeholder="Enter P.O. Box Number"
         value={Poboxnu}
         onChangeText={setPoboxnu}
@@ -517,6 +537,8 @@ const handlePress = () => {
         value={MobilePhone}
         onChangeText={setMobilePhone}
         keyboardType='numeric'
+        maxLength={10}
+
       />
       
         <View style = {{width:wp('90%')}}>
@@ -616,12 +638,15 @@ const styles = StyleSheet.create({
     
   },
   logo: {
-    width: 120,
-    height: 120,
+    width: wp("25%"),
+    height: wp("25%"),
+    resizeMode:'contain',
   },
   logo1: {
-    height: 120,
+    height: wp("30%"),
     resizeMode:'contain',
+    width : wp("55%")
+    
   },
   fw500Text: {
     fontWeight: '500',

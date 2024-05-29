@@ -6,6 +6,7 @@ import {
   responsiveFontSize as rf,
   widthPercentageToDP as wp,
 } from '../common/responsiveFunction';
+import Icons, { Icon } from './Icons';
 function CustomButtons({ onBackPress, onNextPress }) {
   return (
     <View style={styles.container}>
@@ -26,6 +27,12 @@ function CustomButtons({ onBackPress, onNextPress }) {
       style={[styles.buttonL]}
       onPress={onBackPress}
     >
+       <Icons
+    name={"arrow-back-circle"}
+    Type={Icon.Ionicons}
+    size={rf(3.0)}
+    color={COLORS.white}
+  />
       <Text style={[styles.buttonText]}>{'Back'}</Text>
     </TouchableOpacity>
 
@@ -33,6 +40,12 @@ function CustomButtons({ onBackPress, onNextPress }) {
       style={[styles.buttonR]}
       onPress={onNextPress}
     >
+       <Icons
+    name={"navigate-next"}
+    Type={Icon.MaterialIcons}
+    size={rf(3.0)}
+    color={COLORS.white}
+  />
       <Text style={[styles.buttonText]}>{'Next'}</Text>
     </TouchableOpacity>
     </View>
@@ -54,7 +67,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: COLORS.CancelRED, 
-
+    flexDirection:'row',
+    gap :10
   },
   buttonR: {
     width: wp("40%"),
@@ -63,7 +77,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: COLORS.blueButton, 
-
+    flexDirection:'row',
+    gap :10
   },
   buttonText: {
     color: 'white',

@@ -64,10 +64,10 @@ export default function ImageUploadModal({modalVisible, setModalVisible,onImageD
            }
            setModalVisible(false);        });
       } else {
-        //console.log('Camera permission denied');
+        console.log('Camera permission denied');
       }
     } catch (error) {
-     // console.log('Camera permission error: ', error);
+      console.log('Camera permission error: ', error);
     }
   };
 

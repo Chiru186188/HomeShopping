@@ -1,5 +1,5 @@
 <resources>
-  <color name="splashscreen_background">#ffffff</color>
+    <drawable name="splashscreen_background">@drawable/splash_gradient</drawable>
   <color name="iconBackground">#ffffff</color>
   <color name="colorPrimary">#023c69</color>
   <color name="colorPrimaryDark">#ffffff</color>

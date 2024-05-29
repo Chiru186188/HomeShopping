@@ -207,6 +207,14 @@ const updatedReceiptNotes = receiptNotes.replace(/<br\s*[/]?>/gi, '\n');
           </View>
           <View style={styles.hr}></View>
 
+
+          <View style={styles.rowList2}>
+          <Text style={styles.Left500BOLDText} >Payment Mode</Text>
+          <Text style={styles.Left500TextMedum} >{item?.payMode ?? "OnlinePay"}</Text>
+          </View>
+          <View style={styles.hr}></View>
+
+
           <View style={styles.rowList2}>
           <Text style={styles.Left500BOLDText} >From Account Amount</Text>
           <Text style={styles.Left500TextMedum} >{item?.FromAccountAmount}</Text>

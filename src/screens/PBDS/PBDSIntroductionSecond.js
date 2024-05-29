@@ -13,6 +13,7 @@ import HeaderWithBackButton from '../../components/HeaderWithBackButton';
 import CustomRadioButtons from '../../components/CustomRadioButtons';
 import CustomButtons from '../../components/CustomButtons';
 import { useRoute } from '@react-navigation/native';
+import utills from '../../utills';
 // import CustomRadioButtons from '../../components/CustomRadioButtons';
 
 export default function PBDSIntroductionSecond({navigation}) {
@@ -44,6 +45,14 @@ const [selectedOption, setSelectedOption] = useState(null);
   
   const handleNextPress = () => {
     // Add your logic for the "Next" button action here
+
+    console.log("selectedOption",selectedOption)
+if (selectedOption == null || selectedOption === "I do not accept the agreement"){
+
+  utills.errorAlert("Please accept the agreement!")
+  return
+}
+
      navigation.navigate(SCREENS.PBDSAccountDetails1,{Params1 :Params1})
   };
 const handlePress = () => {

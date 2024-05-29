@@ -131,12 +131,13 @@ const getCustomerdata = () => {
     setlastName(res?.aaData[0]?.Surname);
     setPhysicalAddress(res?.aaData[0]?.Address);
     setPoboxnu(res?.aaData[0]?.POBox);
+    setIRD(res?.aaData[0]?.IRDNumber)
     setEmailAdd(res?.aaData[0]?.Email);
     setMobilePhone(res?.aaData[0]?.PhoneNumber);
     setAccountId(res?.aaData[0]?.AccountId);
     setCustId(res?.aaData[0]?.Id);
 setServiceList(res?.aaData[0]?.ServiceDetail)
-    getAccountHistory(res?.aaData[0]?.AccountId,res?.aaData[0]?.Id)
+    //getAccountHistory(res?.aaData[0]?.AccountId,res?.aaData[0]?.Id)
 
 
 
@@ -248,7 +249,7 @@ const handleCancelPress = () => {
 
 
 
-console.log("AccountHistory",AccountHistory)
+// console.log("AccountHistory",AccountHistory)
 
 useFocusEffect(
   React.useCallback(() => {
@@ -295,6 +296,8 @@ const [FirstName, setFirstName] = useState();
 const [lastName, setlastName] = useState();
 const [PhysicalAddress, setPhysicalAddress] = useState();
 const [Poboxnu, setPoboxnu] = useState();
+const [IRD, setIRD] = useState();
+
 const [EmailAdd, setEmailAdd] = useState();
 const [MobilePhone, setMobilePhone] = useState();
 const [expanded, setExpanded] = useState(false); // Initially not expanded
@@ -345,7 +348,8 @@ const listData = [
       justifyContent: 'center',
       paddingHorizontal:15,
       marginTop:25,
-
+      //zIndex: 1, // Add zIndex to ensure the dropdown appears above other elements
+      position: 'relative'
     }}>
       <DropDownPicker
       open={open}
@@ -356,8 +360,9 @@ const listData = [
       setItems={setItems}
       listMode='SCROLLVIEW'
       placeholder='Select Account User'
+      // searchable={true}
       style={{borderColor:'lightgrey', borderWidth:2,borderRadius:15,height: hp('8%'),
-
+    
 
       
     }}
@@ -381,13 +386,16 @@ const listData = [
     setlastName(CostumerDetails?.aaData[selectedIndex]?.Surname);
     setPhysicalAddress(CostumerDetails?.aaData[selectedIndex]?.Address);
     setPoboxnu(CostumerDetails?.aaData[selectedIndex]?.POBox);
+    //setIRD(CostumerDetails?.aaData[selectedIndex]?.);
+    setIRD(CostumerDetails?.aaData[selectedIndex]?.IRDNumber)
+
     setEmailAdd(CostumerDetails?.aaData[selectedIndex]?.Email);
     setMobilePhone(CostumerDetails?.aaData[selectedIndex]?.PhoneNumber);
     setAccountId(CostumerDetails?.aaData[selectedIndex]?.AccountId);
     setCustId(CostumerDetails?.aaData[selectedIndex]?.Id);
     setServiceList(CostumerDetails?.aaData[selectedIndex]?.ServiceDetail)
 
-    getAccountHistory(CostumerDetails?.aaData[selectedIndex]?.AccountId,CostumerDetails?.aaData[selectedIndex]?.Id)
+   // getAccountHistory(CostumerDetails?.aaData[selectedIndex]?.AccountId,CostumerDetails?.aaData[selectedIndex]?.Id)
 
       }}
     />
@@ -453,6 +461,7 @@ const listData = [
         onChangeText={setMobilePhone}
         keyboardType='numeric'
           disable={enableText}
+          maxLength={10}
 
       />
       
@@ -478,8 +487,8 @@ const listData = [
        <EditText_WithBackgroundColor
         label="IRD"
         placeholder="IRD"
-        value={Poboxnu}
-        onChangeText={setPoboxnu}
+        value={IRD}
+        onChangeText={setIRD}
         keyboardType="default"
         disable={true}
 
@@ -575,12 +584,12 @@ style = {{alignItems:'center'}}>
 <Image source={IMAGES.HistoryReport} style={styles.logo} />
 
 </View>
-<Text style={styles.Left500Text}>Transactions</Text>
+<Text style={styles.Left500Text}>Online Systems</Text>
 
 <Text style={styles.Left500Text}
 numberOfLines={2}
 ellipsizeMode='tail'
->History Report</Text>
+>Payments Report</Text>
 {/* <Text style={styles.Left500Text}>Report</Text> */}
 
 </TouchableOpacity>
@@ -656,7 +665,7 @@ onPress={handleCancelPress}
 </React.Fragment>
 )}
 
-<TouchableOpacity 
+{/* <TouchableOpacity 
           onPress={handleexpanded2Press} 
           style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,alignContent:'left',borderTopLeftRadius: 10,borderTopRightRadius: 10,marginTop: 10}]}>
                 <View style={styles.col8}>
@@ -684,12 +693,7 @@ onPress={handleCancelPress}
         <Text style={styles.Left500BOLDText}>{CostumerDetails?.RegCharges != null ? CostumerDetails?.RegCharges : '$0.00'}</Text>
   
         </View>
-        {/* <View style={styles.hr}></View>
-        <View style={styles.rowList}>
-        <Text style={styles.Left500RegularText}>{'Un-cleared Parcels:'}</Text>
-        <Text style={styles.Left500BOLDText}>{'$20.00 ( frieght, Customs Duty )'}</Text>
-  
-        </View> */}
+       
 
 <View style={styles.hr}></View>
         <View style={styles.rowList}>
@@ -733,7 +737,7 @@ onPress={handleCancelPress}
         /> 
 
 </React.Fragment>
-)}
+)} */}
 
       
         {/* <View style = {{width:wp('90%')}}>
@@ -798,9 +802,9 @@ const handlPrintHistoryRow = () => {
      
         <View style={styles.hr}></View>
 
-        {(item.OnlinePayAmount != "") && (
+        {/* {(item.OnlinePayAmount != "") && ( */}
 
-       // {(item.TransactionTypeId != "10" && item.TransactionTypeId != "9" && item.TransactionTypeId != "4" && item.TransactionTypeId != "3" && item.TransactionTypeId != "1" && item.TransactionTypeId != "11" )&& (
+        {(item.TransactionTypeId != "10" && item.TransactionTypeId != "9" && item.TransactionTypeId != "4" && item.TransactionTypeId != "3" && item.TransactionTypeId != "1" && item.TransactionTypeId != "11" )&& (
        
        <View style={styles.rowList2}>
         <Text style={styles.Left500TextMedum}>{}</Text>
@@ -883,8 +887,99 @@ const handlPrintHistoryRow = () => {
         {/* <Image source={IMAGES.Wallet_icon6} style={{width:24,height:24,resizeMode:'contain'}} /> */}
         < History_Icon6 />
 
-    <Text style={styles.Left500TextMedum}>{item.Amount}</Text>
+    {/* <Text style={styles.Left500TextMedum}>{item.Amount}</Text> */}
   
+
+    {/* <View>
+{item.TransactionText !== "" && (
+  <View style={{padding:3,flex:1}}>
+  <Text style={styles.Left500TextMedum}>{"Online"}: ${item.TotalAmount.replace('-', '')}</Text>
+  </View>
+)}
+
+{(item.TransactionTypeId === "2" || item.TransactionTypeId === "5" || item.TransactionTypeId === "6" || item.TransactionTypeId === "7"|| item.TransactionTypeId === "8" || item.TransactionTypeId === "12" )&& (
+<View style={{backgroundColor:COLORS.yellow ,padding:3,flex:1}}>
+<Text style={styles.Left500TextMedum}>Paid Amount: ${item.TotalAmount.replace('-', '')}</Text>
+</View>
+)
+}
+{(item.TransactionTypeId === "1" || item.TransactionTypeId === "11" )&& (
+  <View style={{backgroundColor:COLORS.yellow ,padding:3,flex:1}}>
+<Text style={styles.Left500TextMedum}>Dues_Amount: ${item.TotalAmount.replace('-', '')}</Text>
+</View>
+)
+}
+{(item.TransactionTypeId === "4" )&& (
+ <View style={{backgroundColor:COLORS.yellow ,padding:3,flex:1}}>
+<Text style={styles.Left500TextMedum}>Adjust Amount: ${item.TotalAmount.replace('-', '')}</Text>
+ </View>
+)
+}
+
+{(item.TransactionTypeId === 10 )&& (
+ <View style={{backgroundColor:COLORS.yellow ,padding:3,flex:1}}>
+<Text style={styles.Left500TextMedum}>Cancel Payment: ${item.TotalAmount.replace('-', '')}</Text>
+ </View>
+)
+}
+
+
+{(item.TransactionTypeId === 9 )&& (
+ <View style={{backgroundColor:COLORS.yellow ,padding:3,flex:1}}>
+<Text style={styles.Left500TextMedum}>CF Amount: ${item.TotalAmount.replace('-', '')}</Text>
+ </View>
+)
+}
+</View> */}
+<View>
+  {item.TransactionText !== "" && (
+    <View style={{ padding: 3, flex: 1 }}>
+      <Text style={styles.Left500TextMedum}>{"Online Pay"}: ${item.TotalAmount.replace('-', '')}</Text>
+    </View>
+  )}
+
+{(item.TransactionTypeId === "2" || item.TransactionTypeId === "5" || item.TransactionTypeId === "6" || item.TransactionTypeId === "7"|| item.TransactionTypeId === "8" || item.TransactionTypeId === "12" )&& (
+    <View style={{ backgroundColor: COLORS.yellow, padding: 3, flex: 1 }}>
+      <Text style={styles.Left500TextMedum}>Paid Amount: ${item.TotalAmount.replace('-', '')}</Text>
+    </View>
+  )}
+
+  {(item.TransactionTypeId === "1" || item.TransactionTypeId === "11") && (
+    <View style={{ backgroundColor: COLORS.yellow, padding: 3, flex: 1 }}>
+      <Text style={styles.Left500TextMedum}>Dues Amount: ${item.TotalAmount.replace('-', '')}</Text>
+    </View>
+  )}
+
+  {item.TransactionTypeId === "4" && (
+    <View style={{ backgroundColor: COLORS.yellow, padding: 3, flex: 1 }}>
+      <Text style={styles.Left500TextMedum}>Adjust Amount: ${item.TotalAmount.replace('-', '')}</Text>
+    </View>
+  )}
+
+  {item.TransactionTypeId === "10" && (
+    <View style={{ backgroundColor: COLORS.yellow, padding: 3, flex: 1 }}>
+      <Text style={styles.Left500TextMedum}>Cancel Payment: ${item.TotalAmount.replace('-', '')}</Text>
+    </View>
+  )}
+
+  {item.TransactionTypeId === "9" && (
+    <View style={{ backgroundColor: COLORS.yellow, padding: 3, flex: 1 }}>
+      <Text style={styles.Left500TextMedum}>CF Amount: ${item.TotalAmount.replace('-', '')}</Text>
+    </View>
+  )}
+
+  {/* Render this view when TransactionTypeId doesn't match any condition */}
+  {!["2", "5", "6", "7", "8", "12","1","11","4","10","9"].includes(item.TransactionTypeId) && (
+    <View style={{ backgroundColor: COLORS.yellow, padding: 3, flex: 1 ,flexDirection:'row',justifyContent:'space-between'}}>
+    {/* Add any additional styling or components here if needed */}
+    <Text style={styles.Left500TextMedum}></Text>
+
+      <Text style={styles.Left500TextMedum}>${item.TotalAmount.replace('-', '')}</Text>
+    </View>
+  )}
+</View>
+
+
         </View>
 
         </View>
@@ -902,7 +997,7 @@ const handlPrintHistoryRow = () => {
         </View>  
         <View style={styles.rowAA}>
         < History_Icon8 />
-        <Text style={styles.Left500TextMedum}>{item.TotalAmount}</Text>
+        <Text style={styles.Left500TextMedum}>${item.TotalAmount.replace('-', '')}</Text>
 
     {/* <Text style={styles.Left500TextMedum}>{item.ReceivedByName}</Text> */}
   
@@ -953,7 +1048,7 @@ const handlPrintHistoryRow = () => {
               <View style={styles.hr}></View>
     
               <View style={styles.rowList2}>
-              <Text style={styles.Left500BOLDText} >Account Opening Amount</Text>
+              <Text style={styles.Left500BOLDText} >Account Closing Balance</Text>
               {/* <Text style={styles.Left500TextMedum} >{item?.CustomerInfo}</Text> */}
               <View style={{ flex: 1 }}>
       <Text style={styles.Left500TextMedumR} numberOfLines={2} ellipsizeMode="tail">
@@ -1108,12 +1203,12 @@ width:wp('90%')
   },
   Left500Text: {
     fontFamily: FONTFAMILY.SemiBold,
-    fontSize:rf(1.8),
+    fontSize:rf(1.6),
     textAlign: 'center',
   },
   Left500TextMedum: {
     fontFamily: FONTFAMILY.Medium,
-    fontSize:rf(1.8),
+    fontSize:rf(1.6),
     textAlign: 'left',
   },
   Left500TextMedumR: {

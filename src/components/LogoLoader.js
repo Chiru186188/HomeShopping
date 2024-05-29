@@ -80,8 +80,8 @@ function LogoLoader() {
                 borderColor: COLORS.primary,
                 alignItems: 'center',
                 justifyContent: 'center',
-                height: wp('22%'),
-                width: wp('22%'),
+                height: wp('30%'),
+                width: wp('30%'),
                 borderWidth: 2,
                 borderStyle: 'dashed',
                 borderRadius: wp('22%'),
@@ -95,11 +95,11 @@ function LogoLoader() {
                   borderColor: COLORS.primary,
                   alignItems: 'center',
                   justifyContent: 'center',
-                  height: wp('15%'),
-                  width: wp('15%'),
+                  height: wp('27%'),
+                  width: wp('27%'),
                   borderWidth: 1,
                   borderStyle: 'dashed',
-                  borderRadius: wp('20%'),
+                  borderRadius: wp('30%'),
                   padding: wp('2%'),
                 },
                 animatedStyles,
@@ -109,7 +109,7 @@ function LogoLoader() {
 
           <Image
             source={IMAGES.logoHS}
-            style={{width: wp('10%'), height: wp('10%'), position: 'absolute'}}
+            style={{width: wp('24%'), height: wp('24%'), position: 'absolute'}}
             resizeMode="contain"
           />
         </View>

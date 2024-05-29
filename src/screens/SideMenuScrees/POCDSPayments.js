@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View,Platform, Linking,NativeModules, Image, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View,Platform, Linking,NativeModules, Image, TouchableOpacity, TextInput} from 'react-native';
 import React from 'react';
 import {COLORS, CONSTANTS, FONTFAMILY, IMAGES, SCREENS, SIZES, STYLES} from '../../constants/them';
 import {
@@ -17,6 +17,11 @@ import CustomHeader from '../../components/CustomHeader';
 import { ScrollView } from 'react-native-gesture-handler';
 import CustomButtons from '../../components/CustomButtons';
 import CustomButtonsBAndP from '../../components/CustomButtonsBAndP';
+import { useSelector } from 'react-redux';
+import DropDownPicker from 'react-native-dropdown-picker';
+import useRedux from '../../components/useRedux';
+import { SavePOCDSPaymentSlice, getPOCDSPaymentSlice, getPostBoxPaymentSlice } from '../../redux/slice/categories';
+import utills from '../../utills';
 
 export default function POCDSPayments({navigation}) {
   const [transcType, settranscType] = useState('');
@@ -31,13 +36,61 @@ export default function POCDSPayments({navigation}) {
 
   const [isChecked, setIsChecked] = useState(false);
 
-useEffect(() => {
+  const userData = useSelector(state => state.auth.userData);
+  const [amountUs, setamountUs] = useState('');
+  const exchangeRate = 2.6882;
 
-  return () => {
+
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
    
-  };
-}, []);
+   
+  ]);
+  const {dispatch} = useRedux();
 
+  useEffect(() => {
+    getPocdspaymentdata()
+    return () => {
+     
+    };
+  }, []);
+  const getPocdspaymentdata = () => {
+    // console.log('FromID',FromID)
+  
+     let data = {
+       Id: userData?.userID,
+   
+     };
+    // console.log('dataaaaaaar',data)
+   
+     dispatch(getPOCDSPaymentSlice(data))
+       .unwrap()
+       .then(res => {
+         console.log("resDATAAAAA?",res)
+         setamount(res?.Data?.Amount.toString())
+         setHSacount(res?.Data?.HSEZoneAccNo)
+         setinvoice(res?.Data?.InvoiceNo)
+         setRefCusName(res?.Data?.CustomerName)
+         const formattedItems = res?.TransactionTypeId?.map((item) => ({
+          label: item.Text,
+          value: item.Value,
+        }));
+    
+        //console.log("formattedItems",formattedItems)
+        setItems(formattedItems);
+    
+        if (res?.TransactionTypeId?.length > 0){
+      setValue(res?.TransactionTypeId[0]?.Value)
+        }
+        setTransactionFor((res?.Data?.TransactionFor).toString())
+        
+       })
+  
+       .catch(e => {
+         //  setLoading(false);
+       });
+   };
 const handlePress = () => {
 };
 
@@ -48,8 +101,123 @@ const handleBackPress = () => {
 
 const handleNextPress = () => {
   // Add your logic for the "Next" button action here
-  navigation.navigate(SCREENS.PaymentGatwayScreen)
+
+  if(value == null){
+    utills.errorAlert("Error","Please Select Transaction Type")
+    return
+  }
+
+  // if(valueRY == null){
+  //   utills.errorAlert("Error","Please Select Renewal Year")
+  //   return
+  // }
+  // if(valueLB == null){
+  //   utills.errorAlert("Error","Please Select Post Office Box type")
+  //   return
+  // }
+  console.log("value======",value)
+  if(value === "2"){
+  if(amount === "" ||amount == "0" ){
+    utills.errorAlert("Error","Please Enter Amount")
+    return
+  }
+  console.log("Call======",value)
+
+}
+else {
+  console.log("Callll======",value)
+
+  if(HSacount === "" ||  HSacount == null){
+    utills.errorAlert("Error","Please Enter Home Shopping/Ezone Account")
+    return
+  }
+
+  if(RefCusName === ""  ||  RefCusName == null){
+    utills.errorAlert("Error","Please Enter Ref. Customer Name")
+    return
+  }
+  if(invoice === "" ||  invoice == null){
+    utills.errorAlert("Error","Please Enter Invoice Number")
+    return
+  }
+  if(amount === "" || amount == "0" ){
+    utills.errorAlert("Error","Please Enter Amount")
+    return
+  }
+
+}
+  SubmitPOCDSpaymentdata()
 };
+const [TransactionFor, setTransactionFor] = useState('');
+
+
+const SubmitPOCDSpaymentdata = () => {
+  // console.log('FromID',FromID)
+
+   let data = {
+    HSEZoneAccNo:value !=2 ? HSacount : "",
+    UserId: userData?.userID,
+    Amount:amount,
+    Notes:RefNo,
+    TransactionTypeId :value,
+    CustomerName : value !=2 ? RefCusName : ""  ,
+   // InvoiceNo : reason,
+    InvoiceNo:invoice,
+    //RenewalYear:"",
+    TransactionFor:TransactionFor
+   };
+   console.log('dataaaaaaar',data)
+ 
+   dispatch(SavePOCDSPaymentSlice(data))
+     .unwrap()
+     .then(res => {
+       console.log("res???",res)
+
+ if (res.Message === "success"){
+  console.log("res???",res.Status)
+
+//   processResponse(res)  
+const redirectUrl = res.Data;
+console.log("redirectUrl",redirectUrl)
+
+navigation.navigate(SCREENS.LinkOpenScreenNEW,{item:redirectUrl})
+//utills.successAlert('', res.Message);
+
+ }else{
+  utills.errorAlert('', res.Message);
+  return;
+}
+
+
+     })
+ 
+ 
+ 
+ 
+ 
+     .catch(e => {
+       //  setLoading(false);
+     });
+ };
+ const handleAmountChange = (text) => {
+  // Ensure the input always starts with "EC$"
+  
+
+  const amountNumber = parseFloat(text.replace('EC$', ''));
+
+  // Check if the entered text is a valid number
+  if (!isNaN(amountNumber)) {
+    setamount(text);
+    // Convert to US$ and set the state
+    const convertedAmountUsd = (amountNumber / exchangeRate).toFixed(2);
+    setamountUs(`(US$ ${convertedAmountUsd})`);
+  } else {
+    // If the entered text is not a valid number, only update the EC$ amount
+    setamount(text);
+    setamountUs(''); // Reset the US$ amount if the input is not a valid number
+  }
+};
+
   return (
      <GradientBackground>
     <CustomHeader onPress={handlePress} title = "POCDS Service" />
@@ -61,51 +229,173 @@ const handleNextPress = () => {
 </Text>
     </View>
 <View style={{alignSelf:'center'}}>
-<EditTextWithLable
+{/* <EditTextWithLable
         label="Transaction Type *"
         placeholder="Transaction Type"
         value={transcType}
         onChangeText={settranscType}
         keyboardType="default"
-      />
-     <EditTextWithLable
+      /> */}
+
+<View style={{ flexDirection: 'row', width: wp("90%"), gap: 0,
+
+  backgroundColor: COLORS.white,
+  // paddingHorizontal: wp('1.5%'),
+  // marginTop: hp('1%'),
+  
+
+}}>
+          <Text style={{marginVertical: hp('1%'),
+    fontSize: rf(1.8),
+    color: COLORS.Lableheading,
+    fontFamily: FONTFAMILY.Medium,
+    marginLeft:wp('1%')}}>Transaction Type</Text>
+<Text style={{marginTop: hp('1%'),
+    fontSize: rf(1.8),
+    color: 'red',
+    fontFamily: FONTFAMILY.Medium,
+    marginLeft:wp('1%')}}> *</Text>
+     
+      </View>
+    <View style={{
+           alignItems: 'center',
+     justifyContent: 'center',
+      // paddingHorizontal:15,
+      marginBottom: hp('1.5%'),
+      alignSelf:'center',alignContent:'center'
+      ,width:wp("89%"),
+      //zIndex: 1, // Add zIndex to ensure the dropdown appears above other elements
+      position: 'relative'
+    }}>
+      <DropDownPicker
+      open={open}
+      value={value}
+      items={items}
+      setOpen={setOpen}
+      setValue={setValue}
+      setItems={setItems}
+      listMode='SCROLLVIEW'
+      placeholder='Select Account User'
+      style={{borderColor:COLORS.Greyscale, borderWidth:2,borderRadius:15,height: hp('8%')
+    }}
+      textStyle={{fontFamily:FONTFAMILY.Bold,fontSize:rf(1.8)}}
+   
+   
+   />
+    </View>
+
+     {/* <EditTextWithLable
         label="Account *"
         placeholder="Enter Account"
         value={acount}
         onChangeText={setacount}
         keyboardType="default"
-      />
+      /> */}
+        {value === '15' && (
+
         <EditTextWithLable
         label="Home Shopping/Ezone Account *"
         placeholder="Enter Home Shopping/Ezone Account"
         value={HSacount}
         onChangeText={setHSacount}
         keyboardType="default"
+        disable={true}
       />
 
+        )}
+  {value === '15' && (
 <EditTextWithLable
         label="Customer Name *"
         placeholder="Enter Customer Name"
         value={RefCusName}
         onChangeText={setRefCusName}
         keyboardType="default"
+        disable={true}
       />
-      <EditTextWithLable
+      
+  )}
+  {value === '15' && (
+
+<EditTextWithLable
         label="Invoice *"
         placeholder="Enter Invoice"
         value={invoice}
         onChangeText={setinvoice}
         keyboardType="default"
+        disable={true}
       />
-    
-       <EditTextWithLable
+      )}
+       {/* <EditTextWithLable
         label="Amount *"
         placeholder="Enter Amount"
         value={amount}
         onChangeText={setamount}
         keyboardType="default"
-      />
+      /> */}
        
+
+      
+       <View style={{ flexDirection: 'row', width: wp("90%"), gap: 0,
+
+backgroundColor: COLORS.white,
+// paddingHorizontal: wp('1.5%'),
+// marginTop: hp('1%'),
+
+
+}}>
+        <Text style={{marginVertical: hp('1%'),
+  fontSize: rf(1.8),
+  color: COLORS.Lableheading,
+  fontFamily: FONTFAMILY.Medium,
+  marginLeft:wp('1%')}}>Amount</Text>
+<Text style={{marginTop: hp('1%'),
+  fontSize: rf(1.8),
+  color: 'red',
+  fontFamily: FONTFAMILY.Medium,
+  marginLeft:wp('1%')}}> *</Text>
+   
+    </View>
+
+<View style={{ flexDirection: 'row', width: wp("90%"), gap: 0,
+
+backgroundColor: COLORS.white,
+// paddingHorizontal: wp('1.5%'),
+//
+ marginBottom: hp('2%'),
+flexDirection: 'row',
+height: hp('8%'),
+justifyContent: 'center',
+alignItems: 'center',
+borderWidth: 2,
+borderColor: COLORS.Greyscale,borderRadius:10,
+ width : wp("89%"),
+ backgroundColor:COLORS.lightGreySelection
+
+}}>
+<View style={{backgroundColor:COLORS.Greyscale,height: hp('8%'),borderBottomLeftRadius:10,borderTopLeftRadius:10,paddingHorizontal:10,paddingVertical:hp("2%")}}
+ >
+      <Text style={styles.txt3}>EC$</Text>
+      </View>
+      <TextInput
+        placeholder="Enter Amount"
+        value={amount}
+        onChangeText={handleAmountChange}
+        keyboardType='decimal-pad'
+        style={ {
+          flex:1,color: COLORS.Content,
+          fontFamily: FONTFAMILY.Bold,
+          alignSelf: 'center',
+          fontSize: rf(1.8),
+        paddingHorizontal:10,
+        
+        }}
+        maxLength={8}
+editable={false}
+      />
+    </View>
+
+
+
        <EditTextWithLable
         label="Note Description"
         placeholder="Enter Note Description"
@@ -119,6 +409,7 @@ const handleNextPress = () => {
 <CustomButtonsBAndP
         onBackPress={handleBackPress}
         onNextPress={handleNextPress}
+        Buttontext={"Proceed To Pay " + amountUs  }
       />
      </View>
     </View>

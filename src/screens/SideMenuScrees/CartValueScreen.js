@@ -270,30 +270,53 @@ import EditTextWithLable from '../../components/EditTextWithLable';
 import Icons, { Icon } from '../../components/Icons';
 import CustomHeader from '../../components/CustomHeader';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useRoute } from '@react-navigation/native';
+import { useFocusEffect, useRoute } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import { SubscriptionValueSlice, saveAllSubscriptions } from '../../redux/slice/categories';
 import useRedux from '../../components/useRedux';
 import { ProceedToPaySlice } from '../../redux/slice/auth';
 import utills from '../../utills';
+import HeaderWithBackButton2 from '../../components/HeaderWithBackButton2';
 
 export default function CartValueScreen({navigation}) {
   const route = useRoute();
- const { From ,Service,userID} = route.params;
+ const { From ,Service,userID,LoginParams} = route.params;
   const {dispatch} = useRedux();
   const [plansID, setPlans] = useState([]);
 
   const MySubscriptionsList  = useSelector(state => state.category.MySubscriptionsList);
-  console.log("MyCoinsList", MySubscriptionsList);
+  // console.log("MyCoinsList", MySubscriptionsList);
   const subscription = MySubscriptionsList?.data?.selectedPlans;
-  console.log("subscriptions", subscription);
+  // console.log("subscriptions", subscription);
+  const [isChecked, setChecked] = useState(true);
 
-  useEffect(() => {
-     getAllCoinsPurchaselist();
-    return () => {
-       dispatch(saveAllSubscriptions(null))
-    };
-  }, []);
+  // useEffect(() => {
+    
+  //   dispatch(saveAllSubscriptions(null))
+
+
+  //    console.log(LoginParams)
+  //   return () => {
+  //     dispatch(saveAllSubscriptions(null))
+
+  //   };
+  // }, []);
+
+
+  useFocusEffect(
+    React.useCallback(() => {
+      
+       //dispatch(saveAllSubscriptions(null))
+    
+       getAllCoinsPurchaselist();
+
+      
+     
+    }, [navigation])
+  );
+
+
+
 
   const processResponse = (response) => {
     if (response && response.data && response.data.redirectUrl) {
@@ -371,6 +394,8 @@ console.log(plansID); // This will log an array containing the extracted id valu
       let data = {
         planIds: idArray,
         userId: userID,
+        IsInsured:isChecked
+
       };
       console.log(data); // This will log an array containing the extracted id values
 
@@ -379,10 +404,10 @@ console.log(plansID); // This will log an array containing the extracted id valu
         .then(res => {
           console.log('Forgot res==', res);
           if (res.Status == true){
-            utills.successAlert('', res.Message);
+           // utills.successAlert('', res.Message);
          //   processResponse(res)  
          const redirectUrl = res.Data.redirectUrl;
-       navigation.navigate(SCREENS.LinkOpenScreen,{item:redirectUrl})
+       navigation.navigate(SCREENS.LinkOpenScreen,{From:From,item:redirectUrl,LoginParams:LoginParams})
            }else{
             utills.errorAlert('', res.Message);
             return;
@@ -412,12 +437,48 @@ const GoToNext = () => {
 
 }
 
+const getFullName = (params) => {
+  // Check if either firstName or FirstName exists in the params object
+  console.log("params",params)
+  if (params.firstName) {
+    return `${params.firstName} ${params.lastName || ''}`;
+  } else if (params.FirstName) {
+    return `${params.FirstName} ${params.LastName || ''}`;
+  } else {
+    return ''; // Handle the case when neither property is available
+  }
+};
+
 const handlePress = () => {
+
+//navigation.navigate(SCREENS.LoginScreen)
 };
   return (
      <GradientBackground>
       <HeaderWithBackButton onPress={handlePress} title= 'Cart' />
     {/* <CustomHeader onPress={handlePress} title = "Cart" /> */}
+
+
+    {/* <View style={styless.subContainer1}>
+  <TouchableOpacity
+    style={styles.container}
+    onPress={onPress}
+    >
+
+    <Icons
+  name={'keyboard-backspace'}
+  Type={Icon.MaterialCommunityIcons}
+  size={rf(2.4)}
+  color={COLORS.white}
+/>
+  </TouchableOpacity>
+
+  <Text style={styless.text1}>Cart Total</Text>
+  <View style={styless.container1}></View>
+</View>
+ */}
+
+
 <ScrollView>
     <View>
     <View style={styles.container}>
@@ -468,7 +529,12 @@ const handlePress = () => {
 
 </View>
       */}
+<View style={styles.row}>
+<Text style={styles.txt3}>Subscribed By:</Text>
+<Text style={styles.txt3}>{getFullName(LoginParams)}</Text>
 
+
+</View>
 <FlatList
       data={subscription} // Your data array from MySubscriptionsList
       keyExtractor={(item, index) => index.toString()} // Use a proper unique key here
@@ -482,9 +548,17 @@ const handlePress = () => {
  <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
               
  <View style={{ flex: 0.95 }}>
-    <Text style={styles.txt1} numberOfLines={4} ellipsizeMode="tail">{item.name}</Text>
+    <Text style={styles.txt1} numberOfLines={4} ellipsizeMode="tail">{item.name ?? ""}</Text>
   </View>
-  <Text style={styles.txt3}>${item.amount}</Text>
+  {item.id === 3 ? (
+   <Text style={styles.txt3}>${MySubscriptionsList?.data?.subsrcptionAmount ?? ""}</Text>
+
+) : (
+  <Text style={styles.txt3}>${item.amount ?? ""}</Text>
+)}
+
+
+
               </View>
             <Text style={styles.txt2} numberOfLines={3} ellipsizeMode="tail">
               {"(" + item.note + ")"}
@@ -494,15 +568,38 @@ const handlePress = () => {
              {item.id === 3 ? (
   <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
     <View style={{ flex: 1 }}>
-      <Text style={styles.txt1}>{MySubscriptionsList?.data?.keydepositename}</Text>
+      <Text style={styles.txt1}>{MySubscriptionsList?.data?.keydepositename ?? ""}</Text>
     </View>
     <View style={{ flex: 1 }}>
-      <Text style={styles.txt3}>${MySubscriptionsList?.data?.keyAmount}</Text>
+      <Text style={styles.txt3}>${MySubscriptionsList?.data?.keyAmount ?? ""}</Text>
     </View>
   </View>
 ) : (
   <View /> // Render a blank View when item.id !== 3
 )}
+       {(item.id === 1 || item.id === 4)&& (
+
+<TouchableOpacity
+        
+        style={[
+                styles.checkboxItem,
+               
+              ]}
+              onPress={() => setChecked(!isChecked)}
+            >
+  
+    
+              <Icons
+                name={isChecked == true ? 'checkbox-active' : 'checkbox-passive'}
+                style={styles.icon}
+                Type={Icon.Fontisto}
+                size={rf(2.8)}
+              />
+                    <Text style={styles.txt2}>{"Select this option if you want insurance on your parcels"}</Text>
+
+            </TouchableOpacity>
+)}
+
           </View>
           
         </View>
@@ -517,23 +614,27 @@ const handlePress = () => {
               </View>
               
               <View style={{ flex: 1 }}>
-                <Text style={styles.txt3}>${MySubscriptionsList?.data?.totalAmount}</Text>
+                <Text style={styles.txt3}>EC$ {MySubscriptionsList?.data?.totalAmount}</Text>
               </View>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between',marginHorizontal:20 ,marginVertical:15}}>
-              <View style={{ flex: 1  }}>
-              </View>
+              {/* <View style={{ flex: 1  }}>
+              </View> */}
               
-              <View style={{ flex: 1 }}>
+            
+            </View>
+
+            <View style={{ flex: 1,alignItems:'center' }}>
               <CustomBlueButton
           title={"Proceed To Pay (US" + MySubscriptionsList?.data?.totalAmountAsUSDT + ")"}
           onPress={ProceedToPay}
-          buttonStyle={{width : wp('45%')}} // Custom button style
+          buttonStyle={{width : wp('88%')}} 
+          IconName={"payment"}
+          // Custom button style
           textStyle={{fontFamily :FONTFAMILY.SemiBold,
             fontSize: rf(1.6),paddingHorizontal:10,textAlign:"center",}} // Custom text style
         />   
               </View>
-            </View>
            
     </View>
 
@@ -656,6 +757,13 @@ containerTop:
         fontFamily: FONTFAMILY.Bold,
         fontSize:rf(1.8),
         textAlign: 'left',
+      }, checkboxItem: {
+        flexDirection: 'row',
+         alignItems: 'center',
+        alignSelf:'flex-start',
+        paddingRight: 10,
+        // margin: 10,
+        // gap : 100
       },
 });
 

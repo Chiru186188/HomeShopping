@@ -12,7 +12,7 @@ import GradientBackground from '../../../components/GradientBackground';
 import HeaderWithBackButton from '../../../components/HeaderWithBackButton';
 import EditTextWithLableAndIcon from '../../../components/EditTextWithLableAndIcon';
 import CustomButtons from '../../../components/CustomButtons';
-import { useRoute } from '@react-navigation/native';
+import { useFocusEffect, useRoute } from '@react-navigation/native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import utills from '../../../utills';
 import EditTextWithLable from '../../../components/EditTextWithLable';
@@ -34,7 +34,20 @@ setdob('1995-10-19')
    
   };
 }, []);
-
+useFocusEffect(
+  React.useCallback(() => {
+    
+    setFirstName("")
+    setEmailAdd("")
+    setIRD("")
+    setMobilePhone("")
+    setNewpwd("")
+    setupwd("")
+    setPhysicalAddress("")
+    setPoboxnu("")
+    setlastName("")
+  }, [])
+);
 
 const [open, setOpen] = useState(false);
 const [value, setValue] = useState(null);
@@ -59,22 +72,22 @@ const [itemsG, setItemsG] = useState([
 
 const [selectedOption, setSelectedOption] = useState(null);
 const [title, settitle] = useState('');
-const [FirstName, setFirstName] = useState('Marque');
-const [lastName, setlastName] = useState('Hastle');
+const [FirstName, setFirstName] = useState('');
+const [lastName, setlastName] = useState('');
 const [Natinality, setNatinality] = useState('');
-const [PhysicalAddress, setPhysicalAddress] = useState('St. Kitts');
-const [Poboxnu, setPoboxnu] = useState('AAGH334');
-const [EmailAdd, setEmailAdd] = useState('Marque1@yopmail.com');
-const [IRD, setIRD] = useState('AASEDD');
+const [PhysicalAddress, setPhysicalAddress] = useState('');
+const [Poboxnu, setPoboxnu] = useState('');
+const [EmailAdd, setEmailAdd] = useState('');
+const [IRD, setIRD] = useState('');
 
 const [fbId, setfbId] = useState('');
 const [instaid, setinstaid] = useState('');
 const [homePhone, sethomePhone] = useState('');
 const [workphone, setworkphone] = useState('');
-const [MobilePhone, setMobilePhone] = useState('789987633');
+const [MobilePhone, setMobilePhone] = useState('');
 
-const [pwd, setupwd] = useState('Cw@123456');
-  const [Npwd, setNewpwd] = useState('Cw@123456');
+const [pwd, setupwd] = useState('');
+  const [Npwd, setNewpwd] = useState('');
 const handleBackPress = () => {
   // Add your logic for the "Back" button action here
   navigation.goBack()
@@ -140,25 +153,45 @@ const handleNextPress = async () => {
       utills.errorAlert('', 'Please Enter Physical Address');
       return;
     }
-    if (utills.isEmptyOrSpaces(Poboxnu)) {
-      utills.errorAlert('', 'Please Enter P.O. Box Number');
-      return;
-    }
-    if (utills.isEmptyOrSpaces(IRD)) {
-      utills.errorAlert('', 'Please Enter IRD');
-      return;
-    }
+    // if (utills.isEmptyOrSpaces(Poboxnu)) {
+    //   utills.errorAlert('', 'Please Enter P.O. Box Number');
+    //   return;
+    // }
+    // if (utills.isEmptyOrSpaces(IRD)) {
+    //   utills.errorAlert('', 'Please Enter IRD');
+    //   return;
+    // }
     if (utills.isEmptyOrSpaces(EmailAdd)) {
       utills.errorAlert('', 'Please Enter Email Address');
       return;
     }
+
+    // if (!utills.validateEmail(EmailAdd)) {
+    //   utills.errorAlert('', 'Invalid Email');
+    //   return;
+    // }
     if (utills.isEmptyOrSpaces(MobilePhone)) {
       utills.errorAlert('', 'Please Enter Mobile Number');
       return;
     }
+    if (utills.isEmptyOrSpaces(pwd)) {
+      utills.errorAlert('', 'Please Enter Password');
+      return;
+    }
+    const isValidPassword = validatePassword(pwd);
+if( isValidPassword == false ){
+  utills.confirmMessageAlert('Error', 'Password should contain  minimum 6 character and min 1 uppercase letter and 1 lowercase letter and 1 special character.');
+  return;
+}
+    if (utills.isEmptyOrSpaces(Npwd)) {
+      utills.errorAlert('', 'Please Enter New Password');
+      return;
+    }
 
-   
-
+    if(pwd != Npwd){
+      utills.errorAlert('', 'Confirm Password And New Password should be same');
+      return;
+    }
      // navigation.navigate(SCREENS.SelectServicesSubscription,{Params1 : data})
     let data = {
       FirstName:FirstName,
@@ -174,6 +207,7 @@ const handleNextPress = async () => {
       PhoneNumber:MobilePhone,
     };
 
+    console.log('data res==', data);
 
     dispatch(RegisterSlice(data))
     .unwrap()
@@ -196,7 +230,7 @@ const handleNextPress = async () => {
       PhoneNumber:res?.data?.phoneNumber,
       UserId:res?.data?.userId,
     };
-    navigation.navigate(SCREENS.SelectServicesSubscription,{Params1 : Getdata})
+    navigation.navigate(SCREENS.SelectServicesSubscription,{Params1 : Getdata,from:"Registration"})
   }
   else{
     utills.errorAlert('', res.message);
@@ -207,9 +241,41 @@ const handleNextPress = async () => {
   
 };
 
+
+
+const validatePassword = (password) => {
+  // Regular expressions for password criteria
+  const uppercaseRegex = /[A-Z]/;
+  const lowercaseRegex = /[a-z]/;
+  const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+
+  // Check if password length is at least 6 characters
+  if (password.length < 6) {
+    return false;
+  }
+
+  // Check if password contains at least one uppercase letter
+  if (!uppercaseRegex.test(password)) {
+    return false;
+  }
+
+  // Check if password contains at least one lowercase letter
+  if (!lowercaseRegex.test(password)) {
+    return false;
+  }
+
+  // Check if password contains at least one special character
+  if (!specialCharRegex.test(password)) {
+    return false;
+  }
+
+  // Password meets all criteria
+  return true;
+};
+
   return (
      <GradientBackground>
-    <HeaderWithBackButton onPress={handlePress} title = "Registration" />
+    <HeaderWithBackButton onPress={handlePress} title = "Create Account" />
     <ScrollView style= {styles.containerSc}> 
     <View style={styles.container}>
     {/* <ScrollView> */}
@@ -259,7 +325,9 @@ const handleNextPress = async () => {
       justifyContent: 'center',
       paddingHorizontal:10,
       marginTop:10,
-      marginBottom:15
+      marginBottom:15,
+      //zIndex: 1, // Add zIndex to ensure the dropdown appears above other elements
+      position: 'relative'
 
     }}>
       <DropDownPicker
@@ -274,8 +342,8 @@ const handleNextPress = async () => {
       placeholderStyle ={{color:COLORS.Greyscale}}
       style={{ 
         borderColor: COLORS.Greyscale,borderRadius:10, borderWidth:2,height: hp('8%'),
-        width : wp('89%')
-    }}
+        width : wp('89%'),zIndex:1
+}}
       textStyle={{  
         color:  COLORS.Content,
         fontFamily: FONTFAMILY.Bold,
@@ -360,6 +428,7 @@ const handleNextPress = async () => {
         value={MobilePhone}
         onChangeText={setMobilePhone}
         keyboardType='numeric'
+        maxlength={10}
       />
        <EditTextWithLableAndIcon
         label="Physical Address *"
@@ -369,14 +438,14 @@ const handleNextPress = async () => {
         keyboardType="default"
       />
        <EditTextWithLableAndIcon
-        label="P.O. Box Number *"
+        label="P.O. Box Number"
         placeholder="Enter P.O. Box Number"
         value={Poboxnu}
         onChangeText={setPoboxnu}
         keyboardType="default"
       />
        <EditTextWithLableAndIcon
-        label="IRD *"
+        label="IRD#"
         placeholder="Enter IRD"
         value={IRD}
         onChangeText={setIRD}
@@ -389,7 +458,7 @@ const handleNextPress = async () => {
         onChangeText={setupwd}
         keyboardType="default"
         icon
-
+        password
       />
 
 <EditTextWithLable
@@ -409,7 +478,10 @@ const handleNextPress = async () => {
           onPress={() => {
                //navigation.navigate(SCREENS.DashBoard);
             handleNextPress()
-          }}          buttonStyle={styles.loginButton} // Custom button style
+          }}      
+          IconName={"input"}
+
+          buttonStyle={styles.loginButton} // Custom button style
           textStyle={{fontFamily :FONTFAMILY.Bold,
             fontSize: rf(2.0)}}         />
 
@@ -420,7 +492,7 @@ const handleNextPress = async () => {
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => {
-              navigation.goBack()
+              navigation.navigate(SCREENS.LoginScreen);
             }}>
             <Text
               style={[
