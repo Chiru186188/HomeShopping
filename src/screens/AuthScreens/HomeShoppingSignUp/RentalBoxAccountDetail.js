@@ -371,11 +371,13 @@ let LetterBoxCode =  arrayOfSubstrings[0] ?? ""
     setaccountOPDate(utills.getDateBeforeT(res?.aaData?.AccountOpeningDate));
     setaccountOPAmnt(res?.aaData?.OpeningAmount?.toString());
     setsubscriptionDate(utills.getDateBeforeT(res?.aaData?.SubscriptionDueDate));
-    setaccountStatts(res?.aaData?.AccountStatusName);
+    setaccountStatts(res?.aaData?.AccountStatus === 1 ? 'ACTIVE' : 'INACTIVE');
     setFirstName(res?.aaData?.FirstName);
     setlastName(res?.aaData?.Surname);
     setPhysicalAddress(res?.aaData?.Address);
     setPoboxnu(res?.aaData?.POBox);
+    setirdnu(res?.aaData?.IRDNumber);
+
     setEmailAdd(res?.aaData?.Email);
     setMobilePhone(res?.aaData?.PhoneNumber);
     setAccountId(res?.aaData?.AccountId);
@@ -566,11 +568,22 @@ AdditionalCustomerList:additionalAddressArrays
     .unwrap()
     .then(res => {
       console.log("res?",res)
-      setenableText(true)
+      
 
-      setIsEditing(false);
+ if (res?.status == true){
+  setenableText(true)
+
+  setIsEditing(false);
 //
- utills.confirmMessageAlert('Updated','Customer Details Updated Successfully.')
+utills.confirmMessageAlert('Updated','Customer Details Updated Successfully.')
+
+return
+}else{
+  utills.confirmMessageAlert('Error',res?.msg)
+  return
+
+}
+
 
     })
     .catch(e => {
@@ -609,7 +622,8 @@ const [selectedLBValue, setselectedLBValue] = useState("");
 
 useFocusEffect(
   React.useCallback(() => {
-    
+    setIsEditing(false);
+
     const unsubscribe = navigation.addListener('beforeRemove', (e) => {
       console.log("beforeRemove",e)
       const originalString = e.target;
@@ -656,6 +670,7 @@ const [AllotedPoboxnu, setAllotedPoboxnuPoboxnu] = useState();
 const [Add1, setAdd1] = useState();
 const [Add2, setAdd2] = useState();
 const [Add3, setAdd3] = useState();
+const [irdnu, setirdnu] = useState("");
 
 const [EmailAdd, setEmailAdd] = useState();
 const [MobilePhone, setMobilePhone] = useState();
@@ -828,7 +843,7 @@ const listData = [
         onChangeText={setPhysicalAddress}
         keyboardType="default"
         disable={enableText}
-
+        isRequired={true}
       />
        {/* <EditText_WithBackgroundColor
         label="P.O. Box Number"
@@ -875,8 +890,8 @@ const listData = [
        <EditText_WithBackgroundColor
         label="I.R.D #"
         placeholder="IRD"
-        value={Poboxnu}
-        onChangeText={setPoboxnu}
+        value={irdnu}
+        onChangeText={setirdnu}
         keyboardType="default"
         disable={true}
 
@@ -1818,7 +1833,7 @@ width:wp('90%')
   },
   Left500TextMedum: {
     fontFamily: FONTFAMILY.Medium,
-    fontSize:rf(1.6),
+    fontSize:rf(1.5),
     textAlign: 'left',
   },
    Left500BOLDText: {

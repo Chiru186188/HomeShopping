@@ -69,6 +69,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { saveUserData } from '../redux/slice/auth';
 import SplashScreen from '../components/SplashScreen';
 import { Alert } from 'react-native';
+import CreditCardOrdereningServiceList from '../screens/AuthScreens/HomeShoppingSignUp/CreditCardOrdereningServiceList';
+import COSDetails from '../screens/AuthScreens/HomeShoppingSignUp/COSDetails';
 
 const Stack = createStackNavigator();
 
@@ -249,6 +251,8 @@ function MainNavigation({}) {
         <Stack.Screen name={SCREENS.PBDSPayments} component={PBDSPayments} options={{headerShown: false}}/>
         <Stack.Screen name={SCREENS.CartListpayment} component={CartListpayment} options={{headerShown: false}}/>
         <Stack.Screen name={SCREENS.CartListpaymentparcel} component={CartListpaymentparcel} options={{headerShown: false}}/>
+        <Stack.Screen name={SCREENS.CreditCardOrdereningServiceList} component={CreditCardOrdereningServiceList} options={{headerShown: false}}/>
+        <Stack.Screen name={SCREENS.COSDetails} component={COSDetails} options={{headerShown: false}}/>
 
       </Stack.Navigator>
     </NavigationContainer>

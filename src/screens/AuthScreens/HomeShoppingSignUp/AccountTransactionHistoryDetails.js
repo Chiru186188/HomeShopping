@@ -111,7 +111,7 @@ useFocusEffect(
      <GradientBackground>
     {/* <CustomHeader onPress={handlePress} title = "Account Detail" /> */}
     <HeaderWithBackButton onPress={handlePress} title = "Transaction History" />
- <View style={{
+ {/* <View style={{
            alignItems: 'center',
       justifyContent: 'center',
       paddingHorizontal:15,
@@ -119,7 +119,7 @@ useFocusEffect(
 
     }}>
   
-    </View>
+    </View> */}
     <View style= {styles.containerSc}> 
  
     {/* <ScrollView> */}
@@ -145,14 +145,34 @@ const updatedReceiptNotes = receiptNotes.replace(/<br\s*[/]?>/gi, '\n');
 
     return (
     <View >
-      <View style={{width:wp('90%'),alignSelf:'center'}}>
+            <View style={{width:wp('100%'),alignSelf:'center' ,backgroundColor:COLORS.lightgrey,marginBottom:15,borderTopLeftRadius:45,borderTopRightRadius:45}}>
+            <View style={styles.rowList22}>
+              <View style ={{flex:1}}>
+          <Text style={styles.Left500BOLDText} 
+          numberOfLines={3}
+          ellipsizeMode='tail'
+          >{item?.CustomerInfo}</Text>
+          </View>
+          <View style ={{flex:1,flexDirection:'row',gap :5}}>
+          <Icons
+            name={'calendar-clock'}
+            style={styles.icon}
+            Type={Icon.MaterialCommunityIcons}
+            size={rf(2.8)}
+          />
+           <View style ={{flex:1}}>
+          <Text style={[styles.Left500BOLDText,{textAlign:'center'}]} >{item?.CreatedOn}</Text>
+          </View>
+          </View>
+          </View>
+      <View style={{width:wp('100%'),alignSelf:'center' ,backgroundColor:'white',borderTopLeftRadius:45,borderTopRightRadius:45,paddingHorizontal:10,paddingVertical:10}}>
      
 
-        <View style={styles.rowList2}>
+        {/* <View style={styles.rowList2}>
           <Text style={styles.Left500BOLDText} >Transaction Date</Text>
           <Text style={styles.Left500TextMedum} >{item?.CreatedOn}</Text>
-          </View>
-          <View style={styles.hr}></View>
+          </View> */}
+          {/* <View style={styles.hr}></View> */}
 
           <View style={styles.rowList2}>
           <Text style={styles.Left500BOLDText} >Transaction Type</Text>
@@ -210,7 +230,7 @@ const updatedReceiptNotes = receiptNotes.replace(/<br\s*[/]?>/gi, '\n');
 
           <View style={styles.rowList2}>
           <Text style={styles.Left500BOLDText} >Payment Mode</Text>
-          <Text style={styles.Left500TextMedum} >{item?.payMode ?? "OnlinePay"}</Text>
+          <Text style={styles.Left500TextMedum} >{item?.payMode}</Text>
           </View>
           <View style={styles.hr}></View>
 
@@ -227,15 +247,15 @@ const updatedReceiptNotes = receiptNotes.replace(/<br\s*[/]?>/gi, '\n');
           </View>
           <View style={styles.hr}></View>
 
-          <View style={styles.rowList2}>
-          <Text style={styles.Left500BOLDText} >Description</Text>
-          <View style={{ flex: 1 }}>
+          {/* <View style={styles.rowList2}>
+          <Text style={styles.Left500BOLDText} >Description</Text> */}
+          <View style={{ flex: 1, paddingTop:10,paddingBottom:10,paddingHorizontal:10 }}>
 
-<Text style={styles.Left500TextMedum} 
+<Text style={styles.Left500TextMedum2} 
  numberOfLines={100} ellipsizeMode="tail"
 >{updatedReceiptNotes}</Text>
 </View>
-          </View>
+          {/* </View> */}
          
 
           
@@ -301,7 +321,8 @@ const updatedReceiptNotes = receiptNotes.replace(/<br\s*[/]?>/gi, '\n');
         {/* <Text style={[styles.Left500TextMedum,{paddingHorizontal:10,marginBottom:25}]}>{updatedReceiptNotes}</Text> */}
 
       </View>
-      <View style={styles.hr2}></View>
+      </View>
+      {/* <View style={styles.hr2}></View> */}
 
       </View>
       
@@ -310,10 +331,10 @@ const updatedReceiptNotes = receiptNotes.replace(/<br\s*[/]?>/gi, '\n');
 const styles = StyleSheet.create({
   containerSc: {
     flex: 1,
-    width : wp('94'),
+    width : wp('100'),
     alignContent:'center',
-    backgroundColor :COLORS.white,
-    margin:20,
+   // backgroundColor :COLORS.white,
+    //margin:20,
     borderRadius : 15,
     alignSelf:'center'
 
@@ -382,6 +403,18 @@ const styles = StyleSheet.create({
     marginVertical:10,
     alignItems:'center',
     gap:20
+
+  },
+  rowList22: {
+    flex:1,
+    minHeight: 'auto' ,
+    //  flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent:'space-between',
+    paddingHorizontal:25,
+    marginVertical:15,
+    alignItems:'center',
+    gap : 20
 
   },
   rowList3: {
@@ -515,7 +548,7 @@ marginBottom:25
   },
   hr2: {
     borderBottomWidth: 10,
-    borderColor: COLORS.charcoalGrey,
+    backgroundColor: COLORS.cle,
     width:wp('94%')
 
   },

@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View,Platform, Linking,NativeModules, Image, TouchableOpacity, ScrollView, Alert, ActivityIndicator} from 'react-native';
+import {StyleSheet, Text, View,Platform, Linking,NativeModules, Image, TouchableOpacity, ScrollView, Alert, ActivityIndicator, Share} from 'react-native';
 import React from 'react';
 import {COLORS, CONSTANTS, FONTFAMILY, IMAGES, SCREENS, SIZES, STYLES} from '../../constants/them';
 import {
@@ -21,7 +21,9 @@ import { LogedInUserSlice, removeUserData, saveUserData } from '../../redux/slic
 import useRedux from '../../components/useRedux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { saveIsLoading } from '../../redux/slice/categories';
-
+import * as FileSystem from 'expo-file-system';
+import * as Permissions from 'expo-permissions';
+import ReactNativeBlobUtil from 'react-native-blob-util';
 export default function SideMenu({navigation}) {
   const [email, setemail] = useState('');
   const [pwd, setupwd] = useState('');
@@ -265,22 +267,27 @@ const menus = [
 
 
         <View style={styles.subcontainer}>
-        {/* <Image source={IMAGES.ProfileImage} style={{
-    width: 100,
-    height: 100,
-  }} /> */}
-{ userData?.profilePath ? (
-        <Image source={{ uri: userData?.profilePath }} style={styles.image} />
-        )  : (
-      <Image source={IMAGES.ProfileImage} style={styles.image} />
-   
-   )}  
+       
+{userData?.profilePath && userData.profilePath !== 'http://hsstrain.apis.gov.ai//Upload/ProfileImgApi/' ? (
+    <Image source={{ uri: userData.profilePath }} style={styles.image} />
+) : (
+    <Image source={IMAGES.ProfileImage} style={styles.image} />
+)} 
   <View>
-  <Text style={styles.txt}>{userData?.firstName + " " + userData?.lastName}</Text>
+  {/* <Text style={styles.txt}>{userData?.firstName + " " + userData?.lastName}</Text>
   <Text style={styles.txt1}>{userData?.email}</Text>
-
-{/* <Text style={styles.txt}>Marcia & Alwyn</Text>
-  <Text style={styles.txt1}>marciar@caribcable.com</Text> */}
+ */}
+ <View style={{width:wp("50%")}}>
+        <Text style={styles.txt} numberOfLines={2} ellipsizeMode='tail'>
+            {userData?.firstName + " " + userData?.lastName}
+        </Text>
+        
+        <Text style={styles.txt1} numberOfLines={2} ellipsizeMode="tail">
+            {userData?.email}
+        </Text>
+        </View>
+       
+   
 
   </View>
   <View style={{alignSelf:'flex-start'}}>
@@ -289,7 +296,6 @@ const menus = [
           () => 
         navigation.goBack()}
         >
-        {/* <Svg /> */}
 
         <Icons
       name={'close-thick'}
@@ -321,12 +327,89 @@ const menus = [
     </View>
 
   );
+
+
 }
+const currentDateTime = new Date();
+   const fileName = `report_${currentDateTime.getTime()}`; // Example: report_1623117351368.pdf
+  //  const downloadFile = () => {
+  //   const source = "http://hsstrain.apis.gov.ai//Content/Pdf/OnlinePayReceipt_3431_202405310255198885.pdf";
+  //   const currentDateTime = new Date();
+  //   const fileName = `report_${currentDateTime.getTime()}.pdf`;
+  //   let dirs = ReactNativeBlobUtil.fs.dirs;
+  //   ReactNativeBlobUtil.config({
+  //     fileCache: true,
+  //     appendExt: 'pdf',
+  //     path: `${dirs.DocumentDir}/${fileName}`,
+  //     addAndroidDownloads: {
+  //       useDownloadManager: true,
+  //       notification: true,
+  //       title: fileName,
+  //       description: 'File downloaded by download manager.',
+  //       mime: 'application/pdf',
+  //     },
+  //   })
+  //     .fetch('GET', source)
+  //     .then((res) => {
+        
+  //       if (Platform.OS === 'ios') {
+  //         const filePath = res.path();
+  //         let options = {
+  //           type: 'application/pdf',
+  //           url: filePath,
+  //           saveToFiles: true,
+  //         };
+  //         Share.open(options)
+  //           .then((resp) => console.log(resp))
+  //           .catch((err) => console.log('Share error:', err));
+  //       }
+  //     })
+  //     .catch((err) => console.log('Download error:', err));
+  // };
+
+
+
+ 
 
 
 
 
 
+//    const downloadFile = () => {
+//     const source = "http://hsstrain.apis.gov.ai//Content/Pdf/OnlinePayReceipt_3431_202405310255198885.pdf";
+//     let dirs = ReactNativeBlobUtil.fs.exists;
+//     ReactNativeBlobUtil.config({
+//       fileCache: true,
+//       appendExt: 'pdf',
+//       path: `${dirs.DocumentDir}/${fileName}`,
+//       addAndroidDownloads: {
+//         useDownloadManager: true,
+//         notification: true,
+//         title: fileName,
+//         description: 'File downloaded by download manager.',
+//         mime: 'application/pdf',
+//       },
+//     })
+//       .fetch('GET', source)
+//       .then((res) => {
+
+// console.log("res",res)
+
+//         if (Platform.OS === 'ios') {
+//           const filePath = res.path();
+//           let options = {
+//             type: 'application/pdf',
+//             url: filePath,
+//             saveToFiles: true,
+//           };
+//           Share.open(options)
+//             .then((resp) => console.log(resp))
+//             .catch((err) => console.log('Share error:', err));
+//         }
+//       })
+//       .catch((err) => console.log('Download error:', err)); // Log detailed error
+//   };
+  
 
 const CustomMenu = ({ label, imageSource, subMenuItems }) => {
 const userData = useSelector(state => state.auth.userData);
@@ -501,17 +584,44 @@ UserId:userData?.userID,
   const TapbMenu= (ItemName) => {
 
     if(ItemName==="Home"){
+
+     // downloadFile()
       navigation.replace(SCREENS.DashBoard);
     } else  if(ItemName==="Contact Us"){
       navigation.replace(SCREENS.ContactUs);
     }
     else  if(ItemName==="Logout"){
 
-      dispatcher(removeUserData(userData));
-      navigation.reset({
-        index: 0,
-        routes: [{ name: SCREENS.WelcomScreen }], // Replace 'InitialScreen' with the name of your initial screen
-      });     
+      
+      
+      Alert.alert(
+        'Warning',
+        'Do You want to logout?',
+        [
+          {
+            text: 'Yes',
+            onPress: () =>{ console.log('New Subscription pressed')
+          
+            //
+            
+            dispatcher(removeUserData(userData));
+            navigation.reset({
+              index: 0,
+              routes: [{ name: SCREENS.WelcomScreen }], // Replace 'InitialScreen' with the name of your initial screen
+            });   
+            
+         
+           }, style: 'default',
+          },
+          {
+            text: 'No',
+            onPress: () => console.log('Cancel pressed'),
+            style: 'cancel',
+          },
+        ],
+        { cancelable: false }
+      );
+
     }
 
    
@@ -578,12 +688,14 @@ UserId:userData?.userID,
  
  else  if(ItemName==="Credit Card Ordering Service"){
  //   if( userData?.services?.pbdsUserId === true){
- //    navigation.replace(SCREENS.PBDSAccountDetail);
+ //   
+        // navigation.replace(SCREENS.CreditCardOrdereningServiceList);
  //   }
  // else{
  // utills.errorAlert("Error","PBDS customer detail not found!")
  // return
  // }
+// 
  utills.confirmMessageAlert("Under Development")
 //  utills.errorAlert("Error","PBDS customer detail not found!")
 //  showAlert("Credit")
@@ -643,6 +755,8 @@ UserId:userData?.userID,
           }>
           <View style={styles.menuHeader}>
             <View style={{flexDirection:'row',alignItems:'center'}}>
+
+              
             <Image source={imageSource} style={styles.menuImage} />
             <Text style={styles.menuText}>{label}</Text>
             {subMenuItems.length > 0 && (
@@ -711,7 +825,8 @@ const styles = StyleSheet.create({
 flexDirection:'row',
 paddingHorizontal:10,
 paddingTop:40,
-paddingBottom:30
+paddingBottom:30,
+gap:10
   },
   
   buttonContainer: {

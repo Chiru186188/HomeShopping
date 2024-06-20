@@ -40,11 +40,9 @@ export default function PBDSPayments({navigation}) {
   const [amountUs, setamountUs] = useState('');
   const exchangeRate = 2.6882;
 
-
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-   
+  const [items, setItems] = useState([ 
    
   ]);
 

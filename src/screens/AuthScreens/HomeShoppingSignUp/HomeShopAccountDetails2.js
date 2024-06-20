@@ -163,14 +163,16 @@ if (isEnabled1 == false){
       utills.errorAlert('', 'Please Enter  Physical Address');
       return;
     }
-    // if (utills.isEmptyOrSpaces(Poboxnu)) {
-    //   utills.errorAlert('', 'Please Enter P.O. Box Number');
-    //   return;
-    // }
+   
     if (utills.isEmptyOrSpaces(EmailAdd)) {
       utills.errorAlert('', 'Please Enter Email Address');
       return;
     }
+    if (!utills.validateEmail(EmailAdd)) {
+      utills.errorAlert('', 'Please Enter valid Email-id');
+      return;
+    }
+
     if (utills.isEmptyOrSpaces(MobilePhone)) {
       utills.errorAlert('', 'Please Enter Mobile Number');
       return;

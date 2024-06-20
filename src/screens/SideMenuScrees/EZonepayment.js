@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View,Platform, Linking,NativeModules, Image, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View,Platform, Linking,NativeModules, Image, TouchableOpacity, FlatList} from 'react-native';
 import React from 'react';
 import {COLORS, CONSTANTS, FONTFAMILY, IMAGES, SCREENS, SIZES, STYLES} from '../../constants/them';
 import {
@@ -17,21 +17,29 @@ import CustomHeader from '../../components/CustomHeader';
 import { ScrollView } from 'react-native-gesture-handler';
 import CustomButtons from '../../components/CustomButtons';
 import CustomButtonsBAndP from '../../components/CustomButtonsBAndP';
-import { RegisterEZONESLICE } from '../../redux/slice/auth';
 import { useSelector } from 'react-redux';
 import utills from '../../utills';
 import useRedux from '../../components/useRedux';
+import { RegisterEZONESLICE, SaveEZCartPaymentSlice, saveEzoneInvoices } from '../../redux/slice/categories';
 
 export default function EZonepayment({navigation}) {
-  const [account, setaccount] = useState('atul1000000@gmail.com');
-  const [Passsword, setPasssword] = useState('Admin@123');
+  const [account, setaccount] = useState('');
+  const [Passsword, setPasssword] = useState('');
   const [isChecked, setIsChecked] = useState(false);
   const {dispatch} = useRedux();
+  const [CartItems, setCartItems] = useState([]);
+  const InvoicesList  = useSelector(state => state.category.EzoneInvoices);
+console.log("InvoicesList",InvoicesList?.invoices)
+const totalBalance = InvoicesList?.invoices?.reduce((total, invoice) => total + invoice.Balance, 0);
+const exchangeRate = 2.6882;
+const convertedAmountUsd = (totalBalance / exchangeRate).toFixed(2);
 
-useEffect(() => {
+
+  useEffect(() => {
 
   return () => {
-   
+    dispatch(saveEzoneInvoices(null))
+
   };
 }, []);
 
@@ -76,11 +84,160 @@ dispatch(RegisterEZONESLICE(data))
 .then(res => {
 console.log('RegisterEZONESLICE res==', res);
 
+let jsonObject;
+try {
+  jsonObject = JSON.parse(res);
+} catch (e) {
+  console.error("Parsing error:", e);
+}
+console.log('jsonObject res==', jsonObject);
+
+// 
+console.log('RegisterEZONESLICE res==', jsonObject?.invoices);
+setCartItems[jsonObject?.invoices]
 });
  
 
 };
+
+
+// const SubmitPOCDSpaymentdata = () => {
+//   // console.log('FromID',FromID)
+
+//    let data = {
+//     ListTrans:InvoicesList?.invoices,
+
+//    };
+//    console.log('dataaaaaaar',data)
+ 
+//    dispatch(SaveEZCartPaymentSlice(data))
+//      .unwrap()
+//      .then(res => {
+//        console.log("res???",res?.Status)
+
+//  if (res?.Status == true){
+//   console.log("res???",res.Status)
+
+// //   processResponse(res)  
+// const redirectUrl = res.Data;
+// console.log("redirectUrl",redirectUrl)
+
+// navigation.navigate(SCREENS.LinkOpenScreenNEW,{item:redirectUrl})
+// //utills.successAlert('', res.Message);
+
+//  }else{
+//   utills.errorAlert('', res.Message);
+//   return;
+// }
+
+//      })
+ 
+//      .catch(e => {
+//        //  setLoading(false);
+//      });
+//  };
+
+// const SubmitPOCDSpaymentdata = () => {
+//   // Assuming userData and InvoicesList are defined and accessible in this context
+
+//   // Ensure InvoicesList and userData are available
+//   // Create the array of objects as required
+//   const data = InvoicesList?.invoices?.map(invoice => ({
+//     UserId: userData?.userID,
+//     EzoneAccountNo: invoice.customer?.AccountNumber,
+//     Amount: invoice.Balance,
+//     EzoneInvoiceParcelNo: invoice.Number,
+//     DescriptionOfContents: invoice.Contents,
+//     SuppliersName: invoice.ShipperName,
+//     RefCustomerName: invoice.Contact,
+//     RenewalYear: invoice.InvoiceDate,
+//     Notes: null,
+//     PostOfficeInvoiceNo: null,
+//     Freight: invoice.charges.find(charge => charge.Name === 'FREIGHT')?.Amount || 0,
+//     Fuel: 0, // Assuming there is no Fuel charge as it is not provided
+//     Insurance: 0, // Assuming there is no Insurance charge as it is not provided
+//     InvoiceDate: invoice.InvoiceDate,
+//     GetEndPointJsonData: invoice
+//   }));
+
+//   console.log('Formatted data:', data);
+
+//   // Dispatch the action with the formatted data
+//   dispatch(SaveEZCartPaymentSlice({ ListTrans: data }))
+//     .unwrap()
+//     .then(res => {
+//       console.log("res???", res?.Status);
+//       if (res?.Status === true) {
+//         console.log("res???", res.Status);
+//         const redirectUrl = res.Data;
+//         console.log("redirectUrl", redirectUrl);
+//         navigation.navigate(SCREENS.LinkOpenScreenNEW, { item: redirectUrl });
+//       } else {
+//         utills.errorAlert('', res.Message);
+//       }
+//     })
+//     .catch(e => {
+//       console.error("Error:", e);
+//     });
+// };
+
+
+
+const SubmitPOCDSpaymentdata = () => {
+  // Assuming userData and InvoicesList are defined and accessible in this context
+
+  // Ensure InvoicesList and userData are available
+  if (!InvoicesList || !InvoicesList.invoices || !userData) {
+    console.error("Missing data: InvoicesList or userData is not available");
+    return;
+  }
+
+  // Create the array of objects as required
+  const data = InvoicesList.invoices.map(invoice => ({
+    UserId: userData.userID,
+    EzoneAccountNo: invoice.customer?.AccountNumber,
+    Amount: invoice.Balance,
+    EzoneInvoiceParcelNo: invoice.Number,
+    DescriptionOfContents: invoice.Contents,
+    SuppliersName: invoice.ShipperName,
+    RefCustomerName: invoice.Contact,
+    RenewalYear: invoice.InvoiceDate,
+    Notes: null,
+    PostOfficeInvoiceNo: null,
+    Freight: invoice.charges.find(charge => charge.Name === 'FREIGHT')?.Amount || 0,
+    Fuel: 0, // Assuming there is no Fuel charge as it is not provided
+    Insurance: 0, // Assuming there is no Insurance charge as it is not provided
+    InvoiceDate: invoice.InvoiceDate,
+    GetEndPointJsonData: JSON.stringify(invoice)
+  }));
+
+  console.log('Formatted data:', data);
+  const dat1a  = {
+     ListTrans: data 
+  }
+  // Dispatch the action with the formatted data
+  dispatch(SaveEZCartPaymentSlice(dat1a))
+    .unwrap()
+    .then(res => {
+      console.log("res???", res?.Status);
+      if (res?.Status === true) {
+        console.log("res???", res.Status);
+        const redirectUrl = res.Data;
+        console.log("redirectUrl", redirectUrl);
+        navigation.navigate(SCREENS.LinkOpenScreenNEW, { item: redirectUrl });
+      } else {
+        utills.errorAlert('', res.Message);
+      }
+    })
+    .catch(e => {
+      console.error("Error:", e);
+    });
+};
+
+
+
 const GoToNext = () => {
+  SubmitPOCDSpaymentdata()
 }
   return (
      <GradientBackground>
@@ -127,13 +284,79 @@ const GoToNext = () => {
   
     </View>
 
+    {InvoicesList?.invoices?.length > 0 ? (
+
     <View style={styles.container}>
-    <View style={styles.containerTop}>
-    <Text  style={styles.Left500Text}>Cart Total (EC$66.67)</Text>
-    </View>
-
-
+        <View  style={styles.containerTop2} >
     <View style={styles.row}>
+            
+            <Text  style={styles.Left500BOLDTextT}>Account No:
+            </Text>
+         
+            <Text  style={styles.Left500Text}>{InvoicesList?.customer?.AccountNumber}
+            </Text>
+        
+            </View>  
+
+            <View style={styles.row}>
+            
+            <Text  style={styles.Left500BOLDTextT}>Contact:
+            </Text>
+         
+            <Text  style={styles.Left500Text}>{InvoicesList?.customer?.Contact}
+            </Text>
+        
+            </View> 
+            <View style={styles.row}>
+            
+            <Text  style={styles.Left500BOLDTextT}>CompanyName:
+            </Text>
+         
+            <Text  style={styles.Left500Text}>{InvoicesList?.customer?.CompanyName}
+            </Text>
+        
+            </View> 
+            </View> 
+    <View style={styles.containerTop}>
+    <Text  style={styles.Left500Text}>{"Cart Total " +"(EC$" + totalBalance + ")"}</Text>
+    </View>
+  
+
+
+    <FlatList
+      data={InvoicesList?.invoices}
+      // renderItem={renderItem}
+      renderItem={({ item }) =>  <View style={
+        {padding:15,flexDirection:'row',gap:3,flexWrap:'wrap',borderRadius: 10,
+       shadowColor: 'grey',
+    shadowOffset: {
+      width: 1,
+      height: 0,
+    }
+    ,
+    shadowOpacity: 0.25,
+    shadowRadius: 1,
+    elevation: 1,
+      marginHorizontal:5}}>
+            <Text style={styles.Left500BOLDTextT}>Ezone Account No:</Text>
+            <Text style={styles.value}>{InvoicesList?.customer?.AccountNumber}</Text>
+            <Text style={styles.Left500BOLDTextT}>Customer Name:</Text>
+            <Text style={styles.value}>{InvoicesList?.customer?.Contact}</Text>
+            <Text style={styles.Left500BOLDTextT}>Reference No.: Invoice/Parcel #: </Text>
+            <Text style={styles.value}>{item.Number}</Text>
+            <Text style={styles.Left500BOLDTextT}>Description of Contents:</Text>
+            <Text style={styles.value}>{item.Contents}</Text>
+            <Text style={styles.Left500BOLDTextT}>Supplier's Name:</Text>
+            <Text style={styles.value}>{item.ShipperName}</Text>
+            <Text style={styles.Left500BOLDTextT}>Customer's Name:</Text>
+            <Text style={styles.value}>{item.Contact}</Text>
+          </View>} // Render the CustomServiceListItem for each item
+
+      keyExtractor={(item, index) => index.toString()}
+    />
+
+
+    {/* <View style={styles.row}>
             
             <Text  style={styles.Left500Text}>Customs Charges
             </Text>
@@ -141,7 +364,7 @@ const GoToNext = () => {
             <Text  style={styles.Left500BOLDText}>$0.00
             </Text>
         
-            </View>  
+            </View>   */}
 
 
    
@@ -159,14 +382,14 @@ const GoToNext = () => {
             <Text  style={styles.Left500BOLDTextT}>Total Amount
             </Text>
          
-            <Text  style={styles.Left500BOLDTextT}>$66.67
+            <Text  style={styles.Left500BOLDTextT}>{"EC$" + totalBalance }
             </Text>
         
             </View>   
             <View style={{alignSelf:'center'}}>
               <View style={{height:50}}></View>
         <CustomBlueButton
-          title="Proceed To Pay (US$66.67)"
+          title={"Proceed To Pay (US$" + convertedAmountUsd + ")"}
           onPress={GoToNext}
           IconName={"payment"}
 
@@ -177,13 +400,37 @@ const GoToNext = () => {
                     </View>   
    
     </View>  
+) : (
+  <View style={styles.noDataContainer}>
+    <Image source={IMAGES.NoRecord} style={styles.noDataImage} />
+    {/* <Text style={styles.noDataText}>No records found</Text> */}
+  </View>
+)}
     </View>
     </ScrollView>
      </GradientBackground>
 
   );
 }
-
+const renderItem = ({ item }) => (
+  // <View style={styles.item}>
+        <View style={
+  {paddingHorizontal:10,flexDirection:'row',gap:10,flexWrap:'wrap'}}>
+      <Text style={styles.Left500BOLDTextT}>Ezone Account No:</Text>
+      <Text style={styles.value}>{"accountNo"}</Text>
+      <Text style={styles.Left500BOLDTextT}>Customer Name:</Text>
+      <Text style={styles.value}>{"customerName"}</Text>
+      <Text style={styles.Left500BOLDTextT}>Reference No.:</Text>
+      <Text style={styles.value}>{"referenceNo"}</Text>
+      <Text style={styles.Left500BOLDTextT}>Description of Contents:</Text>
+      <Text style={styles.value}>{"descriptionOfContents"}</Text>
+      <Text style={styles.Left500BOLDTextT}>Supplier's Name:</Text>
+      <Text style={styles.value}>{"supplierName"}</Text>
+      <Text style={styles.Left500BOLDTextT}>Customer's Name:</Text>
+      <Text style={styles.value}>{"customerName"}</Text>
+    </View>
+  // </View>
+);
 const styles = StyleSheet.create({
   container: {
    
@@ -284,7 +531,20 @@ borderRadius:wp('4.5%')
 containerTop:
  {backgroundColor : COLORS.lightGreySelection,alignContent:'left',justifyContent:'space-evenly',padding:15,borderTopLeftRadius: 10, // Set the top left border radius
     borderTopRightRadius: 10},
-   
+    containerTop2:
+    {backgroundColor : COLORS.white,alignContent:'left',justifyContent:'space-evenly',padding:15,borderTopLeftRadius: 10, // Set the top left border radius
+       borderRadius: 10,
+       shadowColor: 'black',
+    shadowOffset: {
+      width: 5,
+      height: 0,
+    }
+    ,
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
+    elevation: 5,
+      margin:10
+      },
    
     Left500Text: {
         fontFamily: FONTFAMILY.Regular,
@@ -300,6 +560,22 @@ containerTop:
         fontFamily: FONTFAMILY.Bold,
         fontSize:rf(1.8),
         textAlign: 'left',
+      }, 
+      noDataContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 10,
+      },
+      noDataImage: {
+        width: 200,
+        height: 150,
+        resizeMode: 'contain',
+      },
+      noDataText: {
+        fontFamily: FONTFAMILY.Bold,
+        fontSize: rf(2),
+        color: COLORS.gray,
+        marginTop: 10,
       },
 });
 

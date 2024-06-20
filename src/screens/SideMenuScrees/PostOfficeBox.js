@@ -100,6 +100,26 @@ export default function PostOfficeBox({navigation}) {
     if (value1 === "Other P.O.Box"){
       console.log("value",value1)
       setValue(items[0]?.value)
+    }else{
+      console.log("HIIIII")
+      console.log("Amountitems",Amountitems)
+      console.log("value",value)
+    
+      const selectedRate = Amountitems?.find(rate => rate.id === parseInt(value));
+      console.log("selectedRate",selectedRate)
+    
+      if (selectedRate) {
+        // const amountNumber = parseFloat(text.replace('EC$', ''));
+    
+        setamount(selectedRate.amount.toString());
+        const convertedAmountUsd = (selectedRate.amount / exchangeRate).toFixed(2);
+        setamountUs(`(US$ ${convertedAmountUsd})`);
+      } else {
+        setamount("100");
+        const convertedAmountUsd = (100 / exchangeRate).toFixed(2);
+        setamountUs(`(US$ ${convertedAmountUsd})`);// Reset the US$ amount if the input is not a valid number
+    
+      }
     }
   };
   const [searchList, setsearchList] = useState(false); // New state variable for search loading
@@ -215,7 +235,7 @@ const RadioButton = ({ label, value, onValueChange, selectedValue }) => {
 
 
         console.log("res?.refCustomerName",res?.refCustomerName)//refCustomerName
-
+        setcustID(res?.customerId)
         setRefCusName(res?.refCustomerName)
         SetData(res?.data)
         setinvoice(res?.data?.letterBoxNo ?? "")
@@ -357,7 +377,7 @@ const SubmitPOCDSpaymentdata = () => {
   // console.log('FromID',FromID)
 
    let data = {
-    CustomerID: selectedValue === "My P.O.Box" ?  "0" : custID ,
+    CustomerID: selectedValue === "My P.O.Box" ?  custID : custID ,
     TransactionTypeId:value,
     userID: userData?.userID,
     Amount: selectedValue === "My P.O.Box" ?  amount : amountOthers,

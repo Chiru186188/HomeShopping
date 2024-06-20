@@ -18,12 +18,16 @@ class utils {
       {cancelable: false},
     );
   }
+
+ validatePassword = (password) => {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{6,}$/;
+    return passwordRegex.test(password);
+  };
   confirmMessageAlert(title, msg,) {
     Alert.alert(
       title,
       msg,
       [
-        
         {text: 'Ok', onPress: () =>'success' },
       ],
       {cancelable: false},
@@ -267,6 +271,9 @@ class utils {
   
     return timeAgoString;
   }
+
+  
+
   getTimeAgoString2(givenDateString) {
     // const givenDate = new Date(givenDateString);
     // const currentDate = new Date(); // Current date

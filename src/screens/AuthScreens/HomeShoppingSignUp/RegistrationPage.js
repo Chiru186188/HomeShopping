@@ -166,10 +166,10 @@ const handleNextPress = async () => {
       return;
     }
 
-    // if (!utills.validateEmail(EmailAdd)) {
-    //   utills.errorAlert('', 'Invalid Email');
-    //   return;
-    // }
+    if (!utills.validateEmail(EmailAdd)) {
+      utills.errorAlert('', 'Please Enter valid Email-id');
+      return;
+    }
     if (utills.isEmptyOrSpaces(MobilePhone)) {
       utills.errorAlert('', 'Please Enter Mobile Number');
       return;

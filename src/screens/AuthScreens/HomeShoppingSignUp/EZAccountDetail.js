@@ -62,11 +62,14 @@ const [items, setItems] = useState([
 ]);
 
 const [currentPage, setCurrentPage] = useState(1);
-const [totalRecords, setTotalRecords] = useState(0);
+const [totalRecords, setTotalRecords] = useState(697);
+const recordsPerPage = 20;
+
 const [loading, setLoading] = useState(false);
 
 useEffect(() => {
   dispatch(saveEZCostumerDetails(null))
+  dispatch(saveEZAccountHistory(null))
 
   getCustomerdata()
 
@@ -79,6 +82,39 @@ useEffect(() => {
 
 
 
+const handleFirstPage = () => {
+  setAccountHistoryList([])
+  setCurrentPage(1);
+  getAccountHistory(AccountId,CustId,1)
+};
+
+const handleLastPage = () => {
+  setAccountHistoryList([])
+  const totalPages = Math.ceil(totalRecords / recordsPerPage);
+  setCurrentPage(totalPages);
+  getAccountHistory(AccountId,CustId,totalPages)
+};
+
+const handleNextPage = () => {
+
+  if (currentPage * recordsPerPage < totalRecords) {
+    setAccountHistoryList([])
+
+    const nextPage = currentPage + 1;
+    setCurrentPage(nextPage);
+    getAccountHistory(AccountId,CustId,nextPage)
+  }
+};
+
+const handlePreviousPage = () => {
+  if (currentPage > 1) {
+    setAccountHistoryList([])
+
+    const prevPage = currentPage - 1;
+    setCurrentPage(prevPage);
+    getAccountHistory(AccountId,CustId,prevPage)
+  }
+};
 
 const handlPrintHistory = () => {
   //?CustomerId=4236&AccountId=3671&type=Hs
@@ -108,7 +144,7 @@ const handlPrintHistory = () => {
       });
   };
 
-
+  
 const getCustomerdata = () => {
  //AccountDetailsApi/EzoneAccountDetails?UserId=5825
 
@@ -121,7 +157,7 @@ const getCustomerdata = () => {
   dispatch(getEZCustomerDetailsSlice(data))
     .unwrap()
     .then(res => {
-      console.log("res?????",res.aaData)
+     // console.log("res?????",res.aaData)
       const formattedItems = res?.CusId?.map((item) => ({
         label: item.Text,
         value: item.Value,
@@ -137,7 +173,7 @@ const getCustomerdata = () => {
       setaccountOPDate(utills.getDateBeforeT(res?.aaData[0]?.AccountOpeningDate));
       setaccountOPAmnt(res?.aaData[0]?.OpeningAmount?.toString());
       setsubscriptionDate(utills.getDateBeforeT(res?.aaData[0]?.SubscriptionDueDate));
-      setaccountStatts(res?.aaData[0]?.AccountStatusName);
+      setaccountStatts(res?.aaData[0]?.AccountStatus === 1 ? 'ACTIVE' : 'INACTIVE');
       setFirstName(res?.aaData[0]?.FirstName);
       setlastName(res?.aaData[0]?.Surname);
       setPhysicalAddress(res?.aaData[0]?.Address);
@@ -146,9 +182,9 @@ const getCustomerdata = () => {
       setMobilePhone(res?.aaData[0]?.PhoneNumber);
       setAccountId(res?.aaData[0]?.AccountId);
       setCustId(res?.aaData[0]?.Id);
-    setAuthPerson(res?.aaData[0]?.FirstName);
+      setAuthPerson(res?.aaData[0]?.ApplicantName);
 
-    console.log("res?.aaData[0]?.oceanfreight",res?.aaData[0]?.oceanfreight)
+    console.log("res?.aaData[0]?.oceanfreight",res?.aaData[0]?.IsInsured)
     setSelectedOption(res?.aaData[0]?.oceanfreight);
     setChecked(res?.aaData[0]?.IsInsured)
 
@@ -167,8 +203,8 @@ const getAccountHistory = (accountID,custId, page = 1) => {
     UserID:userData?.userID,
     AccountId: accountID,
     CusId:custId,
-    iDisplayStart: (page - 1) * 20,  // Assuming 2 records per page, adjust as needed
-    iDisplayLength: 20
+    iDisplayStart: (page - 1) * recordsPerPage,  // Assuming 2 records per page, adjust as needed
+    iDisplayLength: recordsPerPage
    
   };
   console.log('dataaaaaaar',data)
@@ -176,14 +212,16 @@ const getAccountHistory = (accountID,custId, page = 1) => {
   dispatch(getEZAccountHistorySlice(data))
     .unwrap()
     .then(res => {
-      console.log("res??",res)
-      if (page === 1) {
-        console.log("res?.iTotalRecords", res?.iTotalRecords);
-        setTotalRecords(res?.iTotalRecords || 0);
-        setAccountHistoryList(res?.aaData)
-      }else{
-        setAccountHistoryList(prevList => [...prevList, ...res?.aaData]);
-      }
+     // console.log("res??",res)
+     setTotalRecords(res?.iTotalRecords || 0);
+     setAccountHistoryList(res?.aaData)
+      // if (page === 1) {
+      //  // console.log("res?.iTotalRecords", res?.iTotalRecords);
+      //   setTotalRecords(res?.iTotalRecords || 0);
+      //   setAccountHistoryList(res?.aaData)
+      // }else{
+      //   setAccountHistoryList(prevList => [...prevList, ...res?.aaData]);
+      // }
 
     })
     .catch(e => {
@@ -191,13 +229,13 @@ const getAccountHistory = (accountID,custId, page = 1) => {
     });
 };
 
-const handleLoadMore = () => {
-  if (AccountHistoryList.length < totalRecords && !loading) {
-    const nextPage = currentPage + 1;
-    getAccountHistory(AccountId, nextPage);
-    setCurrentPage(nextPage);
-  }
-};
+// const handleLoadMore = () => {
+//   if (AccountHistoryList.length < totalRecords && !loading) {
+//     const nextPage = currentPage + 1;
+//     getAccountHistory(AccountId, nextPage);
+//     setCurrentPage(nextPage);
+//   }
+// };
 
 const CostumerDetails  = useSelector(state => state.category.EZCostumerDetails);
 const AccountHistory  = useSelector(state => state.category.EZAccountHistory);
@@ -254,7 +292,7 @@ const handleSavePress = () => {
     AdditionalEmail:"",
     PhoneNumber:MobilePhone,
     Address:PhysicalAddress,
-  //  POBox : Poboxnu,
+    POBox : Poboxnu,
  // IsInsured: false,
   // IRDNumber: IRDNumber,
   //IsCommercialCustomer: false,
@@ -267,12 +305,27 @@ const handleSavePress = () => {
     .unwrap()
     .then(res => {
       console.log("res?",res)
-      setenableText(true)
 
-      setIsEditing(false);
-//
- utills.confirmMessageAlert('Updated','Customer Details Updated Successfully.')
 
+
+      if (res?.status == true){
+      
+
+        setenableText(true)
+
+        setIsEditing(false);
+  //
+   utills.confirmMessageAlert('Updated','Customer Details Updated Successfully.')
+  
+   return
+      return
+      }else{
+        utills.confirmMessageAlert('Error',res?.msg)
+        return
+      
+      }
+
+      
     })
     .catch(e => {
       //  setLoading(false);
@@ -300,7 +353,8 @@ const handleCancelPress = () => {
 
 useFocusEffect(
   React.useCallback(() => {
-    
+    setIsEditing(false);
+
     const unsubscribe = navigation.addListener('beforeRemove', (e) => {
       console.log("beforeRemove",e)
       const originalString = e.target;
@@ -338,7 +392,7 @@ const [accountOPDate, setaccountOPDate] = useState(utills.getDateBeforeT(Costume
 const [accountOPAmnt, setaccountOPAmnt] = useState(CostumerDetails?.aaData?.openingAmount);
 
 const [subscriptionDate, setsubscriptionDate] = useState(utills.getDateBeforeT(CostumerDetails?.aaData?.subscriptionDueDate));
-const [accountStatts, setaccountStatts] = useState(CostumerDetails?.aaData?.accountStatusName);
+const [accountStatts, setaccountStatts] = useState(CostumerDetails?.aaData?.accountStatus === 1 ? 'ACTIVE' : 'INACTIVE');
 const [FirstName, setFirstName] = useState(CostumerDetails?.aaData?.firstName);
 const [lastName, setlastName] = useState(CostumerDetails?.aaData?.surname);
 const [PhysicalAddress, setPhysicalAddress] = useState(CostumerDetails?.aaData?.address);
@@ -411,12 +465,13 @@ const listData = [
         console.log('Selected index:', selectedIndex);
         // console.log('Selected index:Value', CostumerDetails?.aaData[selectedIndex]);
 
-
+        setAccountHistoryList([]);
+        setCurrentPage(1)
     setaccountno(CostumerDetails?.aaData[selectedIndex]?.AccountNo);
     setaccountOPDate(utills.getDateBeforeT(CostumerDetails?.aaData[selectedIndex]?.AccountOpeningDate));
     setaccountOPAmnt(CostumerDetails?.aaData[selectedIndex]?.OpeningAmount?.toString());
     setsubscriptionDate(utills.getDateBeforeT(CostumerDetails?.aaData[selectedIndex]?.SubscriptionDueDate));
-    setaccountStatts(CostumerDetails?.aaData[selectedIndex]?.AccountStatusName);
+    setaccountStatts(CostumerDetails?.aaData[selectedIndex]?.AccountStatus === 1 ? 'ACTIVE' : 'INACTIVE');
     setFirstName(CostumerDetails?.aaData[selectedIndex]?.FirstName);
     setlastName(CostumerDetails?.aaData[selectedIndex]?.Surname);
     setPhysicalAddress(CostumerDetails?.aaData[selectedIndex]?.Address);
@@ -425,7 +480,7 @@ const listData = [
     setMobilePhone(CostumerDetails?.aaData[selectedIndex]?.PhoneNumber);
     setAccountId(CostumerDetails?.aaData[selectedIndex]?.AccountId);
     setCustId(CostumerDetails?.aaData[selectedIndex]?.Id);
-    setAuthPerson(CostumerDetails?.aaData[selectedIndex]?.FirstName);
+    setAuthPerson(CostumerDetails?.aaData[selectedIndex]?.ApplicantName);
     setSelectedOption(CostumerDetails?.aaData[selectedIndex]?.oceanfreight);
     setChecked(CostumerDetails?.aaData[selectedIndex]?.IsInsured)
 
@@ -507,7 +562,7 @@ const listData = [
         onChangeText={setPhysicalAddress}
         keyboardType="default"
         disable={enableText}
-
+        isRequired={true}
       />
        <EditText_WithBackgroundColor
         label="P.O. Box Number"
@@ -515,18 +570,18 @@ const listData = [
         value={Poboxnu}
         onChangeText={setPoboxnu}
         keyboardType="default"
-        disable={true}
+        disable={enableText}
 
       />
-       <EditText_WithBackgroundColor
+       {/* <EditText_WithBackgroundColor
         label="IRD"
         placeholder="IRD"
-        value={Poboxnu}
-        onChangeText={setPoboxnu}
+        value={IRID}
+        onChangeText={setIRID}
         keyboardType="default"
         disable={true}
 
-      />
+      /> */}
       
       <EditText_WithBackgroundColor
         label="Name of authorized person :"
@@ -801,12 +856,12 @@ onPress={handleCancelPress}
         <Text style={styles.Left500BOLDText}>{CostumerDetails?.FreightCost != null ? CostumerDetails?.FreightCost : '$0.00'}</Text>
   
         </View>
-        <View style={styles.hr}></View>
+        {/* <View style={styles.hr}></View>
         <View style={styles.rowList}>
         <Text style={styles.Left500RegularText}>{'Sub Charges:'}</Text>
         <Text style={styles.Left500BOLDText}>{CostumerDetails?.SubsCharges != null ? CostumerDetails?.SubsCharges : '$0.00'}</Text>
   
-        </View>
+        </View> */}
         <View style={styles.hr}></View>
         <View style={styles.rowList}>
         <Text style={styles.Left500RegularText}>{'Customs Duty:'}</Text>
@@ -829,14 +884,53 @@ onPress={handleCancelPress}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <CustomListItem item={item} />}
         />  */}
-<FlatList
+{/* <FlatList
       data={AccountHistoryList}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => <CustomListItem item={item} />}
       onEndReached={handleLoadMore}
       onEndReachedThreshold={0.1}
       ListFooterComponent={() => loading && <ActivityIndicator animating size="large" />}
+    /> */}
+
+<View style={{ width: wp('90%'), alignSelf: 'center', flex: 1 }}>
+              <FlatList
+                data={AccountHistoryList}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => <CustomListItem item={item} />}
+                //ListFooterComponent={renderFooter}
+              />
+              <View style={styles.paginationContainer}>
+                <TouchableOpacity onPress={handleFirstPage} disabled={currentPage === 1} style={styles.paginationButton}>
+                  <Text style={styles.paginationButtonText}>First</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handlePreviousPage} disabled={currentPage === 1} style={styles.paginationButton}>
+                  {/* <Text style={styles.paginationButtonText}>Previous</Text> */}
+                  <Icons
+      name={'doubleleft'}
+      Type={Icon.AntDesign}
+      size={rf(2.4)}
+      color={COLORS.white}
     />
+                </TouchableOpacity>
+                <Text style={styles.pageNumberText}>
+                  Page {currentPage} of {Math.ceil(totalRecords / recordsPerPage)}
+                </Text>
+                <TouchableOpacity onPress={handleNextPage} disabled={currentPage * recordsPerPage >= totalRecords} style={styles.paginationButton}>
+                  {/* <Text style={styles.paginationButtonText}>Next</Text> */}
+                  <Icons
+      name={'doubleright'}
+      Type={Icon.AntDesign}
+      size={rf(2.4)}
+      color={COLORS.white}
+    />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleLastPage} disabled={currentPage * recordsPerPage >= totalRecords} style={styles.paginationButton}>
+                  <Text style={styles.paginationButtonText}>Last</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+ 
 </React.Fragment>
 )}
 
@@ -867,6 +961,9 @@ const navigation = useNavigation()
   const dateTime = item?.TransactionDate.split(' ');
 const date = dateTime[0];
 const time = dateTime[1] + ' ' + dateTime[2];
+const receiptNotes = item?.RecieptNo;
+
+const updatedReceiptNotes = receiptNotes.replace(/<br\s*[/]?>/gi, '\n');
 
 
 const handlPrintHistoryRow = () => {
@@ -965,8 +1062,21 @@ height: 18,
         {/* <Image source={IMAGES.Parcel_icon4} style={{width:24,height:24,resizeMode:'contain'}} /> */}
         < History_Icon4 />
     
-    <Text style={styles.Left500TextMedum}>{item.ParcelsList}</Text>
-  
+    {/* <Text style={styles.Left500TextMedum}>{item.ParcelsList}</Text> */}
+    <View style ={{flex:1,paddingRight:10}}>  
+    <Text style={styles.Left500TextMedum}
+    numberOfLines={10}
+    ellipsizeMode='tail'
+    >{item.ParcelsList}</Text>
+      {/* {(item.TransactionTypeId === "3"  )&& (
+<>
+       <Text style={styles.Left500TextMedum}
+    >{item.DispatchNo}</Text>
+       <Text style={styles.Left500TextMedum}
+    >{item.AXA_NO}</Text>
+    </>
+      )} */}
+    </View>   
         </View>
 
         </View>
@@ -987,32 +1097,50 @@ height: 18,
     {/* <Text style={styles.Left500TextMedum}>{item.TotalAmount.replace('-', '')}</Text> */}
     <View>
 
-    {item.TransactionText !== "" && (
+    {/* {item.TransactionText !== "" && (
   <View style={{padding:3,flex:1}}>
   <Text style={styles.Left500TextMedum}>{item.TransactionText}: {item.TotalAmount.replace('-', '')}</Text>
   </View>
-)}
-{/* <Text style={styles.Left500TextMedum}>Online Pay:{item.TotalAmount.replace('-', '')}</Text> */}
+)} */}
+{(item.OnlinePayAmount !== ""  )&& (
 
-{(item.TransactionTypeId === "2" || item.TransactionTypeId === "5" || item.TransactionTypeId === "6" || item.TransactionTypeId === "7"|| item.TransactionTypeId === "8" || item.TransactionTypeId === "12" )&& (
+<Text style={styles.Left500TextMedum}>Online Pay: ${item.OnlinePayAmount.replace('-', '')}</Text>
+)}
+{(item.TransactionTypeId === "2" || item.TransactionTypeId === "5" || item.TransactionTypeId === "6" || item.TransactionTypeId === "7"|| item.TransactionTypeId === "8" || item.TransactionTypeId === "12" || item.TransactionTypeId === "35"|| item.TransactionTypeId === "31")&& (
 <View style={{backgroundColor:COLORS.yellow ,padding:3,flex:1}}>
-<Text style={styles.Left500TextMedum}>Paid Amount :{item.TotalAmount.replace('-', '')}</Text>
+<Text style={styles.Left500TextMedum}>Paid Amount: ${item.TotalAmount.replace('-', '')}</Text>
 </View>
 )
 }
-{(item.TransactionTypeId === "1" || item.TransactionTypeId === "11" )&& (
+
+
+{(item.TransactionTypeId === "1" || item.TransactionTypeId === "11"|| item.TransactionTypeId === "32" )&& (
   <View style={{backgroundColor:COLORS.yellow ,padding:3,flex:1}}>
-<Text style={styles.Left500TextMedum}>Dues_Amount :{item.TotalAmount.replace('-', '')}</Text>
+<Text style={styles.Left500TextMedum}>Dues_Amount: ${item.TotalAmount.replace('-', '')}</Text>
+</View>
+)
+}
+{(item.TransactionTypeId === "3"  )&& (
+<View style={{padding:3,flex:1}}>
+<Text style={styles.Left500TextMedum}>Amount: ${item.Amount.replace('-', '')}</Text>
+<Text style={styles.Left500TextMedum}>ServiceCharge: ${item.ServiceCharge.replace('-', '')}</Text>
+<Text style={styles.Left500TextMedum}>OvrWt Charge: ${item.OverWeightCharge.replace('-', '')}</Text>
+<Text style={styles.Left500TextMedum}>AASAPFee: ${item.AASPAFee.replace('-', '')}</Text>
+<Text style={styles.Left500TextMedum}>InsAmt.: ${item.InsuredAmt.replace('-', '')}</Text>
+<Text style={styles.Left500TextMedum}>CustomsCharges: ${item.TotalDuty.replace('-', '')}</Text>
+<Text style={styles.Left500TextMedum}>TaxableAmt.: ${item.TotalAmount.replace('-', '')}</Text>
+
+
 </View>
 )
 }
 {(item.TransactionTypeId === "4" )&& (
  <View style={{backgroundColor:COLORS.yellow ,padding:3,flex:1}}>
-<Text style={styles.Left500TextMedum}>Adjust Amount :{item.TotalAmount.replace('-', '')}</Text>
+<Text style={styles.Left500TextMedum}>Adjust Amount: ${item.TotalAmount.replace('-', '')}</Text>
  </View>
 )
 }
-{(item.TransactionTypeId === 10 )&& (
+{(item.TransactionTypeId === "10" )&& (
  <View style={{backgroundColor:COLORS.yellow ,padding:3,flex:1}}>
 <Text style={styles.Left500TextMedum}>Cancel Payment: ${item.TotalAmount.replace('-', '')}</Text>
  </View>
@@ -1020,7 +1148,7 @@ height: 18,
 }
 
 
-{(item.TransactionTypeId === 9 )&& (
+{(item.TransactionTypeId === "9" )&& (
  <View style={{backgroundColor:COLORS.yellow ,padding:3,flex:1}}>
 <Text style={styles.Left500TextMedum}>CF Amount: ${item.TotalAmount.replace('-', '')}</Text>
  </View>
@@ -1051,8 +1179,30 @@ height: 18,
         </View>
 
         </View>
-      {/* //  <Text style={[styles.Left500TextMedum,{paddingHorizontal:10,marginBottom:25}]}>{updatedReceiptNotes}</Text> */}
+        {(updatedReceiptNotes.trim() != "") && (
+          <>
+              <Text style={[styles.Left500BOLDText, { paddingHorizontal: 10, marginBottom: 15  }]}>{"Receipt No: "}
+              <Text style={[styles.Left500TextMedum, { paddingHorizontal: 10, marginBottom: 15 }]}>{updatedReceiptNotes}</Text>
 
+              </Text>
+
+        </>
+        )}
+      {/* //  <Text style={[styles.Left500TextMedum,{paddingHorizontal:10,marginBottom:25}]}>{updatedReceiptNotes}</Text> */}
+      {(item.TransactionTypeId === "3") && (
+  <>
+    {/* <Text style={[styles.Left500TextMedum, { paddingHorizontal: 10 }]}>{item.GoodsDescription}</Text> */}
+    <Text style={[styles.Left500BOLDText, { paddingHorizontal: 10 }]}>Parcel Description :</Text>
+    <Text style={[styles.Left500TextMedum, { paddingHorizontal: 10, marginBottom: 15 }]}>
+      <Text style={styles.Left500TextBOLD}>WayBill#: </Text>{item.WayBillNo}
+      <Text style={styles.Left500TextMedum}>, <Text style={styles.Left500TextBOLD}>UnitCost#: </Text>{item.UnitCost}</Text>
+      <Text style={styles.Left500TextMedum}>, <Text style={styles.Left500TextBOLD}>InvoiceVal: </Text>{item.InvoiceAmt}</Text>
+      <Text style={styles.Left500TextMedum}>, <Text style={styles.Left500TextBOLD}>No./WtofItem: </Text>{item.ItemsAndPackageWeight}</Text>
+      <Text style={styles.Left500TextMedum}>, <Text style={styles.Left500TextBOLD}>POCFT#: </Text>{item.POCFT}</Text>
+      <Text style={styles.Left500TextMedum}>, <Text style={styles.Left500TextBOLD}>C# -: </Text>{item.WayBillNo}</Text>
+    </Text>
+  </>
+) }
       </View>
       <View style={styles.hr2}></View>
 
@@ -1201,7 +1351,12 @@ width:wp('90%')
   },
   Left500TextMedum: {
     fontFamily: FONTFAMILY.Medium,
-    fontSize:rf(1.6),
+    fontSize:rf(1.4),
+    textAlign: 'left',
+  },
+  Left500TextBOLD: {
+    fontFamily: FONTFAMILY.Bold,
+    fontSize:rf(1.4),
     textAlign: 'left',
   },
   Left500Textwhite: {
@@ -1273,7 +1428,30 @@ marginBottom:25
   MarginFromLeft:{paddingHorizontal:10,gap:10},
   MarginFromLeft1:{paddingLeft:15,gap:10},
   MarginFromLeft2:{paddingHorizontal:10,flexDirection:'row'},
-
+  paginationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginVertical: 10,
+    alignSelf:'center'
+  },
+  paginationButton: {
+    marginHorizontal: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    backgroundColor: COLORS.primary,
+    borderRadius: 5,
+  },pageNumberText: {
+    marginHorizontal: 10,
+    fontSize: rf(2),
+    fontFamily: FONTFAMILY.Bold,
+    color: COLORS.black,
+    marginTop:10
+  },
+  paginationButtonText: {
+    color: COLORS.white,
+    fontSize: rf(1.8),
+    fontFamily: FONTFAMILY.Bold,
+  },
 
 });
 

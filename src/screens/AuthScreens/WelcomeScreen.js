@@ -72,7 +72,9 @@ useFocusEffect(
         <Text style={styles.txt1}>
         General Post Office - Anguilla
                 </Text>
-               
+                <Text style={styles.txt1}>
+       Mobile App
+                </Text>
        
       </View>
       <View>

@@ -6,11 +6,6 @@
     "orientation": "portrait",
     "icon": "./assets/Images/AppIcon.png",
     "userInterfaceStyle": "light",
-    // "splash": {
-    //   "image": "./assets/Images/logo.png",
-    //   "resizeMode": 
-    //  // "backgroundColor": "#6BBDFE"
-    // },
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -24,9 +19,14 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/Images/logo.png",
         "backgroundColor": "#ffffff",
-        "googleServicesFile": "./google-services.json"
+        "googleServicesFile": "./google-services.json",
 
       },
+
+      "permissions": [
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ],
       "package": "com.anonymous.HOMESHOPPING"
     },
     "plugins": [

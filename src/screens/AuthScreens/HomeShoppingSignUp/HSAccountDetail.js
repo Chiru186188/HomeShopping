@@ -19,10 +19,7 @@ import { ColorSpace } from 'react-native-reanimated';
 import DropDownPicker from 'react-native-dropdown-picker';
 import CustomHeader from '../../../components/CustomHeader';
 
-
-
-import {
- 
+import { 
   History_Icon1,
   History_Icon2,
   History_Icon3,
@@ -34,7 +31,7 @@ import {
   
 } from '../../../components/Svg';
 import { useSelector } from 'react-redux';
-import { EditHSCustomerDetailsSlice, PrintReportSlice, PrintTransactionReportSlice, getAccountHistorySlice, getCustomerDetailsSlice, saveAccountHistory, saveCostumerDetails } from '../../../redux/slice/categories';
+import { EditHSCustomerDetailsSlice, PrintReportSlice, PrintTransactionReportSlice, getAccountHistorySlice, getCustomerDetailsSlice, saveAccountHistory, saveCostumerDetails, saveIsLoading } from '../../../redux/slice/categories';
 import useRedux from '../../../components/useRedux';
 import utills from '../../../utills';
 import TouchableNativeFeedback from '../../../components/TouchableNativeFeedback';
@@ -47,26 +44,13 @@ export default function HSAccountDetail({navigation}) {
   const [AccountId, setAccountId] = useState('');
   const [CustId, setCustId] = useState('');
   const [enableText, setenableText] = useState(true);
-
-   //const { From ,FromID} = route.params;
 const [open, setOpen] = useState(false);
 const [value, setValue] = useState(null);
 const [items, setItems] = useState([
-  // {label: 'User1', value: 'User1'},
-  // {label: 'User2', value: 'User2'},
-  // {label: 'User3', value: 'User3'},
-
-  // {label: 'User4', value: 'User4'},
- 
 ]);
 const [isChecked, setChecked] = useState(false);
 
-
-const [currentPage, setCurrentPage] = useState(1);
-const [totalRecords, setTotalRecords] = useState(0);
-const [loading, setLoading] = useState(false);
-
-
+// const [loading, setLoading] = useState(false);
 useEffect(() => {
   dispatch(saveAccountHistory(null))
   dispatch(saveCostumerDetails(null))
@@ -103,6 +87,9 @@ const handlPrintHistory = () => {
       //  setLoading(false);
     });
 };
+const [currentPage, setCurrentPage] = useState(1);
+const [totalRecords, setTotalRecords] = useState(697);
+const recordsPerPage = 20;
 
 const getCustomerdata = () => {
  // console.log('FromID',FromID)
@@ -117,7 +104,8 @@ dispatch(saveCostumerDetails(null))
   dispatch(getCustomerDetailsSlice(data))
     .unwrap()
     .then(res => {
-      // console.log("res?",res)
+      // 
+      console.log("res?",res)
      const formattedItems = res?.AccountUser?.map((item) => ({
       label: item.Text,
       value: item.Value,
@@ -134,7 +122,7 @@ dispatch(saveCostumerDetails(null))
     setaccountOPDate(utills.getDateBeforeT(res?.aaData[0]?.AccountOpeningDate));
     setaccountOPAmnt(res?.aaData[0]?.OpeningAmount?.toString());
     setsubscriptionDate(utills.getDateBeforeT(res?.aaData[0]?.SubscriptionDueDate));
-    setaccountStatts(res?.aaData[0]?.AccountStatusName);
+    setaccountStatts(res?.aaData[0]?.AccountStatus === 1 ? 'ACTIVE' : 'INACTIVE');
     setFirstName(res?.aaData[0]?.FirstName);
     setlastName(res?.aaData[0]?.Surname);
     setPhysicalAddress(res?.aaData[0]?.Address);
@@ -151,59 +139,141 @@ dispatch(saveCostumerDetails(null))
 
     getAccountHistory(res?.aaData[0]?.AccountId,res?.aaData[0]?.Id,1)
 
-
-
-
-    })
-
-
-
-
-
-    .catch(e => {
+})
+.catch(e => {
       //  setLoading(false);
     });
 };
+
+
+const handleFirstPage = () => {
+  setAccountHistoryList([])
+  setCurrentPage(1);
+  getAccountHistory(AccountId,CustId,1)
+};
+
+const handleLastPage = () => {
+  setAccountHistoryList([])
+  const totalPages = Math.ceil(totalRecords / recordsPerPage);
+  setCurrentPage(totalPages);
+  getAccountHistory(AccountId,CustId,totalPages)
+};
+
+const handleNextPage = () => {
+
+  if (currentPage * recordsPerPage < totalRecords) {
+    setAccountHistoryList([])
+
+    const nextPage = currentPage + 1;
+    setCurrentPage(nextPage);
+    getAccountHistory(AccountId,CustId,nextPage)
+  }
+};
+
+const handlePreviousPage = () => {
+  if (currentPage > 1) {
+    setAccountHistoryList([])
+
+    const prevPage = currentPage - 1;
+    setCurrentPage(prevPage);
+    getAccountHistory(AccountId,CustId,prevPage)
+  }
+};
+
+const fetchAccountHistory = (page) => {
+  // Your API call logic here
+  // Update totalRecords based on API response
+};
+
+
+
+
 const getAccountHistory = (accountID,custId, page) => {
+  dispatch(saveAccountHistory(null))
 
   let data = {
     Id    : accountID,
     CusId : custId,
     userID: userData?.userID,
-    iDisplayStart: (page - 1) * 20,  // Assuming 2 records per page, adjust as needed
-    iDisplayLength: 20
+    iDisplayStart: (page - 1) * recordsPerPage,  // Assuming 2 records per page, adjust as needed
+    iDisplayLength: recordsPerPage
    
   };
- //
-  console.log('dataaaaaaar',data)
-
   dispatch(getAccountHistorySlice(data))
     .unwrap()
     .then(res => {
-      // console.log("res", res);
-
-      // Update the total records when the first page is fetched
-      if (page === 1) {
-        // console.log("res?.iTotalRecords", res?.iTotalRecords);
-        setTotalRecords(res?.iTotalRecords || 0);
-        setAccountHistoryList(res?.aaData)
-      }else{
-        setAccountHistoryList(prevList => [...prevList, ...res?.aaData]);
-      }
+      setTotalRecords(res?.iTotalRecords || 0);
+      setAccountHistoryList(res?.aaData)
+      // if (page === 1) {
+      //   // console.log("res?.iTotalRecords", res?.iTotalRecords);
+      
+      //   setAccountHistoryList(res?.aaData)
+      // }else{
+      //   setAccountHistoryList(prevList => [...prevList, ...res?.aaData]);
+      // }
 
     })
     .catch(e => {
-      //  setLoading(false);
+     // dispatch(saveIsLoading(false))
+
     });
 };
-const handleLoadMore = () => {
-  if (AccountHistoryList.length < totalRecords && !loading) {
-    const nextPage = currentPage + 1;
-    getAccountHistory(AccountId, CustId,nextPage);
-    setCurrentPage(nextPage);
-  }
+// const handleLoadMore = () => {
+//   console.log("CALLLLLLLlength",AccountHistoryList.length)
+//   console.log("CALLLLLLLtotalRecords",totalRecords)
+
+//   if (AccountHistoryList.length < totalRecords && !loading) {
+//     console.log("CALLLLLLL")
+//     const nextPage = currentPage + 1;
+//     getAccountHistory(AccountId, CustId,nextPage);
+//     setCurrentPage(nextPage);
+//   }
+// };
+const [page, setPage] = useState(1);
+
+const handleLoadMore = async () => {
+  console.log("CALLLLL")
+  if (isFetchingMore) return; // Prevent multiple calls
+  setIsFetchingMore(true);
+  const newPage = page + 1;
+  setPage(newPage);
+
+  getAccountHistory(AccountId, CustId,newPage);
+  setIsFetchingMore(false);
+};
+const renderFooter = () => {
+  return isFetchingMore ? (
+    <View style={{ padding: 10 }}>
+      <ActivityIndicator size="large" color={COLORS.primary} />
+    </View>
+  ) : null;
 };
 
+const onDropdownValueChange = (selectedItem) => {
+  setAccountHistoryList([]);
+  setCurrentPage(1)
+  const selectedIndex = items.findIndex(item => item.value === selectedItem);
+  setaccountno(CostumerDetails?.aaData[selectedIndex]?.AccountNo);
+  setaccountOPDate(utills.getDateBeforeT(CostumerDetails?.aaData[selectedIndex]?.AccountOpeningDate));
+  setaccountOPAmnt(CostumerDetails?.aaData[selectedIndex]?.OpeningAmount?.toString());
+  setsubscriptionDate(utills.getDateBeforeT(CostumerDetails?.aaData[selectedIndex]?.SubscriptionDueDate));
+  setaccountStatts(CostumerDetails?.aaData[selectedIndex]?.AccountStatus === 1 ? 'ACTIVE' : 'INACTIVE');
+  setFirstName(CostumerDetails?.aaData[selectedIndex]?.FirstName);
+  setlastName(CostumerDetails?.aaData[selectedIndex]?.Surname);
+  setPhysicalAddress(CostumerDetails?.aaData[selectedIndex]?.Address);
+  setPoboxnu(CostumerDetails?.aaData[selectedIndex]?.POBox);
+  setIRD(CostumerDetails?.aaData[selectedIndex]?.IRDNumber);
+  setEmailAdd(CostumerDetails?.aaData[selectedIndex]?.Email);
+  setMobilePhone(CostumerDetails?.aaData[selectedIndex]?.PhoneNumber);
+  setAccountId(CostumerDetails?.aaData[selectedIndex]?.AccountId);
+  setCustId(CostumerDetails?.aaData[selectedIndex]?.Id);
+  setAuthPerson(CostumerDetails?.aaData[selectedIndex]?.ApplicantName);
+  setSelectedOption(CostumerDetails?.aaData[selectedIndex]?.oceanfreight);
+  setChecked(CostumerDetails?.aaData[selectedIndex]?.IsInsured);
+
+  getAccountHistory(CostumerDetails?.aaData[selectedIndex]?.AccountId, CostumerDetails?.aaData[selectedIndex]?.Id, 1);
+  setPage(1);
+};
 const CostumerDetails  = useSelector(state => state.category.CostumerDetails);
 const AccountHistory  = useSelector(state => state.category.AccountHistory);
 const AccountHistoryListDetail  = AccountHistory?.aaData;
@@ -246,41 +316,37 @@ const handleSavePress = () => {
 
 
   let data = {
-    CusId: CustId,//userData?.userID,
-   // FirstName:FirstName,
-    //Surname:lastName,
+    CusId: CustId,
+  
     Email:EmailAdd,
-    //AdditionalEmail:"",
     PhoneNumber:MobilePhone,
     Address:PhysicalAddress,
-    //POBox : Poboxnu,
-  ///IsInsured: false,
-  // IRDNumber: IRDNumber,
+   
   IsCommercialCustomer: false
 
 
   };
-  // console.log('dataaaaaaar',data)
 
   dispatch(EditHSCustomerDetailsSlice(data))
     .unwrap()
     .then(res => {
-      // console.log("res?",res)
-      setenableText(true)
+   
+if (res?.status == true){
+  setenableText(true)
 
-      setIsEditing(false);
-//
- utills.confirmMessageAlert('Updated','Customer Details Updated Successfully.')
+  setIsEditing(false);
+  utills.confirmMessageAlert('Updated','Customer Details Updated Successfully.')
+return
+}else{
+  utills.confirmMessageAlert('Error',res?.msg)
+  return
+
+}
 
     })
     .catch(e => {
       //  setLoading(false);
     });
-
-
-
-
-
 };
 //EditHSCustomerDetailsSlice
 
@@ -294,6 +360,7 @@ const handleCancelPress = () => {
 
 useFocusEffect(
   React.useCallback(() => {
+    setIsEditing(false);
     getCustomerdata()
     const unsubscribe = navigation.addListener('beforeRemove', (e) => {
       // console.log("beforeRemove",e)
@@ -360,6 +427,7 @@ const handleexpandedPress = () => {
   // Add your logic for the "Back" button action here
   navigation.goBack()
 };
+const [isFetchingMore, setIsFetchingMore] = useState(false);
 
 const [openStatusMenu, setopenStatusMenu] = useState(false);
 const [valueStatusMenu, setvalueStatusMenu] = useState(null);
@@ -376,6 +444,8 @@ const [itemsStatusMenu, setitemsStatusMenu] = useState([
     navigation.navigate(SCREENS.AccountTransactionHistoryDetails);  
       
     };
+
+    
 const listData = [
     { id: '1', title: 'Item 1' },
     { id: '2', title: 'Item 2' },
@@ -407,29 +477,32 @@ const listData = [
       
     }}
       textStyle={{fontFamily:FONTFAMILY.Bold,fontSize:rf(1.8)}}
-      onChangeValue={(selectedItem) => {
-        const selectedIndex = items.findIndex(item => item.value === selectedItem);
-   setaccountno(CostumerDetails?.aaData[selectedIndex]?.AccountNo);
-    setaccountOPDate(utills.getDateBeforeT(CostumerDetails?.aaData[selectedIndex]?.AccountOpeningDate));
-    setaccountOPAmnt(CostumerDetails?.aaData[selectedIndex]?.OpeningAmount?.toString());
-    setsubscriptionDate(utills.getDateBeforeT(CostumerDetails?.aaData[selectedIndex]?.SubscriptionDueDate));
-    setaccountStatts(CostumerDetails?.aaData[selectedIndex]?.AccountStatusName);
-    setFirstName(CostumerDetails?.aaData[selectedIndex]?.FirstName);
-    setlastName(CostumerDetails?.aaData[selectedIndex]?.Surname);
-    setPhysicalAddress(CostumerDetails?.aaData[selectedIndex]?.Address);
-    setPoboxnu(CostumerDetails?.aaData[selectedIndex]?.POBox);
-    setIRD(CostumerDetails?.aaData[selectedIndex]?.IRDNumber);
+    //   onChangeValue={(selectedItem) => {
+    //     setAccountHistoryList([])
+    //     const selectedIndex = items.findIndex(item => item.value === selectedItem);
+    // setaccountno(CostumerDetails?.aaData[selectedIndex]?.AccountNo);
+    // setaccountOPDate(utills.getDateBeforeT(CostumerDetails?.aaData[selectedIndex]?.AccountOpeningDate));
+    // setaccountOPAmnt(CostumerDetails?.aaData[selectedIndex]?.OpeningAmount?.toString());
+    // setsubscriptionDate(utills.getDateBeforeT(CostumerDetails?.aaData[selectedIndex]?.SubscriptionDueDate));
+    // setaccountStatts(CostumerDetails?.aaData[selectedIndex]?.AccountStatus === 1 ? 'ACTIVE' : 'INACTIVE');
+    // setFirstName(CostumerDetails?.aaData[selectedIndex]?.FirstName);
+    // setlastName(CostumerDetails?.aaData[selectedIndex]?.Surname);
+    // setPhysicalAddress(CostumerDetails?.aaData[selectedIndex]?.Address);
+    // setPoboxnu(CostumerDetails?.aaData[selectedIndex]?.POBox);
+    // setIRD(CostumerDetails?.aaData[selectedIndex]?.IRDNumber);
 
-    setEmailAdd(CostumerDetails?.aaData[selectedIndex]?.Email);
-    setMobilePhone(CostumerDetails?.aaData[selectedIndex]?.PhoneNumber);
-    setAccountId(CostumerDetails?.aaData[selectedIndex]?.AccountId);
-    setCustId(CostumerDetails?.aaData[selectedIndex]?.Id);
-    setAuthPerson(CostumerDetails?.aaData[selectedIndex]?.ApplicantName);
-    setSelectedOption(CostumerDetails?.aaData[selectedIndex]?.oceanfreight);
-    setChecked(CostumerDetails?.aaData[selectedIndex]?.IsInsured)
+    // setEmailAdd(CostumerDetails?.aaData[selectedIndex]?.Email);
+    // setMobilePhone(CostumerDetails?.aaData[selectedIndex]?.PhoneNumber);
+    // setAccountId(CostumerDetails?.aaData[selectedIndex]?.AccountId);
+    // setCustId(CostumerDetails?.aaData[selectedIndex]?.Id);
+    // setAuthPerson(CostumerDetails?.aaData[selectedIndex]?.ApplicantName);
+    // setSelectedOption(CostumerDetails?.aaData[selectedIndex]?.oceanfreight);
+    // setChecked(CostumerDetails?.aaData[selectedIndex]?.IsInsured)
 
-    getAccountHistory(CostumerDetails?.aaData[selectedIndex]?.AccountId,CostumerDetails?.aaData[selectedIndex]?.Id,1)
-      }}
+    // getAccountHistory(CostumerDetails?.aaData[selectedIndex]?.AccountId,CostumerDetails?.aaData[selectedIndex]?.Id,1)
+    //   }}
+    onChangeValue={onDropdownValueChange}
+
     />
 
     
@@ -502,7 +575,7 @@ const listData = [
         onChangeText={setPhysicalAddress}
         keyboardType="default"
         disable={enableText}
-
+        isRequired={true}
       />
        <EditText_WithBackgroundColor
         label="P.O. Box Number"
@@ -613,21 +686,6 @@ const listData = [
         isRequired={true}
 
       />
-      {/* <DropDownPicker
-      open={openStatusMenu}
-      value={valueStatusMenu}
-      items={itemsStatusMenu}
-      setOpen={setopenStatusMenu}
-      setValue={setvalueStatusMenu}
-      setItems={setitemsStatusMenu}
-      listMode='SCROLLVIEW'
-      placeholder='Select Account Status'
-      style={{backgroundColor:COLORS.lightGreySelection, borderWidth:0,borderRadius:10,height: hp('8%'),width:wp('86%'),marginHorizontal:15,marginTop:10      
-    }}
-      textStyle={{fontFamily:FONTFAMILY.Bold,fontSize:rf(1.8)}}
-    //  
-    />   */}
-
 
 <View style={styles.containerSub}>
 <View style={{backgroundColor :COLORS.primary,padding:10,borderTopRightRadius:10,borderTopLeftRadius:10
@@ -659,7 +717,7 @@ const listData = [
           title={item1.label}
           setSelected={setSelectedOption}
           onChangeSelected={(data, item1) => {
-            console.log(data);
+          //  console.log(data);
             setSelectedOption(data);
           }}
           selected={selectedOption}
@@ -669,36 +727,8 @@ const listData = [
     );
   })}
 </View>
-
-
-{/* <View style={{paddingHorizontal:20, alignSelf:'flex-start',paddingTop:10}}>
-
-
-
-{DEFAULTARRAYS.ApplyList.map((item1) => {
-            return (
-              <CustomRadioButtons
-                title={item1.label}
-                setSelected={setSelectedOption}
-                onChangeSelected={(data, item1) => {
-                  console.log(data)
-                  setSelectedOption(data);
-                 
-
-                }}
-                 selected={selectedOption}
-                style={{marginBottom : 7 }}
-              />
-            );
-          })}
-
-
-
-              </View>  */}
-
-
-             
-</View>
+            
+            </View>
 
 
 
@@ -827,12 +857,12 @@ onPress={handleCancelPress}
         <Text style={styles.Left500BOLDText}>{CostumerDetails?.FreightCost != null ? CostumerDetails?.FreightCost : '$0.00'}</Text>
   
         </View>
-        <View style={styles.hr}></View>
+        {/* <View style={styles.hr}></View>
         <View style={styles.rowList}>
         <Text style={styles.Left500RegularText}>{'Sub Charges:'}</Text>
         <Text style={styles.Left500BOLDText}>{CostumerDetails?.SubsCharges != null ? CostumerDetails?.SubsCharges : '$0.00'}</Text>
   
-        </View>
+        </View> */}
         <View style={styles.hr}></View>
         <View style={styles.rowList}>
         <Text style={styles.Left500RegularText}>{'Customs Duty:'}</Text>
@@ -850,19 +880,59 @@ onPress={handleCancelPress}
         </View>
      
         </View>
+                {/* {AccountHistoryList?.map((record, index) => (
+                  <CustomListItem
+                  item={record}
+                  />
+                ))} */}
+
+                
 {/* <FlatList
-          data={AccountHistoryList}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <CustomListItem item={item} />}
-        />  */}
-<FlatList
       data={AccountHistoryList}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => <CustomListItem item={item} />}
-      onEndReached={handleLoadMore}
-      onEndReachedThreshold={0.1}
-      ListFooterComponent={() => loading && <ActivityIndicator animating size="large" />}
+      // onEndReached={handleLoadMore}
+      onEndReachedThreshold={0.5}
+      ListFooterComponent={renderFooter}
+      /> */}
+<View style={{ width: wp('90%'), alignSelf: 'center', flex: 1 }}>
+              <FlatList
+                data={AccountHistoryList}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => <CustomListItem item={item} />}
+                ListFooterComponent={renderFooter}
+              />
+              <View style={styles.paginationContainer}>
+                <TouchableOpacity onPress={handleFirstPage} disabled={currentPage === 1} style={styles.paginationButton}>
+                  <Text style={styles.paginationButtonText}>First</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handlePreviousPage} disabled={currentPage === 1} style={styles.paginationButton}>
+                  {/* <Text style={styles.paginationButtonText}>Previous</Text> */}
+                  <Icons
+      name={'doubleleft'}
+      Type={Icon.AntDesign}
+      size={rf(2.4)}
+      color={COLORS.white}
     />
+                </TouchableOpacity>
+                <Text style={styles.pageNumberText}>
+                  Page {currentPage} of {Math.ceil(totalRecords / recordsPerPage)}
+                </Text>
+                <TouchableOpacity onPress={handleNextPage} disabled={currentPage * recordsPerPage >= totalRecords} style={styles.paginationButton}>
+                  {/* <Text style={styles.paginationButtonText}>Next</Text> */}
+                  <Icons
+      name={'doubleright'}
+      Type={Icon.AntDesign}
+      size={rf(2.4)}
+      color={COLORS.white}
+    />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleLastPage} disabled={currentPage * recordsPerPage >= totalRecords} style={styles.paginationButton}>
+                  <Text style={styles.paginationButtonText}>Last</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+ 
 </React.Fragment>
 )}
 
@@ -925,7 +995,6 @@ const handlPrintHistoryRow = () => {
 
         <TouchableNativeFeedback
         onPress={handlPrintHistoryRow} 
-
         style={{backgroundColor:COLORS.primary,borderRadius:7,alignItems:'center',width:30,height:30,alignContent:'center',justifyContent:"center"}} >
 <Image source={IMAGES.PrintReport} style={{
     width: 18,
@@ -937,10 +1006,7 @@ const handlPrintHistoryRow = () => {
         </View>
 
 )}
-
-
-
-        <View style={styles.rowList2}>
+ <View style={styles.rowList2}>
         <View style={styles.rowAA}>
        < History_Icon1></History_Icon1>
 
@@ -983,9 +1049,20 @@ const handlPrintHistoryRow = () => {
 
 
     
-            
-    <Text style={styles.Left500TextMedum}>{item.ParcelsList}</Text>
-  
+       <View style ={{flex:1,paddingRight:10}}>  
+    <Text style={styles.Left500TextMedum}
+    numberOfLines={10}
+    ellipsizeMode='tail'
+    >{item.ParcelsList}</Text>
+      {(item.TransactionTypeId === "3"  )&& (
+<>
+       <Text style={styles.Left500TextMedum}
+    >{item.DispatchNo}</Text>
+       <Text style={styles.Left500TextMedum}
+    >{item.AXA_NO}</Text>
+    </>
+      )}
+    </View>   
         </View>
 
         </View>
@@ -1015,6 +1092,22 @@ const handlPrintHistoryRow = () => {
 {(item.TransactionTypeId === "2" || item.TransactionTypeId === "5" || item.TransactionTypeId === "6" || item.TransactionTypeId === "7"|| item.TransactionTypeId === "8" || item.TransactionTypeId === "12" )&& (
 <View style={{backgroundColor:COLORS.yellow ,padding:3,flex:1}}>
 <Text style={styles.Left500TextMedum}>Paid Amount: ${item.TotalAmount.replace('-', '')}</Text>
+</View>
+)
+}
+
+
+{(item.TransactionTypeId === "3"  )&& (
+<View style={{padding:3,flex:1}}>
+<Text style={styles.Left500TextMedum}>Amount: ${item.Amount.replace('-', '')}</Text>
+<Text style={styles.Left500TextMedum}>ServiceCharge: ${item.ServiceCharge.replace('-', '')}</Text>
+<Text style={styles.Left500TextMedum}>OvrWt Charge: ${item.OverWeightCharge.replace('-', '')}</Text>
+<Text style={styles.Left500TextMedum}>AASAPFee: ${item.AASPAFee.replace('-', '')}</Text>
+<Text style={styles.Left500TextMedum}>InsAmt.: ${item.InsuredAmt.replace('-', '')}</Text>
+<Text style={styles.Left500TextMedum}>CustomsCharges: ${item.TotalDuty.replace('-', '')}</Text>
+<Text style={styles.Left500TextMedum}>TaxableAmt.: ${item.TotalAmount.replace('-', '')}</Text>
+
+
 </View>
 )
 }
@@ -1070,8 +1163,22 @@ const handlPrintHistoryRow = () => {
         </View>
 
         </View>
-        <Text style={[styles.Left500TextMedum,{paddingHorizontal:10,marginBottom:25}]}>{updatedReceiptNotes}</Text>
-
+        {(item.TransactionTypeId === "3") ? (
+  <>
+    <Text style={[styles.Left500TextMedum, { paddingHorizontal: 10, marginTop: 10 }]}>{item.GoodsDescription}</Text>
+    <Text style={[styles.Left500BOLDText, { paddingHorizontal: 10 }]}>Parcel Description :</Text>
+    <Text style={[styles.Left500TextMedum, { paddingHorizontal: 10, marginBottom: 25 }]}>
+      <Text style={styles.Left500TextBOLD}>WayBill#: </Text>{item.WayBillNo}
+      <Text style={styles.Left500TextMedum}>, <Text style={styles.Left500TextBOLD}>UnitCost#: </Text>{item.UnitCost}</Text>
+      <Text style={styles.Left500TextMedum}>, <Text style={styles.Left500TextBOLD}>InvoiceVal: </Text>{item.InvoiceAmt}</Text>
+      <Text style={styles.Left500TextMedum}>, <Text style={styles.Left500TextBOLD}>No./WtofItem: </Text>{item.ItemsAndPackageWeight}</Text>
+      <Text style={styles.Left500TextMedum}>, <Text style={styles.Left500TextBOLD}>POCFT#: </Text>{item.POCFT}</Text>
+      <Text style={styles.Left500TextMedum}>, <Text style={styles.Left500TextBOLD}>C# -: </Text>{item.WayBillNo}</Text>
+    </Text>
+  </>
+) : (
+  <Text style={[styles.Left500TextMedum, { paddingHorizontal: 10, marginBottom: 25 }]}>{updatedReceiptNotes}</Text>
+)}
       </View>
       <View style={styles.hr2}></View>
 
@@ -1131,6 +1238,14 @@ const styles = StyleSheet.create({
   container2: {
     padding: 10,
   },
+  
+  pageNumberText: {
+    marginHorizontal: 10,
+    fontSize: rf(2),
+    fontFamily: FONTFAMILY.Bold,
+    color: COLORS.black,
+    marginTop:10
+  },
   row: {
     flexDirection: 'row',
   },
@@ -1156,7 +1271,8 @@ const styles = StyleSheet.create({
     justifyContent:'space-between',
     paddingHorizontal:10,
     marginVertical:10,
-    alignItems:'center'
+    alignItems:'center',
+    gap : 0
 
   },
   rowAc: {
@@ -1218,7 +1334,12 @@ width:wp('90%')
   },
   Left500TextMedum: {
     fontFamily: FONTFAMILY.Medium,
-    fontSize:rf(1.6),
+    fontSize:rf(1.4),
+    textAlign: 'left',
+  },
+  Left500TextBOLD: {
+    fontFamily: FONTFAMILY.Bold,
+    fontSize:rf(1.4),
     textAlign: 'left',
   },
    Left500BOLDText: {
@@ -1293,6 +1414,24 @@ marginBottom:25
     margin:20,
     borderRadius : 15,
     // paddingVertical:20
+  },
+  paginationContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginVertical: 10,
+    alignSelf:'center'
+  },
+  paginationButton: {
+    marginHorizontal: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    backgroundColor: COLORS.primary,
+    borderRadius: 5,
+  },
+  paginationButtonText: {
+    color: COLORS.white,
+    fontSize: rf(1.8),
+    fontFamily: FONTFAMILY.Bold,
   },
 });
 

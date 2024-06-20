@@ -145,31 +145,7 @@ export const RegisterSliceHS = createAsyncThunk(
     },
   );
 
-  export const RegisterEZONESLICE = createAsyncThunk(
-    API_URL.LOGINEZONEACC,
-    async (data, thunk) => {
-      try {
-        thunk.dispatch(saveIsLoading(true));
-        const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
-        const extraHeaders = {
-          Authorization: `Bearer ${accessToken}`,
-        };
-        const response = await requestPost(API_URL.LOGINEZONEACC, data,true,extraHeaders);
-        console.log('response',response)
-        thunk.dispatch(saveIsLoading(false));
-        return response;
-      } catch (error) {
-        thunk.dispatch(saveIsLoading(false));
-     
-       console.log('RegisterEZONESLICE error', error);
-           
-              console.log('RegisterEZONESLICE error.response.data.message', error.response.data.message);
 
-       utillsJs.errorAlert('',error.response.data.message)
-        throw error;
-      }
-    },
-  );
 
 
   export const RegisterSlicePBDS = createAsyncThunk(
@@ -608,27 +584,27 @@ export const RegisterSliceHS = createAsyncThunk(
  
 
 
-  // export const ChangePasswordSlice = createAsyncThunk(
-  //   API_URL.CHANGEPASSWORD,
-  //   async (data, thunk) => {
-  //     try {
-  //       thunk.dispatch(saveIsLoading(true));
-  //       const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
-  //       const extraHeaders = {
-  //         Authorization: `Bearer ${accessToken}`,
-  //       };
-  //       const response = await requestPost(API_URL.CHANGEPASSWORD,data,true,extraHeaders);//(`${API_URL.CHANGEPASSWORD}${'?email='}${data.email}${'&oldPassword='}${data.oldPassword}${'&newPassword='}${data.newPassword}`,extraHeaders,);
-  //       thunk.dispatch(saveIsLoading(false));
-  //       return response;
-  //     } catch (error) {
-  //       thunk.dispatch(saveIsLoading(false));
+  export const ChangePasswordSlice = createAsyncThunk(
+    API_URL.CHANGEPASSWORD,
+    async (data, thunk) => {
+      try {
+        thunk.dispatch(saveIsLoading(true));
+        const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
+        const extraHeaders = {
+          Authorization: `Bearer ${accessToken}`,
+        };
+        const response = await requestPost(API_URL.CHANGEPASSWORD,data,true,extraHeaders);//(`${API_URL.CHANGEPASSWORD}${'?email='}${data.email}${'&oldPassword='}${data.oldPassword}${'&newPassword='}${data.newPassword}`,extraHeaders,);
+        thunk.dispatch(saveIsLoading(false));
+        return response;
+      } catch (error) {
+        thunk.dispatch(saveIsLoading(false));
 
-  //       console.log('ChangePasswordSlice error', error);
-  //       utillsJs.errorAlert('',error.response.data.message)
-  //       throw error;
-  //     }
-  //   },
-  // );
+        console.log('ChangePasswordSlice error', error);
+        utillsJs.errorAlert('',error.response.data.message)
+        throw error;
+      }
+    },
+  );
   export const LogoutSlice = createAsyncThunk(
     API_URL.LOGOUT,
     async (data, thunk) => {

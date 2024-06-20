@@ -1999,6 +1999,8 @@ export const IMAGES = {
   logoHS:require('../assets/Images/logo.png'),
   logoBg:require('../assets/Images/logo2.png'),
   energyicon: require('../assets/Images/energyicon.png'),
+  NoRecord: require('../assets/Images/norecordfound.png'),
+
 //saveIcon
 saveIcon: require('../assets/Images/saveIcon.png'),
 closeIcon: require('../assets/Images/closeIcon.png'),
@@ -2151,6 +2153,7 @@ export const SCREENS = {
  POCDSAccountDetail:'POCDSAccountDetail',
  AccountSummary:'AccountSummary',
  CartListpaymentparcel:'CartListpaymentparcel',
+ CreditCardOrdereningServiceList:"CreditCardOrdereningServiceList",
 
   /* * After Login Screen  * */
 
@@ -2159,7 +2162,7 @@ export const SCREENS = {
  SideMenu:'SideMenu',
 
    /* * Payments Screen  * */
-
+   COSDetails:'COSDetails',
    ParcelSubscriptionpayment:'ParcelSubscriptionpayment',
  Depositepayment:'Depositepayment',
  PostOfficeBox:'PostOfficeBox',
@@ -2245,6 +2248,7 @@ export const API_URL = {
   RentalPaymentsSubmitFinal:"PayOnlineApi/RentalPaymentsSubmitFinal",
   GetHsParcelAndSubscriptionAPI : 'PayOnlineApi/GetHsParcelAndSubscription?userID=',
   SubmitHsParcelAndSubscription:"PayOnlineApi/SubmitHsParcelAndSubscription?",
+  EZPaymentsSubmitFinal:"PayOnlineApi/OtherPaymentsListPayEzone",
 
 //getAccountApi/LoginApiDetailUserID
   DASHBoardAPI: 'DashboardApi/GetIndex6?Userid=',

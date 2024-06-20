@@ -63,19 +63,12 @@ const getHSpaymentdata = () => {
        console.log("res?",res)
  
      })
- 
- 
- 
- 
- 
-     .catch(e => {
+  .catch(e => {
        //  setLoading(false);
      });
  };
 
 const handleNextPress = () => {
-  // Add your logic for the "Next" button action here
- // navigation.navigate(SCREENS.PaymentGatwayScreen)
 
  if(amount === ""){
   utills.errorAlert("Error","Please Enter Amount")

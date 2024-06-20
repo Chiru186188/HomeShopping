@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View,Platform, Linking,NativeModules, Image, TouchableOpacity, ScrollView} from 'react-native';
+import {StyleSheet, Text, View,Platform, Linking,NativeModules, Image, TouchableOpacity, ScrollView, Alert} from 'react-native';
 import React from 'react';
  import {COLORS, CONSTANTS, DEFAULTARRAYS, FONTFAMILY, IMAGES, SCREENS, SIZES, STYLES} from '../../../constants/them';
 import {
@@ -17,9 +17,10 @@ import CustomRadioButtons from '../../../components/CustomRadioButtons';
 import CustomButtonsBAndS from '../../../components/CustomButtonsBAndS';
 import { useRoute } from '@react-navigation/native';
 import CustomHeader from '../../../components/CustomHeader';
-import { ChangePasswordSlice } from '../../../redux/slice/auth';
+import { ChangePasswordSlice, removeUserData } from '../../../redux/slice/auth';
 import useRedux from '../../../components/useRedux';
 import utills from '../../../utills';
+import { useDispatch, useSelector } from 'react-redux';
 // import CustomRadioButtons from '../../../components/CustomRadioButtons';
 
 export default function ChangePassword({navigation}) {
@@ -37,10 +38,12 @@ const [selectedOption, setSelectedOption] = useState(null);
 //  const { From } = route.params;
 const [Npwd, setNpwd] = useState('');
 const [NCpwd, setNCpwd] = useState('');
+const userData = useSelector(state => state.auth.userData);
 
 
   const handleBackPress = () => {
     // Add your logic for the "Back" button action here
+    navigation.goBack()
   };
 
   const handleNextPress = () => {
@@ -48,7 +51,7 @@ const [NCpwd, setNCpwd] = useState('');
    Changepwd()
   };
   const {dispatch} = useRedux();
-
+  const dispatcher = useDispatch();
 
   const Changepwd = async () => {
 
@@ -68,47 +71,102 @@ const [NCpwd, setNCpwd] = useState('');
       utills.errorAlert('', 'Please Enter New Password');
       return;
     }
-    if (Cpwd.length < 6) {
-      utills.errorAlert('Invalid Password! ', 'It should be minimum 6 Digit');
+    const isValidPassword = validatePassword(Npwd);
+    if( isValidPassword == false ){
+      utills.confirmMessageAlert('Error', 'Password should contain  minimum 6 character and min 1 uppercase letter and 1 lowercase letter and 1 special character.');
       return;
     }
-    if (Npwd.length < 6) {
-      utills.errorAlert('Invalid Password! ', 'It should be minimum 6 Digit');
-      return;
-    }
+    
+    // if(!utills.validatePassword(Npwd)){
+    //   utills.errorAlert('Invalid Password! ', 'Password should contain min 6 character,1 upper case and 1 lower case and 1 special character');
+    //   return;
+    // // }
+    
+    // if (Cpwd.length < 6) {
+    //   utills.errorAlert('Invalid Password! ', 'It should be minimum 6 Digit');
+    //   return;
+    // }
+    
+    // if (Npwd.length < 6) {
+    //   utills.errorAlert('Invalid Password! ', 'It should be minimum 6 Digit');
+    //   return;
+    // }
+    console.log(NCpwd)
+    console.log(Npwd)
+
     if (NCpwd != Npwd) {
-      utills.errorAlert('', 'Password Should be Same as New Password');
+      utills.errorAlert('', 'Confirm Password Should be Same as New Password');
       return;
     }
-
-
-
     let data = {
-      email: EmailValue,
-      oldPassword: pwd,
+      email: userData?.email,
+      oldPassword: Cpwd,
       newPassword: Npwd,
       confirmPassword: NCpwd,
-      code: "",
-      userId: 0
+      userId: userData?.userID
+ };
 
-
-    };
-
-   
-    
+   console.log(data)    
     dispatch(ChangePasswordSlice(data))
       .unwrap()
       .then(res => {
         console.log('ChangePasswordSlice res==', res);
-        if (res.status == true){
-          utills.successAlert('','Password Reset Succesfully')
-          navigation.navigate(SCREENS.Login);
+        if (res.success == true){
+          //utills.successAlert('','Password Reset Succesfully')
+          Alert.alert(
+            'Message',
+            "Password Changed Successfully.Please Login Again",
+            [
+              {
+                text: 'OK',
+                onPress: () => {
+                  dispatcher(removeUserData(userData));
+                  navigation.reset({
+                    index: 0,
+                    routes: [{ name: SCREENS.LoginScreen }], // Replace 'InitialScreen' with the name of your initial screen
+                  });  
+                },
+              },
+            ],
+          );
         }else{
           utills.errorAlert('', res.message);
           return;
         }
       });
   };
+
+  const validatePassword = (password) => {
+    // Regular expressions for password criteria
+    const uppercaseRegex = /[A-Z]/;
+    const lowercaseRegex = /[a-z]/;
+    const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+  
+    // Check if password length is at least 6 characters
+    if (password.length < 6) {
+      return false;
+    }
+  
+    // Check if password contains at least one uppercase letter
+    if (!uppercaseRegex.test(password)) {
+      return false;
+    }
+  
+    // Check if password contains at least one lowercase letter
+    if (!lowercaseRegex.test(password)) {
+      return false;
+    }
+  
+    // Check if password contains at least one special character
+    if (!specialCharRegex.test(password)) {
+      return false;
+    }
+  
+    // Password meets all criteria
+    return true;
+  };
+
+
 const handlePress = () => {
 };
   return (

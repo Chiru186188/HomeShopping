@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, SafeAreaView, Modal, Text, Button, TouchableOpacity, Share, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, SafeAreaView, Modal, Text, Button, TouchableOpacity, Share, ActivityIndicator, Image } from 'react-native';
 import { WebView } from 'react-native-webview';
 import HeaderWithBackButton from '../../components/HeaderWithBackButton';
 import { LogedInUserSlice, PymentResponseSlice, saveUserData } from '../../redux/slice/auth';
@@ -19,7 +19,9 @@ import Icons, { Icon } from '../../components/Icons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { saveIsLoading } from '../../redux/slice/categories';
-
+import * as FileSystem from 'expo-file-system';
+import * as Permissions from 'expo-permissions';
+import ReactNativeBlobUtil from 'react-native-blob-util';
 
 //http://122.176.104.29:7648//Content/Pdf/OnlinePayReceipt_6044_202401111341299811.pdf
   
@@ -119,6 +121,97 @@ const GoToNext = () => {
   setModalVisible2(true);
  // sharePDFLink()
 }  
+
+const downloadFile = () => {
+  closeModal();
+
+  setLoading(true)
+  // const source = "http://hsstrain.apis.gov.ai//Content/Pdf/OnlinePayReceipt_3431_202405310255198885.pdf";
+  const currentDateTime = new Date();
+  const fileName = `report_${currentDateTime.getTime()}.pdf`;
+  let dirs = ReactNativeBlobUtil.fs.dirs;
+  ReactNativeBlobUtil.config({
+    fileCache: true,
+    appendExt: 'pdf',
+    path: `${dirs.DocumentDir}/${fileName}`,
+    addAndroidDownloads: {
+      useDownloadManager: true,
+      notification: true,
+      title: fileName,
+      description: 'File downloaded by download manager.',
+      mime: 'application/pdf',
+    },
+  })
+    .fetch('GET', item)
+    .then((res) => {
+      setLoading(false)
+
+      console.log(res)
+      utills.confirmMessageAlert("Message","Report Download Successfully!")
+      if (Platform.OS === 'ios') {
+        const filePath = res.path();
+        let options = {
+          type: 'application/pdf',
+          url: filePath,
+          saveToFiles: true,
+        };
+        Share.open(options)
+          .then((resp) => console.log(resp))
+          .catch((err) => console.log('Share error:', err));
+      }
+    })
+    .catch((err) =>
+      
+      setLoading(false)
+      // utills.confirmMessageAlert("Report Download Successfully")
+     // console.log('Download error:', err)
+    
+    );
+};
+// const downloadFile = async () => {
+//   // Request permission to save files to the device
+//   const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY_WRITE_ONLY);
+
+//   if (status !== 'granted') {
+//     console.log('Permission denied to access media library');
+//     return;
+//   }
+
+//   // Define the download destination
+//   const fileUri = FileSystem.documentDirectory + filename;
+
+//   try {
+//     // Download the file
+//     const { uri } = await FileSystem.downloadAsync(item, fileUri);
+
+//     console.log('File downloaded to:', uri);
+//     alert('File Downloaded Successfully');
+//   } catch (error) {
+//     console.error('Error downloading file:', error);
+//     alert('File Download Failed');
+//   }
+// };
+const currentDateTime = new Date();
+   const filename = `report_${currentDateTime.getTime()}.pdf`; // Example: report_1623117351368.pdf
+
+// const downloadFile = async () => {
+ 
+//   setLoading(true)
+//   
+//   const fileUri = FileSystem.documentDirectory + filename;
+
+//   try {
+//     // Download the file
+//     const { uri } = await FileSystem.downloadAsync(item, fileUri);
+//     setLoading(false)
+
+//     console.log('File downloaded to:', uri);
+//     alert('Report Downloaded Successfully');
+//   } catch (error) {
+//     console.error('Error downloading file:', error);
+//     alert('File Download Failed');
+//   }
+// };
 const sharePDFLink = async () => {
   try {
     const pdfLink = item
@@ -327,7 +420,27 @@ const sharePDFLink = async () => {
     console.log('LoginParams',LoginParams);
 
     closeModal();
-    navigation.replace(SCREENS.SelectServicesSubscription,{Params1 : LoginParams,from:"AddMore"})
+    //navigation.replace(SCREENS.SelectServicesSubscription,{Params1 : LoginParams,from:"AddMore"})
+    // dispatcher(removeUserData(userData));
+    // navigation.reset({
+    //   index: 0,
+    //   routes: [{ name: (SCREENS.SelectServicesSubscription,{Params1 : LoginParams,from:"AddMore"}) }], // Replace 'InitialScreen' with the name of your initial screen
+    // });  
+    
+    
+    navigation.reset({
+      index: 0,
+      routes: [
+        { 
+          name: SCREENS.SelectServicesSubscription, // Ensure this is a string
+          params: {
+            Params1: LoginParams,
+            from: "AddMore"
+          }
+        }
+      ]
+    });
+
 
   };
 
@@ -367,8 +480,14 @@ const sharePDFLink = async () => {
   color={COLORS.white}
 />
   </TouchableOpacity>
-
+  <View style = {{flexDirection:'row',alignItems:'center',gap:10,flexShrink:1}}>
+      <Image
+            source={IMAGES.logoHS}
+            style={{width: 70, height: 70}}
+            resizeMode='contain'
+          />
   <Text style={styles.text1}>{"Report"}</Text>
+      </View>
   <TouchableOpacity
     style={styles.button}
     onPress={GoToNext}
@@ -507,6 +626,25 @@ const sharePDFLink = async () => {
           }}          buttonStyle={{width:wp('80%')}} // Custom button style
           textStyle={{fontFamily :FONTFAMILY.Bold,
             fontSize: rf(2.0)}}         />
+
+
+
+
+<CustomBlueButton
+          title="Download Report"
+          IconName={"cloud-download"}
+
+          // onPress={() => {
+          //      //navigation.navigate(SCREENS.DashBoard);
+          //      sharePDFLink()
+          // }}       
+          onPress={() => downloadFile()}
+          
+          buttonStyle={{width:wp('80%')}} // Custom button style
+          textStyle={{fontFamily :FONTFAMILY.Bold,
+            fontSize: rf(2.0)}}         />
+
+
 
              <CustomBlueButton
           title="Add More Services"

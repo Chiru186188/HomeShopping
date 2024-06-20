@@ -133,7 +133,7 @@ const getCustomerdata = () => {
       value: item.Value,
     }));
     setitemsStatusMenu(formattedItems2);
-    console.log("res?.aaData?.AccountStatus",res?.aaData?.AccountStatus)
+  //  console.log("res?.aaData?.AccountStatus",res?.aaData?.AccountStatus)
     if (res?.AccountStatus?.length > 0){
   setvalueStatusMenu(res?.aaData?.AccountStatus?.toString())
     }
@@ -322,11 +322,21 @@ Id:0
     .unwrap()
     .then(res => {
       console.log("res?",res)
-      setenableText(true)
+      
 
-      setIsEditing(false);
+
+ if (res?.status == true){
+  setenableText(true)
+
+  setIsEditing(false);
 //
- utills.confirmMessageAlert('Updated','Customer Details Updated Successfully.')
+utills.confirmMessageAlert('Updated','Customer Details Updated Successfully.')
+return
+}else{
+  utills.confirmMessageAlert('Error',res?.msg)
+  return
+
+}
 
     })
     .catch(e => {
@@ -340,7 +350,8 @@ const handleCancelPress = () => {
 };
 useFocusEffect(
   React.useCallback(() => {
-    
+    setIsEditing(false);
+
     const unsubscribe = navigation.addListener('beforeRemove', (e) => {
       console.log("beforeRemove",e)
       const originalString = e.target;
@@ -556,7 +567,7 @@ const listData = [
         disable={true}
         isRequired={true}
       />
-       <EditText_WithBackgroundColor
+       {/* <EditText_WithBackgroundColor
         placeholder="Subscription Due Date"
         value={subscriptionDate}
         onChangeText={setsubscriptionDate}
@@ -564,7 +575,7 @@ const listData = [
         disable={true}
         isRequired={true}
       
-      />
+      /> */}
 
 <View style={{alignSelf:'flex-start',paddingHorizontal:15}}>
           <Text  style={{
@@ -584,7 +595,9 @@ const listData = [
 <View style={{
  
 }}
-  pointerEvents={enableText ? 'none' : 'auto'} // Disable the entire View if enableText is true
+pointerEvents={ 'none'} // Disable the entire View if enableText is true
+
+  //pointerEvents={enableText ? 'none' : 'auto'} // Disable the entire View if enableText is true
 >
 <DropDownPicker
       open={openStatusMenu}
@@ -744,6 +757,8 @@ const CustomListItem = ({ item }) => {
 const date = dateTime[0];
 const time = dateTime[1];
 const receiptNotes =item?.ReceiptNotes;
+
+console.log("receiptNotesdate",receiptNotes)
 const {dispatch} = useRedux();
 const navigation = useNavigation()
 const handlPrintHistoryRow = () => {
@@ -774,9 +789,11 @@ const updatedReceiptNotes = receiptNotes?.replace(/<br\s*[/]?>/gi, '\n');
 let displayReceipt = '';
 
   if (updatedReceiptNotes && updatedReceiptNotes !== '') {
-    const regexMatch = updatedReceiptNotes.match(/(BDS\d+)/);
+    const regexMatch = updatedReceiptNotes.match(/(PBDS\d+)/);
     displayReceipt = regexMatch ? regexMatch[0] : '';
   }
+  console.log("displayReceipt",displayReceipt)
+
     return (
     <View >
       <View style={{width:wp('90%'),alignSelf:'center'}}>
@@ -824,10 +841,12 @@ height: 18,
         <View style={styles.rowList2}>
         <View style={styles.rowAA}>
         < History_Icon3 />
+        <View style={{flex:1}}>
      <Text style={styles.Left500TextMedum}
          >{item.CustomerName}
          
     </Text>
+    </View>
   
         </View>  
         <View style={styles.rowAA}>
@@ -855,7 +874,7 @@ height: 18,
   </View>
 )}
 
-{(item.TransactionTypeId === "2" || item.TransactionTypeId === "5" || item.TransactionTypeId === "6" || item.TransactionTypeId === "7"|| item.TransactionTypeId === "8" || item.TransactionTypeId === "12" )&& (
+{(item.TransactionTypeId === "2" || item.TransactionTypeId === "5" || item.TransactionTypeId === "6" || item.TransactionTypeId === "7"|| item.TransactionTypeId === "8" || item.TransactionTypeId === "12"|| item.TransactionTypeId === "39" )&& (
 <View style={{backgroundColor:COLORS.yellow ,padding:3,flex:1}}>
 <Text style={styles.Left500TextMedum}>Paid Amount: ${item.TotalAmountWithAdjustment.replace('-', '')}</Text>
 </View>
@@ -1048,7 +1067,7 @@ width:wp('90%')
   },
   Left500TextMedum: {
     fontFamily: FONTFAMILY.Medium,
-    fontSize:rf(1.6),
+    fontSize:rf(1.5),
     textAlign: 'left',
   },
    Left500BOLDText: {

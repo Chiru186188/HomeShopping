@@ -143,10 +143,10 @@ const handleNextPress = () => {
     utills.errorAlert('', 'Please Enter Date of Birth');
      return;
    }
-  //  if (utills.isEmptyOrSpaces(CompName)) {
-  //   utills.errorAlert('', 'Please Enter Company Name');
-  //    return;
-  //  }
+   if (utills.isEmptyOrSpaces(CompName)) {
+    utills.errorAlert('', 'Please Enter Company Name');
+     return;
+   }
    if (utills.isEmptyOrSpaces(PhysicalAddress)) {
     utills.errorAlert('', 'Please Enter Physical Address');
      return;
@@ -317,7 +317,7 @@ const handlePress = () => {
    
       
       <EditTextWithLable
-        label="Company Name"
+        label="Company Name *"
         placeholder="Enter Company Name"
         value={CompName}
         onChangeText={setCompName}

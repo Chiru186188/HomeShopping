@@ -124,7 +124,12 @@ const handlePress = () => {
 };
 
 const handleNextPress = async () => {
-   
+   if(EZACCOUNT !== ""){
+    if  (EZACCOUNT.length < 5){
+      utills.errorAlert('', 'Ezone Account no should be minimum 5 digit.');
+      return;
+    }
+   }
     if (utills.isEmptyOrSpaces(valueT)) {
 
       utills.errorAlert('', 'Please Enter Title');
@@ -464,7 +469,7 @@ const handleNextPress = async () => {
         value={EmailAdd}
         onChangeText={setEmailAdd}
         keyboardType="default"
-        editable={false} // Enable/disable based on radio selection
+        disable={true} // Enable/disable based on radio selection
 
       />
 

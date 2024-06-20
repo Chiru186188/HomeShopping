@@ -47,7 +47,9 @@ function CustomButtonsBAndSend({ onBackPress, onNextPress }) {
       size={rf(3.0)}
       color={COLORS.white}
     />
-      <Text style={[styles.buttonText]}>{'Send'}</Text>
+
+
+    <Text style={[styles.buttonText]}>{'Send'}</Text>
     </TouchableOpacity>
     </View>
   );

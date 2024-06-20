@@ -178,7 +178,7 @@ navigation.navigate(SCREENS.LinkOpenScreenNEW,{item:redirectUrl})
   if (!isNaN(amountNumber)) {
     setamount(text);
     // Convert to US$ and set the state
-    const convertedAmountUsd = (amountNumber / exchangeRate).toFixed(2);
+    const convertedAmountUsd = (amountNumber / 2.6882).toFixed(2);
     setamountUs(`(US$ ${convertedAmountUsd})`);
   } else {
     // If the entered text is not a valid number, only update the EC$ amount

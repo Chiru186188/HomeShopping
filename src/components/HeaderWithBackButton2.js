@@ -1,4 +1,4 @@
-import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {memo} from 'react';
 import {
   heightPercentageToDP as hp,
@@ -6,7 +6,7 @@ import {
 
   responsiveFontSize as rf,
 } from '../common/responsiveFunction';
-import {COLORS, FONTFAMILY} from '../constants/them';
+import {COLORS, FONTFAMILY, IMAGES} from '../constants/them';
 // import {Backiconsvg} from './Svg';
 import Icons, {Icon} from './Icons';
 
@@ -34,8 +34,15 @@ const HeaderWithBackButton2 = ({onPress, title}) => {
       color={COLORS.white}
     />
       </TouchableOpacity>
-
+      <View style = {{flexDirection:'row',alignItems:'center',gap:10}}>
+      <Image
+            source={IMAGES.logoHS}
+            style={{width: 70, height: 70}}
+            resizeMode='contain'
+          />
       <Text style={styles.text1}>{title}</Text>
+      </View>
+      {/* <Text style={styles.text1}>{title}</Text> */}
       <View style={styles.container1}></View>
     </View>
     </View>

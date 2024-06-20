@@ -253,7 +253,7 @@
 
 
 
-import {StyleSheet, Text, View,Platform, Linking,NativeModules, Image, TouchableOpacity, FlatList} from 'react-native';
+import {StyleSheet, Text, View,Platform, Linking,NativeModules, Image, TouchableOpacity, FlatList, Alert} from 'react-native';
 import React from 'react';
 import {COLORS, CONSTANTS, FONTFAMILY, IMAGES, SCREENS, SIZES, STYLES} from '../../constants/them';
 import {
@@ -418,14 +418,28 @@ const getAllCoinsPurchaselist = () => {
 
   let data = {
     id: userID,
-
-  };
-
+};
+ console.log("data",data)
   dispatch(SubscriptionValueSlice(data))
     .unwrap()
     .then(res => {
       //  setLoading(false);
-      console.log("AllSubsMembers", res.data);
+      console.log("AllSubsMemberssss", res.data);
+      if (res?.data?.StatusCode == 400) {
+        Alert.alert(
+          'Error',
+          "You have not any subscription plan.You have to register or subscribe a plan.",
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                navigation.replace(SCREENS.LoginScreen);
+              },
+            },
+          ],
+        );
+        
+      }
     })
     .catch(e => {
       //  setLoading(false);
@@ -579,13 +593,13 @@ const handlePress = () => {
 )}
        {(item.id === 1 || item.id === 4)&& (
 
-<TouchableOpacity
+<View
         
         style={[
                 styles.checkboxItem,
                
               ]}
-              onPress={() => setChecked(!isChecked)}
+            //  onPress={() => setChecked(!isChecked)}
             >
   
     
@@ -597,7 +611,7 @@ const handlePress = () => {
               />
                     <Text style={styles.txt2}>{"Select this option if you want insurance on your parcels"}</Text>
 
-            </TouchableOpacity>
+            </View>
 )}
 
           </View>

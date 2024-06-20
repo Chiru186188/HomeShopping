@@ -138,6 +138,8 @@ utills.confirmMessageAlert("Your Query Send Successfully!")
         onBackPress={handleBackPress}
         onNextPress={handleNextPress}
       />
+            <Text style={styles.Left500BOLDText}></Text>
+
     </ScrollView>
     </GradientBackground>
   );
@@ -153,7 +155,7 @@ const styles = StyleSheet.create({
     borderRadius : 15,
     alignSelf:'center',
     paddingHorizontal:10,
-    paddingTop:30
+    paddingVertical:30
   },
   label: {
     fontSize: 16,

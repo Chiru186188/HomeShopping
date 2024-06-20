@@ -1,4 +1,4 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {memo} from 'react';
 import {
   heightPercentageToDP as hp,
@@ -6,7 +6,7 @@ import {
 
   responsiveFontSize as rf,
 } from '../common/responsiveFunction';
-import {COLORS, FONTFAMILY, SCREENS} from '../constants/them';
+import {COLORS, FONTFAMILY, IMAGES, SCREENS} from '../constants/them';
 // import {Backiconsvg} from './Svg';
 import Icons, {Icon} from './Icons';
 
@@ -37,12 +37,27 @@ const CustomHeader = ({onPress, title}) => {
       color={COLORS.black}
     />
       </TouchableOpacity>
+{/* <View style={styles.titleContainer}>
+
+      <Image
+            source={IMAGES.logoHS}
+            style={{width: 70, height: 70}}
+            resizeMode='contain'
+          />
 
       <Text
       numberOfLines={2}
       ellipsizeMode='tail'
       style={styles.text1}>{title}</Text>
-
+</View> */}
+ <View style = {{flexDirection:'row',alignItems:'center',gap:10,flexShrink:1}}>
+      <Image
+            source={IMAGES.logoHS}
+            style={{width: 70, height: 70}}
+            resizeMode='contain'
+          />
+      <Text style={styles.text1}>{title}</Text>
+      </View>
       <TouchableOpacity
         style={styles.container}
         onPress={
@@ -51,7 +66,6 @@ const CustomHeader = ({onPress, title}) => {
        utills.confirmMessageAlert("Under Development")
       }
         >
-        {/* <Svg /> */}
 
         <Icons
       name={'bell'}
@@ -70,7 +84,6 @@ const CustomHeader = ({onPress, title}) => {
 
 const styles = StyleSheet.create({
   container: {
-    // backgroundColor: COLORS.blueButton,
     alignItems: 'center',
     justifyContent: 'center',
     width: wp('7%'),
@@ -83,18 +96,22 @@ const styles = StyleSheet.create({
     marginTop: 20,
     padding:20
   },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    flexGrow: 1,
+    flexShrink: 1,
+  },
   text1: {
     fontFamily: FONTFAMILY.Bold,
     fontSize: rf(2.0),
     color: COLORS.black,
     textAlign: 'center',
+   // flexGrow: 1,
+    flexShrink: 1,
   },
-  container1: {
-    marginRight: 15,
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-  },
+
   containerWithBorder: {
     borderBottomWidth: 0.5, // Adjust the width as needed
     borderColor: COLORS.Greyscale, // Change the color as needed

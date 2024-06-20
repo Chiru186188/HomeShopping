@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, SafeAreaView, Modal, Text, Button, TouchableOpacity, Share } from 'react-native';
+import { View, StyleSheet, SafeAreaView, Modal, Text, Button, TouchableOpacity, Share, Image } from 'react-native';
 import { WebView } from 'react-native-webview';
 import HeaderWithBackButton from '../../components/HeaderWithBackButton';
 import { PymentResponseSlice } from '../../redux/slice/auth';
@@ -11,6 +11,7 @@ import Pdf from 'react-native-pdf';
 import {COLORS, CONSTANTS, FONTFAMILY, IMAGES, SCREENS, SIZES, STYLES} from '../../constants/them';
 import {
   heightPercentageToDP as hp,
+  
   responsiveFontSize as rf,
   widthPercentageToDP as wp,
 } from '../../common/responsiveFunction';
@@ -114,8 +115,15 @@ const sharePDFLink = async () => {
   color={COLORS.white}
 />
   </TouchableOpacity>
-
+  <View style = {{flexDirection:'row',alignItems:'center',gap:10,flexShrink:1}}>
+      <Image
+            source={IMAGES.logoHS}
+            style={{width: 70, height: 70}}
+            resizeMode='contain'
+          />
   <Text style={styles.text1}>{"Report"}</Text>
+      </View>
+  {/* <Text style={styles.text1}>{"Report"}</Text> */}
   <TouchableOpacity
     style={styles.button}
     onPress={GoToNext}

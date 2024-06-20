@@ -67,7 +67,7 @@ const [itemsPOBox, setItemsPOBox] = useState([
 
 
 const [openLocation, setOpenLocation] = useState(false);
-const [valueLocation, setValueLocation] = useState(null);
+const [valueLocation, setValueLocation] = useState("");
 const [itemsLocation, setItemsLocation] = useState([
 ]);
 useEffect(() => {
@@ -162,9 +162,10 @@ const getCustomerdata = () => {
    // console.log("formattedItems",formattedItems3)
     setItemsLocation(formattedItems3);
 
-    if (res?.DeliveryAddress?.length > 0){
-  setValueLocation(res?.DeliveryAddress[0]?.Value)
-    }
+  //   if (res?.DeliveryAddress?.length > 0){
+  // setValueLocation(res?.DeliveryAddress[0]?.Value)
+  //   }
+    setValueLocation(res?.aaData?.DeliveryAddress)
     console.log("res?",res?.aaData)
 
     setHSaccountno(res?.aaData?.HSAccount);
@@ -175,7 +176,7 @@ const getCustomerdata = () => {
     setaccountOPDate(utills.getDateBeforeT(res?.aaData?.AccountOpeningDate));
     setaccountOPAmnt(res?.aaData?.OpeningAmount?.toString());
     setsubscriptionDate(utills.getDateBeforeT(res?.aaData?.SubscriptionDueDate));
-    setaccountStatts(res?.aaData?.AccountStatusName);
+    setaccountStatts(res?.aaData?.AccountStatus === 1 ? 'ACTIVE' : 'INACTIVE');
     setFirstName(res?.aaData?.FirstName);
     setlastName(res?.aaData?.LastName);
     setPhysicalAddress(res?.aaData?.DeliveryInstructions);
@@ -243,6 +244,7 @@ const handleSavePress = () => {
 
 
   let data = {
+    UserID:userData?.userID,
     CusId: CustId,//userData?.userID,
     FirstName:FirstName,
     Surname:lastName,
@@ -250,10 +252,6 @@ const handleSavePress = () => {
     AdditionalEmail:"",
     PhoneNumber:MobilePhone,
     Address:"",
-    // POBox : Poboxnu,
-  // IsInsured: false,
-  // IRDNumber: IRDNumber,
-  // IsCommercialCustomer: false,
   DeliveryAddress:valueLocation,
   HSAccount:HSaccountno,
   DeliveryInstructions:PhysicalAddress,
@@ -265,17 +263,34 @@ const handleSavePress = () => {
 
 
   };
-  // console.log('dataaaaaaar',data)
+  // 
+  console.log('dataaaaaaar',data)
 
   dispatch(EditPOCDSCustomerDetailsSlice(data))
     .unwrap()
     .then(res => {
       console.log("res?",res)
-      setenableText(true)
+//       setenableText(true)
 
-      setIsEditing(false);
+//       setIsEditing(false);
+// //
+//  utills.confirmMessageAlert('Updated','Customer Details Updated Successfully.')
+
+if (res?.status == true){
+  setenableText(true)
+
+  setIsEditing(false);
 //
- utills.confirmMessageAlert('Updated','Customer Details Updated Successfully.')
+utills.confirmMessageAlert('Updated','Customer Details Updated Successfully.')
+return
+}else{
+  utills.confirmMessageAlert('Error',res?.msg)
+  return
+
+}
+
+
+
 
     })
     .catch(e => {
@@ -299,7 +314,8 @@ const handleCancelPress = () => {
 
 useFocusEffect(
   React.useCallback(() => {
-    
+    setIsEditing(false);
+
     const unsubscribe = navigation.addListener('beforeRemove', (e) => {
       console.log("beforeRemove",e)
       const originalString = e.target;
@@ -517,7 +533,21 @@ const listData = [
         keyboardType="default"
         disable={true}
         isRequired={true}
+        description ={true}
 
+      />
+
+<EditText_WithBackgroundColor
+         label="Delivery Village *"
+        placeholder="Delivery Village"
+        value={valueLocation}
+        onChangeText={setValueLocation}
+        keyboardType="default"
+        // disable={enableText && (EZaccountno1 == "0" || EZaccountno1 == "")}
+        // disable={enableText && (EZaccountno1 == "0" || EZaccountno1 == "")}
+        disable={true}
+        isRequired={true}
+        description ={true}
       />
        {/* <EditText_WithBackgroundColor
         label="P.O. Box Number"
@@ -589,7 +619,7 @@ const listData = [
     //   }}
     /> */}
 
-<View style={{alignSelf:'flex-start',paddingHorizontal:15}}>
+{/* <View style={{alignSelf:'flex-start',paddingHorizontal:15}}>
           <Text  style={{
     marginTop: hp('2%'),
     fontSize: rf(1.8),
@@ -619,7 +649,7 @@ const listData = [
       textStyle={{fontFamily:FONTFAMILY.Bold,fontSize:rf(1.8)}}
     />
 
-</View>
+</View> */}
 </React.Fragment>
 )}
 

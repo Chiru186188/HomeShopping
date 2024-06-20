@@ -126,7 +126,8 @@ const getCustomerdata = () => {
     setaccountOPDate(utills.getDateBeforeT(res?.aaData[0]?.AccountOpeningDate));
     setaccountOPAmnt(res?.aaData[0]?.OpeningAmount?.toString());
     setsubscriptionDate(utills.getDateBeforeT(res?.aaData[0]?.SubscriptionDueDate));
-    setaccountStatts(res?.aaData[0]?.AccountStatusName);
+    setaccountStatts(res?.aaData[0]?.AccountStatus === 1 ? 'ACTIVE' : 'INACTIVE');
+
     setFirstName(res?.aaData[0]?.FirstName);
     setlastName(res?.aaData[0]?.Surname);
     setPhysicalAddress(res?.aaData[0]?.Address);
@@ -381,7 +382,7 @@ const listData = [
     setaccountOPDate(utills.getDateBeforeT(CostumerDetails?.aaData[selectedIndex]?.AccountOpeningDate));
     setaccountOPAmnt(CostumerDetails?.aaData[selectedIndex]?.OpeningAmount?.toString());
     setsubscriptionDate(utills.getDateBeforeT(CostumerDetails?.aaData[selectedIndex]?.SubscriptionDueDate));
-    setaccountStatts(CostumerDetails?.aaData[selectedIndex]?.AccountStatusName);
+    setaccountStatts(CostumerDetails?.aaData[selectedIndex]?.AccountStatus === 1 ? 'ACTIVE' : 'INACTIVE');
     setFirstName(CostumerDetails?.aaData[selectedIndex]?.FirstName);
     setlastName(CostumerDetails?.aaData[selectedIndex]?.Surname);
     setPhysicalAddress(CostumerDetails?.aaData[selectedIndex]?.Address);
@@ -498,7 +499,7 @@ const listData = [
 </React.Fragment>
 )}
 
-<TouchableOpacity 
+{/* <TouchableOpacity 
           onPress={handleexpanded1Press} 
           style={[styles.row,{backgroundColor : COLORS.lightGreySelection,paddingVertical:10,paddingHorizontal:20,alignContent:'left',marginTop: 10}]}>
                 <View style={styles.col8}>
@@ -559,9 +560,9 @@ const listData = [
         
 </React.Fragment>
 )}
+ */}
 
-
-
+{/* 
 <View style = {styles.rowAc} >
 <TouchableOpacity style = {{alignItems:'center'}}
 
@@ -590,9 +591,10 @@ style = {{alignItems:'center'}}>
 numberOfLines={2}
 ellipsizeMode='tail'
 >Payments Report</Text>
-{/* <Text style={styles.Left500Text}>Report</Text> */}
 
 </TouchableOpacity>
+</View> */}
+
 {/* 
 {!isEditing ? (
 
@@ -636,7 +638,6 @@ onPress={handleCancelPress}
 </>
   )} */}
   
-  </View>
 
 
   <TouchableOpacity 
@@ -1037,7 +1038,7 @@ const handlPrintHistoryRow = () => {
               <View style={styles.hr}></View>
     
               <View style={styles.rowList2}>
-              <Text style={styles.Left500BOLDText} >Account No</Text>
+              <Text style={styles.Left500BOLDText} >Account #</Text>
               <View style={{ flex: 1 }}>
       <Text style={styles.Left500TextMedumR} numberOfLines={2} ellipsizeMode="tail">
         {item?.AccountNo}
@@ -1048,7 +1049,7 @@ const handlPrintHistoryRow = () => {
               <View style={styles.hr}></View>
     
               <View style={styles.rowList2}>
-              <Text style={styles.Left500BOLDText} >Account Closing Balance</Text>
+              <Text style={styles.Left500BOLDText} >Opening Balance</Text>
               {/* <Text style={styles.Left500TextMedum} >{item?.CustomerInfo}</Text> */}
               <View style={{ flex: 1 }}>
       <Text style={styles.Left500TextMedumR} numberOfLines={2} ellipsizeMode="tail">
@@ -1059,6 +1060,20 @@ const handlPrintHistoryRow = () => {
               </View>
               <View style={styles.hr}></View>
     
+
+              <View style={styles.rowList2}>
+              <Text style={styles.Left500BOLDText} >Membership Dues</Text>
+              {/* <Text style={styles.Left500TextMedum} >{item?.CustomerInfo}</Text> */}
+              <View style={{ flex: 1 }}>
+      <Text style={styles.Left500TextMedumR} numberOfLines={2} ellipsizeMode="tail">
+        {item?.MembershipDues}
+      </Text>
+    </View>
+    
+              </View>
+              <View style={styles.hr}></View>
+    
+
               <View style={styles.rowList2}>
               <Text style={styles.Left500BOLDText} >Account Opening Date</Text>
               {/* <View style={flex = 1}>
@@ -1098,6 +1113,7 @@ const styles = StyleSheet.create({
     borderRadius : 15,
     justifyContent:'flex-start',
     alignItems:'center',
+    gap:10
   },
  
  
@@ -1208,7 +1224,7 @@ width:wp('90%')
   },
   Left500TextMedum: {
     fontFamily: FONTFAMILY.Medium,
-    fontSize:rf(1.6),
+    fontSize:rf(1.5),
     textAlign: 'left',
   },
   Left500TextMedumR: {

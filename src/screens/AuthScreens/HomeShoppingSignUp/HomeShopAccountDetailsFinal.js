@@ -122,7 +122,7 @@ else{
         return
       }
       let data = {
-        // ApplicantName: ApplicantName,
+         ApplicantName: AuthName,
         ApplicantSign: ApplicantSign,
 
         Signature: ApplicantSign,
@@ -135,17 +135,6 @@ else{
      console.log('value==33', data);
      const mergedParams = { ...Params1, ...data };
       console.log('mergedParams',mergedParams)
-
-      // if (From === "HS"){
-      //   navigation.navigate(SCREENS.CartValueScreen,{From :"HS",Service:'Home Shopping'})
-
-      // }else{
-      //   navigation.navigate(SCREENS.CartValueScreen,{From :"EZ",Service:'E-Zone'})
-
-      // }
-
-
-    // navigation.navigate(SCREENS.DashBoard);
       if (From === "HS")
 {
   dispatch(RegisterSliceHS(mergedParams))
@@ -168,7 +157,7 @@ else{
 
       navigation.navigate(SCREENS.CartValueScreen,{From :"EZ",Service:'E-Zone',userID:LoginParam.UserId,LoginParams:LoginParam})
     }else{
-      utills.errorAlert('', res.message);
+      utills.errorAlert('', res.msg);
       return;
     }
   });

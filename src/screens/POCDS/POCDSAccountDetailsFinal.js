@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View,Platform, Linking,NativeModules, Image, TouchableOpacity, ScrollView, TextInput, ActivityIndicator} from 'react-native';
+import {StyleSheet, Text, View,Platform, Linking,NativeModules, Image, TouchableOpacity, ScrollView, TextInput, ActivityIndicator, Alert} from 'react-native';
 import React from 'react';
  import {COLORS, CONSTANTS, DEFAULTARRAYS, FONTFAMILY, IMAGES, SCREENS, SIZES, STYLES} from '../../constants/them';
 import {
@@ -161,6 +161,9 @@ const getAllAdressddata = () => {
       //  setLoading(false);
     });
 };
+const validateString = (str) => {
+  return str.startsWith("axa");
+};
 const handleNextPress = () => {
 
 
@@ -176,6 +179,24 @@ const handleNextPress = () => {
       utills.errorAlert('', 'Please Enter Ezone Account No');
       return;
     }
+
+
+    if ( textValueEZ !== "0"){
+      if (!validateString(textValueEZ.toLowerCase())) {
+        utills.errorAlert('', 'Please Enter Valid Ezone Account No.It must start with axa.');
+        return;
+
+      }
+
+      if(textValueEZ.length < 8){
+        utills.errorAlert('', 'Please Enter Valid Ezone Account No.It must be of 8 digit');
+        return;
+
+      }
+
+  }
+
+    
    }
    if(radioSelectedHS == true){
 
@@ -183,6 +204,16 @@ const handleNextPress = () => {
       utills.errorAlert('', 'Please Enter Home Shoping Account No');
       return;
     }
+   }
+
+   if(textValueHS != "" && radioSelectedHS == false ){
+    utills.errorAlert('', 'You have filled HS Account No,so u have to check HS Option');
+    return;
+   }
+
+   if(textValueEZ != "" && radioSelectedEZ == false ){
+    utills.errorAlert('', 'You have filled Ezone Account No,so u have to check Ezone Option');
+    return;
    }
    if (utills.isEmptyOrSpaces(ApplicantSign)) {
     utills.errorAlert('', 'Please Enter Applicant Signature');
@@ -202,14 +233,18 @@ const handleNextPress = () => {
     utills.errorAlert('', 'Please Select POCDS requirement');
     return;
   }
-
+console.log("value",value)
   if (selectedREQValue == "Customs Clearance and delivery on ALL packages received" || selectedREQValue == "Customs Clearance and delivery on request"){
    if (value == "" || value == null){
     utills.errorAlert('', 'Please Select Address');
     return;
-  }}else{
-    setValue("Zone - 0")
-  }
+  }}
+  // else{
+  //   setValue("Zone - 0")
+  // }
+
+  console.log("value",value)
+
   if (isChecked == false){
 
     utills.errorAlert("Please Agree to the terms")
@@ -221,7 +256,7 @@ const handleNextPress = () => {
     ApplicantSign: ApplicantSign,
     RegDate: AppliDate,
     authPerson : ApplicantName,
-    DeliveryAddress:value,
+    DeliveryAddress:value ? value: "Zone - 0",
     UserId:LoginParam.UserId,
     CustomerId:USERDETAIL?.CustomerId,
     DeliveryInstructions:selectedREQValue,
@@ -241,8 +276,8 @@ const handleNextPress = () => {
   
   handleGoToHome()
 }else{
-    utills.errorAlert('', res.message);
-    return;
+  utills.errorAlert('', res.message || res.msg || 'An unknown error occurred.');
+  return;
   }
   })
   .catch(e => {
@@ -258,7 +293,7 @@ const [loading, setLoading] = useState(false); // State to manage loading status
 const userData = useSelector(state => state.auth.userData);
 
 const handleGoToHome = async () => {
-  const userId = userData?.userID
+  const userId =  LoginParam?.UserId ?? userData?.userID ?? userData?.userId  ?? "";
   setLoading(true); // Se
   let data = {
   id: userId,
@@ -278,13 +313,49 @@ dispatch(LogedInUserSlice(data))
     if (res?.success == true){
       console.log('Login res==', res.data);
 
+
+      if (res?.data?.services == null) {
+        Alert.alert(
+          'No Active Plan',
+          `Please Buy Service Plan First`,
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                gotoSubscription(res.data)
+              },
+            },
+          ],
+          { cancelable: false }
+        );
+
+        return
+      }
+
+
       dispatch(saveUserData(res.data))
       navigation.replace(SCREENS.DashBoard); 
       
   }
 });
 };
-
+ const gotoSubscription = (userData) => {
+    let Getdata = {
+      FirstName: userData?.firstName,
+      LastName: userData?.lastName,
+      DOB: utills.getDateBeforeT(userData?.dob),
+      Gender: userData?.gender,
+      Address: userData?.address,
+      POBox: userData?.poBox,
+      Email: userData?.email,
+      IRD: userData?.ird,
+      Password: "",
+      ConfirmPassword: "",
+      PhoneNumber: userData?.phoneNumber,
+      UserId: userData?.userID || userData?.userId,  // Handle both userID and userId
+    };
+    navigation.navigate(SCREENS.SelectServicesSubscription, { Params1: Getdata, from: "Login" })
+  };
 
 const handlePress = () => {
 };
@@ -316,7 +387,7 @@ const handlePress = () => {
               <View style={{ flexDirection: 'row', alignItems: 'center' ,paddingHorizontal: 15,paddingVertical:5}}>
       {/* Radio Button */}
       <TouchableOpacity onPress={() => setradioSelectedEZ(!radioSelectedEZ)}>
-        <View
+        {/* <View
           style={{
             height: 24,
             width: 24,
@@ -337,13 +408,21 @@ const handlePress = () => {
               }}
             />
           )}
-        </View>
+        </View> */}
+
+
+        <Icons
+              name={radioSelectedEZ ? 'checkbox-active' : 'checkbox-passive'}
+              style={styles.icon}
+              Type={Icon.Fontisto}//
+              size={rf(2.8)}
+            />
       </TouchableOpacity>
 
       {/* Radio Button Label */}
       <Text style={{ marginLeft: 10 ,color: COLORS.black,
     fontSize: rf(1.7),
-    fontFamily: FONTFAMILY.Regular}}>{'Ezone Packages (AXA'}</Text>
+    fontFamily: FONTFAMILY.Regular}}>{'Ezone Packages ('}</Text>
 
       {/* Text Field */}
       <TextInput
@@ -364,7 +443,7 @@ const handlePress = () => {
     <View style={{ flexDirection: 'row', alignItems: 'center' ,paddingHorizontal: 15,paddingVertical:5}}>
       {/* Radio Button */}
       <TouchableOpacity onPress={() => setradioSelectedHS(!radioSelectedHS)}>
-        <View
+        {/* <View
           style={{
             height: 24,
             width: 24,
@@ -385,14 +464,20 @@ const handlePress = () => {
               }}
             />
           )}
-        </View>
+        </View> */}
+          <Icons
+              name={radioSelectedHS ? 'checkbox-active' : 'checkbox-passive'}
+              style={styles.icon}
+              Type={Icon.Fontisto}
+              size={rf(2.8)}
+            />
       </TouchableOpacity>
 
       {/* Radio Button Label */}
       <Text style={{ marginLeft: 10,color: COLORS.black,
     fontSize: rf(1.7),
     fontFamily: FONTFAMILY.Regular, }}>
-      {'Home Shopping Packages (HS'}</Text>
+      {'Home Shopping Packages ('}</Text>
 
       {/* Text Field */}
       <TextInput
