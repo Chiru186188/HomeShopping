@@ -70,7 +70,7 @@ const getUSERdata = () => {
      Id: userData?.userID,
  
    };
-   //console.log('dataaaaaaar',data)
+   console.log('dataaaaaaar',data)
  
    dispatch(getUSERDetailsSlice(data))
      .unwrap()

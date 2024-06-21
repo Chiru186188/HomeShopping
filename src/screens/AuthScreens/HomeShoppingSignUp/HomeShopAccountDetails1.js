@@ -129,6 +129,10 @@ const handleNextPress = async () => {
       utills.errorAlert('', 'Ezone Account no should be minimum 5 digit.');
       return;
     }
+    if  (EZACCOUNT.length > 10){
+      utills.errorAlert('', 'Ezone Account no should be maximum 10 digit.');
+      return;
+    }
    }
     if (utills.isEmptyOrSpaces(valueT)) {
 
@@ -241,6 +245,7 @@ const handleNextPress = async () => {
       <TextInput style={styles1.input}
       onChangeText={setEZACCOUNT}
       value={EZACCOUNT}
+      maxLength={10}
       placeholder="Enter EZone Account"
       />
     </View>

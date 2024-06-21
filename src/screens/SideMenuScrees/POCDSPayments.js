@@ -77,7 +77,7 @@ export default function POCDSPayments({navigation}) {
           value: item.Value,
         }));
     
-        //console.log("formattedItems",formattedItems)
+        console.log("formattedItems",formattedItems)
         setItems(formattedItems);
     
         if (res?.TransactionTypeId?.length > 0){

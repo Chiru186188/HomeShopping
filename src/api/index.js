@@ -26,9 +26,9 @@ axios.get(`${base_url}${url}`, {
     }) 
 };
 export const requestGetWithBody = (url, data, extraHeaders = {}) => {
-  //console.log('requestGetWithBodydata', data);
+  console.log('requestGetWithBodydata', data);
   const queryParams = new URLSearchParams(data).toString();
-  //console.log('requestGetWithBodydataqueryParams', queryParams);
+  console.log('requestGetWithBodydataqueryParams', queryParams);
 
   return new Promise((resolve, reject) => {
     axios.get(`${base_url}${url}?${queryParams}`, {
@@ -38,11 +38,11 @@ export const requestGetWithBody = (url, data, extraHeaders = {}) => {
       },
     })
       .then(response => {
-        //console.log('API', base_url + url, 'requestGet-response.status', response.data);
+        console.log('API', base_url + url, 'requestGet-response.status', response.data);
         resolve(response);
       })
       .catch(error => {
-        //console.log('API', base_url + url, 'requestGet-error', error);
+        console.log('API', base_url + url, 'requestGet-error', error);
         reject(error);
       });
   });
@@ -85,11 +85,11 @@ export const requestPost = (url, data, isRaw, extraHeaders = {}) => {
         },
       })
       .then(response => {
-       // //console.log('API', base_url + url, 'requestPost-response.status', response.data);
+       // console.log('API', base_url + url, 'requestPost-response.status', response.data);
         resolve(response.data);
       })
       .catch(error => {
-        //console.log('API', base_url + url, 'requestPost-error', error);
+        console.log('API', base_url + url, 'requestPost-error', error);
         reject(error);
       });
   });
@@ -104,11 +104,11 @@ export const requestPostImage = (url, data, isRaw, extraHeaders = {}) => {
       },
     })
       .then(response => {
-        //console.log('API', base_url + url, 'requestPost-response.status', response.data);
+        console.log('API', base_url + url, 'requestPost-response.status', response.data);
         resolve(response.data);
       })
       .catch(error => {
-        //console.log('API', base_url + url, 'requestPost-error', error);
+        console.log('API', base_url + url, 'requestPost-error', error);
         reject(error);
       });
   });

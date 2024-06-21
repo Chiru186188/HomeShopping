@@ -97,7 +97,7 @@ useFocusEffect(
   React.useCallback(() => {
     
     const unsubscribe = navigation.addListener('beforeRemove', (e) => {
-      //console.log("beforeRemove",e)
+      console.log("beforeRemove",e)
       const originalString = e.target;
       const arrayOfSubstrings = originalString.split('-');
       

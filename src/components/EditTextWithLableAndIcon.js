@@ -63,7 +63,7 @@ function EditTextWithLableAndIcon(props) {
 
   useEffect(() => {
     if (hasAsterisk) {
-      //console.log(props.label)
+      console.log(props.label)
       const modifiedString = props.label.replace('*', "");
 // console.log(modifiedString);
       props.label = modifiedString

@@ -736,7 +736,7 @@ UserId:userData?.userID,
     UserId:userData?.userID,
       };
       // navigation.navigate(SCREENS.SelectServicesSubscription,{Params1 : Getdata})
-      navigation.replace(SCREENS.SelectServicesSubscription,{Params1 : Getdata,from:"side"});
+      navigation.replace(SCREENS.SelectServicesSubscription,{Params1 : Getdata,from:"Side"});
     }
    else{
       setIsExpanded(!isExpanded)

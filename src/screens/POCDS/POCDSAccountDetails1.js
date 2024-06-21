@@ -27,7 +27,7 @@ export default function POCDSAccountDetails1({navigation}) {
   console.log("AllCountries",AllCountries)
 
  // const AllCountriesdata = AllCountries?.aaData
-  //console.log("AllCountriesdata",AllCountriesdata)
+  console.log("AllCountriesdata",AllCountriesdata)
   const options = [
     { label: 'Yes', value: 'Yes' },
     { label: 'No', value: 'No' },

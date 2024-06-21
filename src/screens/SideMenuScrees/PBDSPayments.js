@@ -79,7 +79,7 @@ export default function PBDSPayments({navigation}) {
           value: item.Value,
         }));
     
-        //console.log("formattedItems",formattedItems)
+        console.log("formattedItems",formattedItems)
         setItems(formattedItems);
         console.log("res?????",res?.Amount)
         setamount(res?.Amount.toString())

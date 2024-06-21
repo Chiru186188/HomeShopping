@@ -192,7 +192,7 @@ const handlPrintHistory = () => {
     AccountId:AccountId,
     type:"Rental"
   };
-  //console.log('dataaaaaaar',data)
+  console.log('dataaaaaaar',data)
 
   dispatch(PrintReportSlice(data))
     .unwrap()
@@ -312,7 +312,7 @@ const getCustomerdata = () => {
     Id: userData?.userID,
 
   };
-  //console.log('dataaaaaaar',data)
+  console.log('dataaaaaaar',data)
 
   dispatch(getRBCustomerDetailsSlice(data))
     .unwrap()
@@ -327,7 +327,7 @@ const getCustomerdata = () => {
       value: item.Value,
     }));
 
-    //console.log("formattedItems",formattedItems)
+    console.log("formattedItems",formattedItems)
     setItems(formattedItems);
 
     if (res?.CusId?.length > 0){

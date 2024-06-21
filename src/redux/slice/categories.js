@@ -63,13 +63,13 @@ export const getAllDashboardDataSlice = createAsyncThunk(
       const response = await requestGet(`${API_URL.DASHBoardAPI}${data.id}`,extraHeaders);
       thunk.dispatch(saveAllDashBordData(response?.data))
        thunk.dispatch(saveIsLoading(false));
-      // //console.log('response',response)
+      // console.log('response',response)
 
       return response?.data
     } catch (error) {
        thunk.dispatch(saveIsLoading(false));
 
-      //console.log('getAllDashboardDataSlice error', error.response);
+      console.log('getAllDashboardDataSlice error', error.response);
       throw error;
     }
   },
@@ -79,7 +79,7 @@ export const getAllAddressListSlice = createAsyncThunk(
 async (data, thunk) => {
   try {
    //
-   //console.log('API',`${API_URL.AddressListAPI}${data.id}`)
+   console.log('API',`${API_URL.AddressListAPI}${data.id}`)
 
     // thunk.dispatch(saveIsLoading(true));
     const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
@@ -90,13 +90,13 @@ async (data, thunk) => {
     const response = await requestGet(`${API_URL.AddressListAPI}${data.id}`,extraHeaders);
     thunk.dispatch(saveAllAddressData(response))
     //  thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response?.data
   } catch (error) {
     // thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getAllDashboardDataSlice error', error.response);
+    console.log('getAllDashboardDataSlice error', error.response);
     throw error;
   }
 },
@@ -107,7 +107,7 @@ export const getPBDSSlice = createAsyncThunk(
 async (data, thunk) => {
   try {
    //
-   //console.log('API',`${API_URL.PBDSFormLoadAPI}${data.id}`)
+   console.log('API',`${API_URL.PBDSFormLoadAPI}${data.id}`)
 
      thunk.dispatch(saveIsLoading(true));
 
@@ -119,13 +119,13 @@ async (data, thunk) => {
     const response = await requestGet(`${API_URL.PBDSFormLoadAPI}${data.id}`,extraHeaders);
     thunk.dispatch(savePBDSDetails(response))
       thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response?.data
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getAllDashboardDataSlice error', error.response);
+    console.log('getAllDashboardDataSlice error', error.response);
     throw error;
   }
 },
@@ -137,7 +137,7 @@ export const getSubscripedServiicesSlices = createAsyncThunk(
 async (data, thunk) => {
   try {
    //
-   //console.log('API',`${API_URL.SubscriptionServices}${data.id}`)
+   console.log('API',`${API_URL.SubscriptionServices}${data.id}`)
 
 
    
@@ -150,13 +150,13 @@ async (data, thunk) => {
     const response = await requestGet(`${API_URL.SubscriptionServices}${data.id}`,extraHeaders);
     thunk.dispatch(saveServiceDetails(response.data))
       thunk.dispatch(saveIsLoading(false));
-   // //console.log('response',response)
+   // console.log('response',response)
 
     return response?.data
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getAllDashboardDataSlice error', error.response);
+    console.log('getAllDashboardDataSlice error', error.response);
     throw error;
   }
 },
@@ -166,7 +166,7 @@ export const getRentalBoxSlice = createAsyncThunk(
 async (data, thunk) => {
   try {
    //
-   //console.log('API',`${API_URL.RentalBoxFormLoadAPI}${data.id}`)
+   console.log('API',`${API_URL.RentalBoxFormLoadAPI}${data.id}`)
 
 
    const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
@@ -180,13 +180,13 @@ async (data, thunk) => {
     const response = await requestGet(`${API_URL.RentalBoxFormLoadAPI}${data.id}`,extraHeaders);
     thunk.dispatch(saveRentalBoxDetails(response))
       thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response?.data
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getAllDashboardDataSlice error', error.response);
+    console.log('getAllDashboardDataSlice error', error.response);
     throw error;
   }
 },
@@ -197,7 +197,7 @@ export const getAccountSummarySlice = createAsyncThunk(
 async (data, thunk) => {
   try {
    //
-   //console.log('API',`${API_URL.GetAccountSummaryDetail}${data.Id}`)
+   console.log('API',`${API_URL.GetAccountSummaryDetail}${data.Id}`)
    const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
 
    const extraHeaders = {
@@ -208,13 +208,13 @@ async (data, thunk) => {
     const response = await requestGet(`${API_URL.GetAccountSummaryDetail}${data.Id}`,extraHeaders);
     thunk.dispatch(saveUserDetails(response.data))
       thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response?.data
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getAllDashboardDataSlice error', error.response);
+    console.log('getAllDashboardDataSlice error', error.response);
     throw error;
   }
 },
@@ -231,8 +231,8 @@ async (data, thunk) => {
    const extraHeaders = {
      Authorization: `Bearer ${accessToken}`,
    };
-   //console.log("extraHeaders",extraHeaders)
-   //console.log('API',`${API_URL.GetCustomerDetailsAPI}${data.Id}`,extraHeaders)
+   console.log("extraHeaders",extraHeaders)
+   console.log('API',`${API_URL.GetCustomerDetailsAPI}${data.Id}`,extraHeaders)
 
      thunk.dispatch(saveIsLoading(true));
 
@@ -241,13 +241,13 @@ async (data, thunk) => {
     ////console.log('saveCostumerDetails',response)
     thunk.dispatch(saveCostumerDetails(response.data))
       thunk.dispatch(saveIsLoading(false));
-   // //console.log('response',response)
+   // console.log('response',response)
 
     return response?.data
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getAllDashboardDataSlice error', error.response);
+    console.log('getAllDashboardDataSlice error', error.response);
     throw error;
   }
 },
@@ -267,13 +267,13 @@ async (data, thunk) => {
     const response = await requestGet(`${API_URL.PrintTransactionReportAPI}${'?Tid='}${data.Tid}${'&tType='}${data.type}`,extraHeaders);
     // thunk.dispatch(saveCostumerDetails(response.data))
       thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response?.data
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getAllDashboardDataSlice error', error.response);
+    console.log('getAllDashboardDataSlice error', error.response);
     throw error;
   }
 },
@@ -291,13 +291,13 @@ async (data, thunk) => {
      const response = await requestPost(`${API_URL.ContactUSSubmitAPI}`, data,true,extraHeaders);
      // thunk.dispatch(saveCostumerDetails(response.data))
       thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getAllDashboardDataSlice error', error.response);
+    console.log('getAllDashboardDataSlice error', error.response);
     throw error;
   }
 },
@@ -308,7 +308,7 @@ export const getHSPaymentSlice = createAsyncThunk(
 async (data, thunk) => {
   try {
    //
-   //console.log('API',`${API_URL.GetHsPaymentsAPI}${data.Id}`)
+   console.log('API',`${API_URL.GetHsPaymentsAPI}${data.Id}`)
    const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
 
    const extraHeaders = {
@@ -318,13 +318,13 @@ async (data, thunk) => {
 
     const response = await requestGet(`${API_URL.GetHsPaymentsAPI}${data.Id}`,extraHeaders);
       thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response?.data
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getHSPaymentSlice error', error.response);
+    console.log('getHSPaymentSlice error', error.response);
     throw error;
   }
 },
@@ -334,7 +334,7 @@ export const getMiscPaymentSlice = createAsyncThunk(
 async (data, thunk) => {
   try {
    //
-   //console.log('API',`${API_URL.GetmiscPaymentsAPI}${data.Id}`)
+   console.log('API',`${API_URL.GetmiscPaymentsAPI}${data.Id}`)
    const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
 
      thunk.dispatch(saveIsLoading(true));
@@ -343,13 +343,13 @@ async (data, thunk) => {
     };
     const response = await requestGet(`${API_URL.GetmiscPaymentsAPI}${data.Id}`,extraHeaders);
       thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response?.data
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getHSPaymentSlice error', error.response);
+    console.log('getHSPaymentSlice error', error.response);
     throw error;
   }
 },
@@ -361,7 +361,7 @@ async (data, thunk) => {
    //
    const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
 
-   //console.log('API',`${API_URL.GetpocdsPaymentsAPI}${data.Id}`)
+   console.log('API',`${API_URL.GetpocdsPaymentsAPI}${data.Id}`)
    const extraHeaders = {
     Authorization: `Bearer ${accessToken}`,
   };
@@ -369,13 +369,13 @@ async (data, thunk) => {
 
     const response = await requestGet(`${API_URL.GetpocdsPaymentsAPI}${data.Id}`,extraHeaders);
       thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response?.data
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getPOCDSPaymentSlice error', error.response);
+    console.log('getPOCDSPaymentSlice error', error.response);
     throw error;
   }
 },
@@ -390,19 +390,19 @@ async (data, thunk) => {
    const extraHeaders = {
     Authorization: `Bearer ${accessToken}`,
   };
-   //console.log('API',`${API_URL.GetrentalPaymentsAPI}${data.Id}`)
+   console.log('API',`${API_URL.GetrentalPaymentsAPI}${data.Id}`)
 
      thunk.dispatch(saveIsLoading(true));
 
     const response = await requestGet(`${API_URL.GetrentalPaymentsAPI}${data.Id}`,extraHeaders);
       thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response?.data
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getPOCDSPaymentSlice error', error.response);
+    console.log('getPOCDSPaymentSlice error', error.response);
     throw error;
   }
 },
@@ -413,7 +413,7 @@ export const getPBDSPaymentSlice = createAsyncThunk(
 async (data, thunk) => {
   try {
    //
-   //console.log('API',`${API_URL.GetpbdsPaymentsAPI}${data.Id}`)
+   console.log('API',`${API_URL.GetpbdsPaymentsAPI}${data.Id}`)
    const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
 
      thunk.dispatch(saveIsLoading(true));
@@ -422,13 +422,13 @@ async (data, thunk) => {
     };
     const response = await requestGet(`${API_URL.GetpbdsPaymentsAPI}${data.Id}`,extraHeaders);
       thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response?.data
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getPOCDSPaymentSlice error', error.response);
+    console.log('getPOCDSPaymentSlice error', error.response);
     throw error;
   }
 },
@@ -442,7 +442,7 @@ async (data, thunk) => {
    //
    const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
 
-   //console.log('API',`${API_URL.GetHsParcelAndSubscriptionAPI}${data.Id}`)
+   console.log('API',`${API_URL.GetHsParcelAndSubscriptionAPI}${data.Id}`)
    const extraHeaders = {
     Authorization: `Bearer ${accessToken}`,
   };
@@ -450,13 +450,13 @@ async (data, thunk) => {
 
     const response = await requestGet(`${API_URL.GetHsParcelAndSubscriptionAPI}${data.Id}`,extraHeaders);
       thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response?.data
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getPOCDSPaymentSlice error', error.response);
+    console.log('getPOCDSPaymentSlice error', error.response);
     throw error;
   }
 },
@@ -476,13 +476,13 @@ async (data, thunk) => {
     const response = await requestGet(`${API_URL.PrintPOCDSReportAPI}${data.ID}`,extraHeaders);
     // thunk.dispatch(saveCostumerDetails(response.data))
       thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response?.data
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getAllDashboardDataSlice error', error.response);
+    console.log('getAllDashboardDataSlice error', error.response);
     throw error;
   }
 },
@@ -503,13 +503,13 @@ async (data, thunk) => {
     const response = await requestGet(`${API_URL.PrintReportAPI}${'?CustomerId='}${data.CustomerId}${'&AccountId='}${data.AccountId}${'&type='}${data.type}`,extraHeaders);
     // thunk.dispatch(saveCostumerDetails(response.data))
       thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response?.data
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getAllDashboardDataSlice error', error.response);
+    console.log('getAllDashboardDataSlice error', error.response);
     throw error;
   }
 },
@@ -519,7 +519,7 @@ export const getEZCustomerDetailsSlice = createAsyncThunk(
 async (data, thunk) => {
   try {
    //
-   //console.log('API',`${API_URL.GetEZCustomerDetailsAPI}${data.Id}`)
+   console.log('API',`${API_URL.GetEZCustomerDetailsAPI}${data.Id}`)
    const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
 
    const extraHeaders = {
@@ -530,13 +530,13 @@ async (data, thunk) => {
     const response = await requestGet(`${API_URL.GetEZCustomerDetailsAPI}${data.Id}`,extraHeaders);
     thunk.dispatch(saveEZCostumerDetails(response.data))
       thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response?.data
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getAllDashboardDataSlice error', error.response);
+    console.log('getAllDashboardDataSlice error', error.response);
     throw error;
   }
 },
@@ -547,7 +547,7 @@ export const getRBCustomerDetailsSlice = createAsyncThunk(
 async (data, thunk) => {
   try {
    //
-   //console.log('API',`${API_URL.GetRBCustomerDetailsAPI}${data.Id}`)
+   console.log('API',`${API_URL.GetRBCustomerDetailsAPI}${data.Id}`)
 
      thunk.dispatch(saveIsLoading(true));
      const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
@@ -558,13 +558,13 @@ async (data, thunk) => {
     const response = await requestGet(`${API_URL.GetRBCustomerDetailsAPI}${data.Id}`,extraHeaders);
     thunk.dispatch(saveRBCostumerDetails(response.data))
       thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response?.data
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getAllDashboardDataSlice error', error.response);
+    console.log('getAllDashboardDataSlice error', error.response);
     throw error;
   }
 },
@@ -577,7 +577,7 @@ export const SaveMISCPaymentSlice = createAsyncThunk(
 async (data, thunk) => {
   try {
    //
-   //console.log('API',`${API_URL.SubmitmiscPaymentApi}`)
+   console.log('API',`${API_URL.SubmitmiscPaymentApi}`)
    const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
 
    const extraHeaders = {
@@ -587,13 +587,13 @@ async (data, thunk) => {
      const response = await requestPost(`${API_URL.SubmitmiscPaymentApi}`, data,true,extraHeaders);
 
     thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('EditHSCustomerDetailsSlice error', error.response);
+    console.log('EditHSCustomerDetailsSlice error', error.response);
     throw error;
   }
 },
@@ -603,7 +603,7 @@ export const SavePOCDSPaymentSlice = createAsyncThunk(
 async (data, thunk) => {
   try {
    //
-   //console.log('API',`${API_URL.SubmitpocdsPaymentApi}`)
+   console.log('API',`${API_URL.SubmitpocdsPaymentApi}`)
    const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
 
    const extraHeaders = {
@@ -613,13 +613,13 @@ async (data, thunk) => {
      const response = await requestPost(`${API_URL.SubmitpocdsPaymentApi}`, data,true,extraHeaders);
 
     thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('EditHSCustomerDetailsSlice error', error.response);
+    console.log('EditHSCustomerDetailsSlice error', error.response);
     throw error;
   }
 },
@@ -631,7 +631,7 @@ export const SaveCartPaymentSlice = createAsyncThunk(
 async (data, thunk) => {
   try {
    //
-   //console.log('API',`${API_URL.RentalPaymentsSubmitFinal}`)
+   console.log('API',`${API_URL.RentalPaymentsSubmitFinal}`)
    const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
 
    const extraHeaders = {
@@ -641,13 +641,13 @@ async (data, thunk) => {
      const response = await requestPost(`${API_URL.RentalPaymentsSubmitFinal}`, data,true,extraHeaders);
 
     thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('EditHSCustomerDetailsSlice error', error.response);
+    console.log('EditHSCustomerDetailsSlice error', error.response);
     throw error;
   }
 },
@@ -659,7 +659,7 @@ export const SaveEZCartPaymentSlice = createAsyncThunk(
 async (data, thunk) => {
   try {
    //
-   //console.log('API',`${API_URL.EZPaymentsSubmitFinal}`)
+   console.log('API',`${API_URL.EZPaymentsSubmitFinal}`)
    const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
 
    const extraHeaders = {
@@ -669,13 +669,13 @@ async (data, thunk) => {
      const response = await requestPost(`${API_URL.EZPaymentsSubmitFinal}`, data,true,extraHeaders);
 
     thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('EditHSCustomerDetailsSlice error', error.response);
+    console.log('EditHSCustomerDetailsSlice error', error.response);
     throw error;
   }
 },
@@ -685,7 +685,7 @@ export const SaveParcelPaymentSlice = createAsyncThunk(
 async (data, thunk) => {
   try {
    //
-   //console.log('API',`${API_URL.SubmitHsParcelAndSubscription}`)
+   console.log('API',`${API_URL.SubmitHsParcelAndSubscription}`)
    const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
 
    const extraHeaders = {
@@ -697,13 +697,13 @@ async (data, thunk) => {
      //const response = await requestGet(`${API_URL.GetPBDSCustomerDetailsAPI}${data.Id}`);
 
     thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('EditHSCustomerDetailsSlice error', error.response);
+    console.log('EditHSCustomerDetailsSlice error', error.response);
     throw error;
   }
 },
@@ -714,7 +714,7 @@ export const SaveAddToCArtSlice = createAsyncThunk(
 async (data, thunk) => {
   try {
    //
-   //console.log('API',`${API_URL.AddToCartApi}`)
+   console.log('API',`${API_URL.AddToCartApi}`)
    const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
 
    const extraHeaders = {
@@ -727,13 +727,13 @@ async (data, thunk) => {
     thunk.dispatch(saveIsLoading(false));
     //MyCartList
 
-    //console.log('response',response)
+    console.log('response',response)
 
     return response
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('EditHSCustomerDetailsSlice error', error.response);
+    console.log('EditHSCustomerDetailsSlice error', error.response);
     throw error;
   }
 },
@@ -743,7 +743,7 @@ export const SavePBDSPaymentSlice = createAsyncThunk(
 async (data, thunk) => {
   try {
    //
-   //console.log('API',`${API_URL.SubmitpbddsPaymentApi}`)
+   console.log('API',`${API_URL.SubmitpbddsPaymentApi}`)
    const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
 
    const extraHeaders = {
@@ -753,13 +753,13 @@ async (data, thunk) => {
      const response = await requestPost(`${API_URL.SubmitpbddsPaymentApi}`, data,true,extraHeaders);
 
     thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('EditHSCustomerDetailsSlice error', error.response);
+    console.log('EditHSCustomerDetailsSlice error', error.response);
     throw error;
   }
 },
@@ -769,7 +769,7 @@ export const SaveHSPaymentSlice = createAsyncThunk(
 async (data, thunk) => {
   try {
    //
-   //console.log('API',`${API_URL.SubmitHSPaymentApi}`)
+   console.log('API',`${API_URL.SubmitHSPaymentApi}`)
    const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
 
    const extraHeaders = {
@@ -779,13 +779,13 @@ async (data, thunk) => {
      const response = await requestPost(`${API_URL.SubmitHSPaymentApi}`, data,true,extraHeaders);
 
     thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('EditHSCustomerDetailsSlice error', error.response);
+    console.log('EditHSCustomerDetailsSlice error', error.response);
     throw error;
   }
 },
@@ -798,7 +798,7 @@ export const EditHSCustomerDetailsSlice = createAsyncThunk(
 async (data, thunk) => {
   try {
    //
-   //console.log('API',`${API_URL.GetHSAccountDetailsForEdit}`)
+   console.log('API',`${API_URL.GetHSAccountDetailsForEdit}`)
    const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
 
    const extraHeaders = {
@@ -808,13 +808,13 @@ async (data, thunk) => {
      const response = await requestPost(`${API_URL.GetHSAccountDetailsForEdit}`, data,true,extraHeaders);
 
     thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('EditHSCustomerDetailsSlice error', error.response);
+    console.log('EditHSCustomerDetailsSlice error', error.response);
     throw error;
   }
 },
@@ -824,7 +824,7 @@ export const EditPOCDSCustomerDetailsSlice = createAsyncThunk(
 async (data, thunk) => {
   try {
    //
-   //console.log('API',`${API_URL.SIGNUPPOCDS}`)
+   console.log('API',`${API_URL.SIGNUPPOCDS}`)
    const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
 
    const extraHeaders = {
@@ -834,13 +834,13 @@ async (data, thunk) => {
      const response = await requestPost(`${API_URL.SIGNUPPOCDS}`, data,true,extraHeaders);
 
     thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('EditHSCustomerDetailsSlice error', error.response);
+    console.log('EditHSCustomerDetailsSlice error', error.response);
     throw error;
   }
 },
@@ -850,7 +850,7 @@ export const EditRentalBoxCustomerDetailsSlice = createAsyncThunk(
 async (data, thunk) => {
   try {
    //
-   //console.log('API',`${API_URL.GetRentalBoxAccountDetailsForEdit}`)
+   console.log('API',`${API_URL.GetRentalBoxAccountDetailsForEdit}`)
    const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
 
    const extraHeaders = {
@@ -860,13 +860,13 @@ async (data, thunk) => {
      const response = await requestPost(`${API_URL.GetRentalBoxAccountDetailsForEdit}`, data,true,extraHeaders);
 
     thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('EditHSCustomerDetailsSlice error', error.response);
+    console.log('EditHSCustomerDetailsSlice error', error.response);
     throw error;
   }
 },
@@ -879,7 +879,7 @@ async (data, thunk) => {
    //
    const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
 
-   //console.log('API',`${API_URL.GetEZAccountDetailsForEdit}`)
+   console.log('API',`${API_URL.GetEZAccountDetailsForEdit}`)
    const extraHeaders = {
     Authorization: `Bearer ${accessToken}`,
   };
@@ -887,13 +887,13 @@ async (data, thunk) => {
      const response = await requestPost(`${API_URL.GetEZAccountDetailsForEdit}`, data,true,extraHeaders);
 
     thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('EditHSCustomerDetailsSlice error', error.response);
+    console.log('EditHSCustomerDetailsSlice error', error.response);
     throw error;
   }
 },
@@ -908,19 +908,19 @@ async (data, thunk) => {
    const extraHeaders = {
     Authorization: `Bearer ${accessToken}`,
   };
-   //console.log('API',`${API_URL.GetPBDSAccountDetailsForEdit}`)
+   console.log('API',`${API_URL.GetPBDSAccountDetailsForEdit}`)
 
      thunk.dispatch(saveIsLoading(true));
      const response = await requestPost(`${API_URL.GetPBDSAccountDetailsForEdit}`, data,true,extraHeaders);
 
     thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('EditHSCustomerDetailsSlice error', error.response);
+    console.log('EditHSCustomerDetailsSlice error', error.response);
     throw error;
   }
 },
@@ -932,7 +932,7 @@ async (data, thunk) => {
     const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
 
    //
-   //console.log('API',`${API_URL.GetPBDSCustomerDetailsAPI}${data.Id}`)
+   console.log('API',`${API_URL.GetPBDSCustomerDetailsAPI}${data.Id}`)
    const extraHeaders = {
     Authorization: `Bearer ${accessToken}`,
   };
@@ -941,13 +941,13 @@ async (data, thunk) => {
     const response = await requestGet(`${API_URL.GetPBDSCustomerDetailsAPI}${data.Id}`,extraHeaders);
     thunk.dispatch(savePBDSCostumerDetails(response.data))
       thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response?.data
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getAllDashboardDataSlice error', error.response);
+    console.log('getAllDashboardDataSlice error', error.response);
     throw error;
   }
 },
@@ -959,7 +959,7 @@ async (data, thunk) => {
    //
    const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
 
-   //console.log('API',`${API_URL.GetUSERDetailsAPI}${data.Id}`)
+   console.log('API',`${API_URL.GetUSERDetailsAPI}${data.Id}`)
    const extraHeaders = {
     Authorization: `Bearer ${accessToken}`,
   };
@@ -967,13 +967,13 @@ async (data, thunk) => {
 
     const response = await requestGet(`${API_URL.GetUSERDetailsAPI}${data.Id}`,extraHeaders);
     thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response?.data
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('GetUSERDetailsAPI error', error.response);
+    console.log('GetUSERDetailsAPI error', error.response);
     throw error;
   }
 },
@@ -989,20 +989,20 @@ async (data, thunk) => {
    const extraHeaders = {
     Authorization: `Bearer ${accessToken}`,
   };
-   //console.log('API',`${API_URL.GetPOCDSCustomerDetailsAPI}${data.Id}`,extraHeaders)
+   console.log('API',`${API_URL.GetPOCDSCustomerDetailsAPI}${data.Id}`,extraHeaders)
 
      thunk.dispatch(saveIsLoading(true));
 
     const response = await requestGet(`${API_URL.GetPOCDSCustomerDetailsAPI}${data.Id}`,extraHeaders);
     thunk.dispatch(savePOCDSCostumerDetails(response.data))
       thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response?.data
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getAllDashboardDataSlice error', error.response);
+    console.log('getAllDashboardDataSlice error', error.response);
     throw error;
   }
 },
@@ -1023,14 +1023,14 @@ async (data, thunk) => {
      //
       thunk.dispatch(saveIsLoading(false));
     //
-   // //console.log('responseNEW',response)
+   // console.log('responseNEW',response)
 
     return response
   } catch (error) {
    // 
     thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getAccountHistorySlice error', error.response);
+    console.log('getAccountHistorySlice error', error.response);
     throw error;
   }
 },
@@ -1061,7 +1061,7 @@ async (data, thunk) => {
      //
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getAllDashboardDataSlice error', error.response);
+    console.log('getAllDashboardDataSlice error', error.response);
     throw error;
   }
 },
@@ -1074,7 +1074,7 @@ async (data, thunk) => {
     // thunk.dispatch(saveIsLoading(true));
 
     const response = await requestPost(API_URL.COUNTRY_mycountrylist,data,true);
-    //console.log("response",response)
+    console.log("response",response)
     thunk.dispatch(saveAllCountry(response))
     // thunk.dispatch(saveIsLoading(false));
 
@@ -1082,7 +1082,7 @@ async (data, thunk) => {
   } catch (error) {
     // thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getAllCountrySlice error', error.response);
+    console.log('getAllCountrySlice error', error.response);
     throw error;
   }
 },
@@ -1104,13 +1104,13 @@ async (data, thunk) => {
    // const response = await requestGet(`${API_URL.GetCustomerAllTransaction}${data.Id}`);
     thunk.dispatch(saveTransactionHistory(response.data))
       thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response?.data
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getAllDashboardDataSlice error', error.response);
+    console.log('getAllDashboardDataSlice error', error.response);
     throw error;
   }
 },
@@ -1134,13 +1134,13 @@ async (data, thunk) => {
 
     thunk.dispatch(saveRBAccountHistory(response))
       // thunk.dispatch(saveIsLoading(false));
-   // //console.log('response',response)
+   // console.log('response',response)
 
     return response
   } catch (error) {
     //  thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getAllDashboardDataSlice error', error.response);
+    console.log('getAllDashboardDataSlice error', error.response);
     throw error;
   }
 },
@@ -1162,13 +1162,13 @@ async (data, thunk) => {
    // const response = await requestGet(`${API_URL.GetCustomerAllTransaction}${data.Id}`);
     thunk.dispatch(savePBDSAccountHistory(response))
     //  thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response
   } catch (error) {
   //   thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getAllDashboardDataSlice error', error.response);
+    console.log('getAllDashboardDataSlice error', error.response);
     throw error;
   }
 },
@@ -1189,13 +1189,13 @@ async (data, thunk) => {
 
     thunk.dispatch(saveSummaryAccountHistory(response.data))
       thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response?.data
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getAllDashboardDataSlice error', error.response);
+    console.log('getAllDashboardDataSlice error', error.response);
     throw error;
   }
 },
@@ -1216,13 +1216,13 @@ async (data, thunk) => {
 
     thunk.dispatch(savePOCDSAccountHistory(response.data))
       thunk.dispatch(saveIsLoading(false));
-    //console.log('response',response)
+    console.log('response',response)
 
     return response?.data
   } catch (error) {
      thunk.dispatch(saveIsLoading(false));
 
-    //console.log('getAllDashboardDataSlice error', error.response);
+    console.log('getAllDashboardDataSlice error', error.response);
     throw error;
   }
 },
@@ -1241,7 +1241,7 @@ export const SubscriptionValueSlice = createAsyncThunk(
     };
       const response = await requestGet(`${API_URL.SubscriptionGetPayment}${data.id}`,extraHeaders);
      // thunk.dispatch(saveIsLoading(false));
-      //console.log('response',response)
+      console.log('response',response)
 
       thunk.dispatch(saveAllSubscriptions(response?.data))
 
@@ -1249,7 +1249,7 @@ export const SubscriptionValueSlice = createAsyncThunk(
     } catch (error) {
     //  thunk.dispatch(saveIsLoading(false));
 
-      //console.log('ResetPasswordSlice error', error);
+      console.log('ResetPasswordSlice error', error);
       utillsJs.errorAlert('',error.response.data.message)
       throw error;
     }
@@ -1260,7 +1260,7 @@ export const DeleteMyInvoiceSlice = createAsyncThunk(
   async (data, thunk) => {
     try {    
       thunk.dispatch(saveIsLoading(true));
-      //console.log('data error', data);
+      console.log('data error', data);
       // const response = await requestGet(`${API_URL.GetCustomerPOCDSAllTransaction}${'?CustomerId='}${data.Id}`,extraHeaders);
 
       const response = await requestPost(`${API_URL.INVOICEDELETE}${'WrNumber='}${data.WrNumber}${'&UserId='}${data.UserId}${'&delReason='}${data.delReason}`, data,true);
@@ -1269,7 +1269,7 @@ export const DeleteMyInvoiceSlice = createAsyncThunk(
 
       return response;
     } catch (error) {
-      //console.log('DeleteMyInvoiceSlice error', error);
+      console.log('DeleteMyInvoiceSlice error', error);
       thunk.dispatch(saveIsLoading(false));
 
       utillsJs.errorAlert('',error.response.data.message)
@@ -1295,21 +1295,21 @@ export const RegisterEZONESLICE = createAsyncThunk(
       } catch (e) {
         console.error("Parsing error:", e);
       }
-      //console.log('jsonObject res==', jsonObject);
+      console.log('jsonObject res==', jsonObject);
       
 
 
       thunk.dispatch(saveEzoneInvoices(jsonObject))
-      //console.log('response.data',jsonObject)
+      console.log('response.data',jsonObject)
 
       thunk.dispatch(saveIsLoading(false));
       return response.data;
     } catch (error) {
       thunk.dispatch(saveIsLoading(false));
    
-     //console.log('RegisterEZONESLICE error', error);
+     console.log('RegisterEZONESLICE error', error);
          
-            //console.log('RegisterEZONESLICE error.response.data.message', error.response.data.message);
+            console.log('RegisterEZONESLICE error.response.data.message', error.response.data.message);
 
      utillsJs.errorAlert('',error.response.data.message)
       throw error;
@@ -1327,7 +1327,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 //     const extraHeaders = {
 //       Authorization: `Bearer ${accessToken}`,
 //     };
-//    // //console.log("URL",`${API_URL.Viewrelatedadds}${data}`)
+//    // console.log("URL",`${API_URL.Viewrelatedadds}${data}`)
 //     const response = await requestGet(`${API_URL.Viewrelatedadds}${data}`,extraHeaders);
 
 //     thunk.dispatch(saveAllrelatedProducts(response?.data))
@@ -1337,7 +1337,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 //   } catch (error) {
 //     thunk.dispatch(saveIsLoading(false));
 
-//     //console.log('getAllRelatedSlice error', error);
+//     console.log('getAllRelatedSlice error', error);
 //     throw error;
 //   }
 // },
@@ -1351,7 +1351,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 //     const extraHeaders = {
 //       Authorization: `Bearer ${accessToken}`,
 //     };
-//     //console.log("URL",`${API_URL.PRODUCT_MYFAVPOST}`)
+//     console.log("URL",`${API_URL.PRODUCT_MYFAVPOST}`)
 //     const response = await requestGet(`${API_URL.PRODUCT_MYFAVPOST}`,extraHeaders);
 
 //     thunk.dispatch(saveAllfavProducts(response?.data))
@@ -1361,7 +1361,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 //   } catch (error) {
 //     thunk.dispatch(saveIsLoading(false));
 
-//     //console.log('getAllRelatedSlice error', error);
+//     console.log('getAllRelatedSlice error', error);
 //     throw error;
 //   }
 // },
@@ -1378,12 +1378,12 @@ export const RegisterEZONESLICE = createAsyncThunk(
 //       const response = await requestPost(`${API_URL.PRICE_SUMMARY}${'categoryId='}${data.categoryId}${'&featured='}${data.featured}`, data,true,extraHeaders);
 //       thunk.dispatch(saveProductsummary(response?.data))
 
-//       //console.log('response',response)
+//       console.log('response',response)
 //       return response;
 //     } catch (error) { 
-//      //console.log('GetBalanceSummarySlice error', error);
+//      console.log('GetBalanceSummarySlice error', error);
 //             // 
-//             //console.log('GetBalanceSummarySlice error.response.data.message', error.response.data.message);
+//             console.log('GetBalanceSummarySlice error.response.data.message', error.response.data.message);
 
 //      utillsJs.errorAlert('',error.response.data.message)
 //       throw error;
@@ -1404,14 +1404,14 @@ export const RegisterEZONESLICE = createAsyncThunk(
 //       // thunk.dispatch(saveProductsummary(response?.data))
 //       thunk.dispatch(saveIsLoading(false));
 
-//       //console.log('response',response)
+//       console.log('response',response)
 //       return response;
 //     } catch (error) { 
-//      //console.log('CouponAppliedSlice error', error);
+//      console.log('CouponAppliedSlice error', error);
 //             //  
 //                thunk.dispatch(saveIsLoading(false));
 
-//     //console.log('CouponAppliedSlice error.response.data.message', error.response.data.message);
+//     console.log('CouponAppliedSlice error.response.data.message', error.response.data.message);
 
 //      utillsJs.errorAlert('',error.response.data.message)
 //       throw error;
@@ -1433,7 +1433,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 //       // thunk.dispatch(saveProductsummary(response?.data))
 //       thunk.dispatch(saveIsLoading(false));
 
-//       //console.log('response',response)
+//       console.log('response',response)
 //       return response;
 //     } catch (error) { 
 //             //  
@@ -1458,7 +1458,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 //       const response = await requestPost(`${API_URL.USERREPORT}${'?userId='}${data.userId}${'&description='}${data.description}`, data,true,extraHeaders);
 //       // thunk.dispatch(saveProductsummary(response?.data))
 //       thunk.dispatch(saveIsLoading(false));
-//       //console.log('response',response)
+//       console.log('response',response)
 //       return response;
 //     } catch (error) { 
 //             //  
@@ -1484,14 +1484,14 @@ export const RegisterEZONESLICE = createAsyncThunk(
 //       // thunk.dispatch(saveProductsummary(response?.data))
 //       thunk.dispatch(saveIsLoading(false));
 
-//       //console.log('response',response)
+//       console.log('response',response)
 //       return response;
 //     } catch (error) { 
-//      //console.log('BlockUserSlice error', error);
+//      console.log('BlockUserSlice error', error);
 //             //  
 //               //  thunk.dispatch(saveIsLoading(false));
 
-//     //console.log('BlockUserSlice error.response.data.message', error.response.data.message);
+//     console.log('BlockUserSlice error.response.data.message', error.response.data.message);
 
 //      utillsJs.errorAlert('',error.response.data.message)
 //       throw error;
@@ -1506,7 +1506,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 //     const extraHeaders = {
 //       Authorization: `Bearer ${accessToken}`,
 //     };
-//     //console.log("URL",`${API_URL.STATEMENT}`)
+//     console.log("URL",`${API_URL.STATEMENT}`)
 //     const response = await requestGet(`${API_URL.STATEMENT}`,extraHeaders);
 
 //     thunk.dispatch(saveAllStatement(response?.data))
@@ -1514,7 +1514,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 //     return response?.data
 //   } catch (error) {
 
-//     //console.log('getAllstatementSlice error', error);
+//     console.log('getAllstatementSlice error', error);
 //     throw error;
 //   }
 // },
@@ -1525,7 +1525,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 //   try {
 //     const countryno = await AsyncStorage.getItem('CountryNo')
 
-//     //console.log("URL",`${API_URL.STATELIST}${countryno}`)
+//     console.log("URL",`${API_URL.STATELIST}${countryno}`)
 
 //     const response = await requestGet(`${API_URL.STATELIST}${countryno}`);
 
@@ -1534,7 +1534,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 //     return response?.data
 //   } catch (error) {
 
-//     //console.log('getAllstateSlice error', error);
+//     console.log('getAllstateSlice error', error);
 //     throw error;
 //   }
 // },
@@ -1549,7 +1549,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 //     const extraHeaders = {
 //       Authorization: `Bearer ${accessToken}`,
 //     };
-//     //console.log(`${API_URL.CATEGORY_PRODUCT}${'name='}${data.name}${'&categoryid='}${data.categoryid}${'&location='}${data.location}${'&minprice='}${data.minprice}${'&maxprice='}${data.maxprice}${'&subcategoryid='}${data.subcategoryid}${'&page='}${data.page}${'&size='}${data.size}${'&country='}${data.country}`)
+//     console.log(`${API_URL.CATEGORY_PRODUCT}${'name='}${data.name}${'&categoryid='}${data.categoryid}${'&location='}${data.location}${'&minprice='}${data.minprice}${'&maxprice='}${data.maxprice}${'&subcategoryid='}${data.subcategoryid}${'&page='}${data.page}${'&size='}${data.size}${'&country='}${data.country}`)
 //     const response = await requestGet(`${API_URL.CATEGORY_PRODUCT}${'name='}${data.name}${'&categoryid='}${data.categoryid}${'&location='}${data.location}${'&minprice='}${data.minprice}${'&maxprice='}${data.maxprice}${'&subcategoryid='}${data.subcategoryid}${'&page='}${data.page}${'&size='}${data.size}${'&country='}${data.country}`,extraHeaders);
 //     thunk.dispatch(saveAllDashBordDataProduct(response?.data))
 //     thunk.dispatch(saveIsLoading(false));
@@ -1558,7 +1558,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 //   } catch (error) {
 //     thunk.dispatch(saveIsLoading(false));
 
-//     //console.log('CATEGORY_PRODUCT error', error);
+//     console.log('CATEGORY_PRODUCT error', error);
 //     throw error;
 //   }
 // },
@@ -1573,7 +1573,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 //       Authorization: `Bearer ${accessToken}`,
 //     };
 //     //      const response = await requestPost(`${API_URL.BLOCKUSER}${'?blockId='}${data.blockId}${'&status='}${data.status}`, data,true,extraHeaders);
-// //console.log(data)
+// console.log(data)
 //     const response = await requestPost(`${API_URL.CATEGORY_PRODUCT}`,data,true,extraHeaders);
 //     thunk.dispatch(saveAllCategoryProduct(response?.data))
 //     thunk.dispatch(saveIsLoading(false));
@@ -1582,7 +1582,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 //   } catch (error) {
 //     thunk.dispatch(saveIsLoading(false));
 
-//     //console.log('CATEGORY_PRODUCT error', error);
+//     console.log('CATEGORY_PRODUCT error', error);
 //     throw error;
 //   }
 // },
@@ -1597,7 +1597,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 //         const extraHeaders = {
 //           Authorization: `Bearer ${accessToken}`,
 //         };
-//         //console.log("URL",`${API_URL.CATEGORY_getrecommendations}`)
+//         console.log("URL",`${API_URL.CATEGORY_getrecommendations}`)
 
 //     const response = await requestGet(`${API_URL.CATEGORY_getrecommendations}${data}`,extraHeaders);//API_URL.CATEGORY_getrecommendations,extraHeaders);
 //     thunk.dispatch(savegetrecommendations(response?.data))
@@ -1605,7 +1605,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 
 //     return response?.data
 //   } catch (error) {
-//     //console.log('getDashboardDataSlice error', error);
+//     console.log('getDashboardDataSlice error', error);
 //     thunk.dispatch(saveIsLoading(false));
 
 //     throw error;
@@ -1616,7 +1616,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 //   API_URL.SITENAV,
 // async (data, thunk) => {
 //   try {
-//     // //console.log(`${API_URL.CATEGORY_PRODUCT}${data}`)
+//     // console.log(`${API_URL.CATEGORY_PRODUCT}${data}`)
 //     thunk.dispatch(saveIsLoading(true));
 //     const response = await requestGet(API_URL.SITENAV);
 //     thunk.dispatch(savesitenav(response?.data))
@@ -1624,7 +1624,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 
 //     return response?.data
 //   } catch (error) {
-//     //console.log('getSideMenuDataSlice error', error);
+//     console.log('getSideMenuDataSlice error', error);
 //     thunk.dispatch(saveIsLoading(false));
 
 //     throw error;
@@ -1637,7 +1637,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 //   try {
 //     thunk.dispatch(saveIsLoading(true));
 //     const response = await requestGet(`${API_URL.DYNAMIC_CATEGORYDATA}${data}`);
-//     //  //console.log('response',response)
+//     //  console.log('response',response)
 //     thunk.dispatch(saveDynamicPostCategories(response?.data))
 //     thunk.dispatch(saveIsLoading(false));
 
@@ -1645,7 +1645,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 //   } catch (error) {
 //     thunk.dispatch(saveIsLoading(false));
 
-//     //console.log('DYNAMIC_CATEGORYDATA error', error);
+//     console.log('DYNAMIC_CATEGORYDATA error', error);
 //     throw error;
 //   }
 // },
@@ -1666,7 +1666,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 
 //       return response;
 //     } catch (error) {
-//       //console.log('ViewAllProducttSlice error', error);
+//       console.log('ViewAllProducttSlice error', error);
 //       thunk.dispatch(saveIsLoading(false));
 
 //     //  utillsJs.errorAlert('',error.response.data.message)
@@ -1690,7 +1690,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 
 //       return response;
 //     } catch (error) {
-//       //console.log('ViewAllChatMembers error', error);
+//       console.log('ViewAllChatMembers error', error);
 //       //thunk.dispatch(saveIsLoading(false));
 
 //       utillsJs.errorAlert('',error.response.data.message)
@@ -1716,7 +1716,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 
 //       return response;
 //     } catch (error) {
-//       //console.log('ViewAllCoinsSlice error', error);
+//       console.log('ViewAllCoinsSlice error', error);
 //       thunk.dispatch(saveIsLoading(false));
 
 //       utillsJs.errorAlert('',error.response.data.message)
@@ -1741,7 +1741,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 
 //       return response;
 //     } catch (error) {
-//       //console.log('ViewAllSubscriptionSlice error', error);
+//       console.log('ViewAllSubscriptionSlice error', error);
 //       thunk.dispatch(saveIsLoading(false));
 
 //       utillsJs.errorAlert('',error.response.data.message)
@@ -1765,7 +1765,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 
 //       return response;
 //     } catch (error) {
-//       //console.log('ViewAllChatMembers error', error);
+//       console.log('ViewAllChatMembers error', error);
 //       thunk.dispatch(saveIsLoading(false));
 
 //       utillsJs.errorAlert('',error.response.data.message)
@@ -1789,7 +1789,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 
 //       return response;
 //     } catch (error) {
-//       //console.log('ViewAllChatMembers error', error);
+//       console.log('ViewAllChatMembers error', error);
 //       thunk.dispatch(saveIsLoading(false));
 
 //       utillsJs.errorAlert('',error.response.data.message)
@@ -1810,7 +1810,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 
 //       return response;
 //     } catch (error) {
-//       //console.log('ViewMyProducttSlice error', error);
+//       console.log('ViewMyProducttSlice error', error);
 //       thunk.dispatch(saveIsLoading(false));
 
 //      // utillsJs.errorAlert('',error.response.data.message)
@@ -1824,7 +1824,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 //   async (data, thunk) => {
 //     try {    
 //       thunk.dispatch(saveIsLoading(true));
-//       // //console.log('data error', data);
+//       // console.log('data error', data);
       
 //       const response = await requestGet(`${API_URL.ADMINCHATMESSAGES}${data.recipientId}/${data.senderId}`);
 
@@ -1833,7 +1833,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 
 //       return response;
 //     } catch (error) {
-//       //console.log('ViewMyChatSlice error', error);
+//       console.log('ViewMyChatSlice error', error);
 //       thunk.dispatch(saveIsLoading(false));
 
 //       utillsJs.errorAlert('',error.response.data.message)
@@ -1846,7 +1846,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 //   async (data, thunk) => {
 //     try {    
 //       thunk.dispatch(saveIsLoading(true));
-//       //console.log('data error', data);
+//       console.log('data error', data);
 //       const accessToken = await AsyncStorage.getItem(CONSTANTS.AccessToken)
 //       const extraHeaders = {
 //         Authorization: `Bearer ${accessToken}`,
@@ -1857,7 +1857,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 
 //       return response;
 //     } catch (error) {
-//       //console.log('ViewAdminChatSlice error', error);
+//       console.log('ViewAdminChatSlice error', error);
 //       thunk.dispatch(saveIsLoading(false));
 
 //       utillsJs.errorAlert('',error.response.data.message)
@@ -1870,7 +1870,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 //   async (data, thunk) => {
 //     try {    
 //       thunk.dispatch(saveIsLoading(true));
-//       //console.log('data error', data);
+//       console.log('data error', data);
 
 //       const response = await requestGet(`${API_URL.CHATMESSAGES}${data.recipientId}/${data.senderId}/${data.productId}`);
 
@@ -1879,7 +1879,7 @@ export const RegisterEZONESLICE = createAsyncThunk(
 
 //       return response;
 //     } catch (error) {
-//       //console.log('ViewMyChatSlice error', error);
+//       console.log('ViewMyChatSlice error', error);
 //       thunk.dispatch(saveIsLoading(false));
 
 //       utillsJs.errorAlert('',error.response.data.message)
@@ -1894,17 +1894,17 @@ export const RegisterEZONESLICE = createAsyncThunk(
 //   async (data, thunk) => {
 //     try {    
 //       thunk.dispatch(saveIsLoading(true));
-//       //console.log('data', data);
+//       console.log('data', data);
 
 //       const response = await requestGet(`${API_URL.CHATMESSAGES}${data.senderId}/${data.recipientId}/count`);
-//       // //console.log('ViewMyChatSlice response', response);
+//       // console.log('ViewMyChatSlice response', response);
 
 //       thunk.dispatch(saveLastChat(response?.data))
 //       thunk.dispatch(saveIsLoading(false));
 
 //       return response;
 //     } catch (error) {
-//       //console.log('ViewMyChatSlice error', error);
+//       console.log('ViewMyChatSlice error', error);
 //       thunk.dispatch(saveIsLoading(false));
 
 //       utillsJs.errorAlert('',error.response.data.message)

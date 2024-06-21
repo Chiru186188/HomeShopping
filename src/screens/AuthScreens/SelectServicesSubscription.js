@@ -461,7 +461,7 @@ export default function SelectServicesSubscription({ navigation }) {
 
   const handlePress = () => {
     console.log("from",from)
-    if (from === 'AddMore') {
+    if (from === 'AddMore' || from == "Side") {
      // navigation.replace(SCREENS.LoginScreen);
 
      handleGoToHome()

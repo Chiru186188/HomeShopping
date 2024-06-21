@@ -171,7 +171,7 @@ const RadioButton = ({ label, value, onValueChange, selectedValue }) => {
           value: item.value,
         }));
     
-        //console.log("formattedItems",formattedItems)
+        console.log("formattedItems",formattedItems)
         setItems(formattedItems);
     
         if (res?.transactionTypeId?.length > 0){
@@ -183,7 +183,7 @@ const RadioButton = ({ label, value, onValueChange, selectedValue }) => {
           value: item.value,
         }));
     
-        //console.log("formattedItems",formattedItemsRY)
+        console.log("formattedItems",formattedItemsRY)
         setItemsRY(formattedItemsRY);
     
        // console.log("dropdownrates?",res?.dropdownrates)
@@ -201,7 +201,7 @@ const RadioButton = ({ label, value, onValueChange, selectedValue }) => {
           value: item.value,
         }));
     
-        //console.log("formattedItems",formattedItemsLB)
+        console.log("formattedItems",formattedItemsLB)
         setItemsLB(formattedItemsLB);
     
         if (res?.letterBoxType?.length > 0){
@@ -213,7 +213,7 @@ const RadioButton = ({ label, value, onValueChange, selectedValue }) => {
           value: item.value,
         }));
     
-        //console.log("formattedItems",formattedItemsEST)
+        console.log("formattedItems",formattedItemsEST)
         setItemsEST(formattedItemsEST);
     
         if (res?.ezoneSubscriptionType?.length > 0){
@@ -225,7 +225,7 @@ const RadioButton = ({ label, value, onValueChange, selectedValue }) => {
           value: item.value,
         }));
     
-        //console.log("formattedItems",formattedItemsMRM)
+        console.log("formattedItems",formattedItemsMRM)
         setItemsMRM(formattedItemsMRM);
     
         if (res?.mailRedirectionMonths?.length > 0){

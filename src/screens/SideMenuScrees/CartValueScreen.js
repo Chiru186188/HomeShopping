@@ -440,6 +440,10 @@ const getAllCoinsPurchaselist = () => {
         );
         
       }
+
+      // setChecked()
+
+
     })
     .catch(e => {
       //  setLoading(false);
@@ -604,7 +608,7 @@ const handlePress = () => {
   
     
               <Icons
-                name={isChecked == true ? 'checkbox-active' : 'checkbox-passive'}
+                name={item.IsInsured == true ? 'checkbox-active' : 'checkbox-passive'}
                 style={styles.icon}
                 Type={Icon.Fontisto}
                 size={rf(2.8)}
