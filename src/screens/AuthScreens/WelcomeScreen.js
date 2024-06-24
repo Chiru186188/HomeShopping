@@ -72,8 +72,8 @@ useFocusEffect(
         <Text style={styles.txt1}>
         General Post Office - Anguilla
                 </Text>
-                <Text style={styles.txt1}>
-       Mobile App
+                <Text style={styles.txt12}>
+        MOBILE APP
                 </Text>
        
       </View>
@@ -139,6 +139,12 @@ padding: 20
   },
   txt1: {
     fontFamily: FONTFAMILY.Regular,
+    fontSize: rf(2.4),
+    color: COLORS.Heading,
+    textAlign: 'center',
+  },
+  txt12: {
+    fontFamily: FONTFAMILY.Bold,
     fontSize: rf(2.4),
     color: COLORS.Heading,
     textAlign: 'center',

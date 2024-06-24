@@ -323,30 +323,43 @@ const sharePDFLink = async () => {
             console.log('Exactly one value is not null or true.');
         
             if  (services?.hsUserId !== null){
-              navigation.replace(SCREENS.HSAccountDetail);
+
+              navigation.reset({
+                index: 0,
+                routes: [{ name: SCREENS.HSAccountDetail }], // Replace 'InitialScreen' with the name of your initial screen
+              });   
+              
+              //navigation.replace(SCREENS.HSAccountDetail);
             } else if  (services?.ezUserId !== null){
-              navigation.replace(SCREENS.EZAccountDetail);
+              navigation.reset({
+                index: 0,
+                routes: [{ name: SCREENS.EZAccountDetail }], // Replace 'InitialScreen' with the name of your initial screen
+              });  
              } else if  (services?.ltbUserId !== null){
-              navigation.replace(SCREENS.RentalBoxAccountDetail);
+              navigation.reset({
+                index: 0,
+                routes: [{ name: SCREENS.RentalBoxAccountDetail }], // Replace 'InitialScreen' with the name of your initial screen
+              });  
             }else if  (services?.pbdsUserId !== null){
-              navigation.replace(SCREENS.PBDSAccountDetail);
+              navigation.reset({
+                index: 0,
+                routes: [{ name: SCREENS.PBDSAccountDetail }], // Replace 'InitialScreen' with the name of your initial screen
+              });  
             }else if  (services?.pocdsUserId == true){
-              navigation.replace(SCREENS.POCDSAccountDetail);
+              navigation.reset({
+                index: 0,
+                routes: [{ name: SCREENS.POCDSAccountDetail }], // Replace 'InitialScreen' with the name of your initial screen
+              });  
             }
           } else {
             console.log('3');
 
-        navigation.replace(SCREENS.DashBoard); 
-          
+        navigation.reset({
+          index: 0,
+          routes: [{ name: SCREENS.DashBoard }], // Replace 'InitialScreen' with the name of your initial screen
+        });    
           
           }
-
-
-
-
-
-
-
 
       }else{
         navigation.navigate(SCREENS.CartValueScreen,{From :"Login",Service:'',userID:res?.data?.userID,LoginParams:res?.data})

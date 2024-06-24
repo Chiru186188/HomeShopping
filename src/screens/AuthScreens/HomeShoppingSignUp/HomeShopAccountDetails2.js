@@ -19,6 +19,7 @@ import TouchableNativeFeedback from '../../../components/TouchableNativeFeedback
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import CustomRadioButtons from '../../../components/CustomRadioButtons';
+import { useSelector } from 'react-redux';
 
 export default function HomeShopAccountDetails2({navigation}) {
  
@@ -48,6 +49,10 @@ const showDatePicker = () => {
 const hideDatePicker = () => {
   setDatePickerVisibility(false);
 };
+const AllCountries = useSelector(state => state.category.AllCountries);
+
+// 
+const AllCountriesdata = AllCountries?.aaData
 const handleConfirm = (date) => {
   const dateObject = new Date(date.toString());
   const year = dateObject.getFullYear();
@@ -70,10 +75,16 @@ const route = useRoute();
   useEffect(() => {
     console.log("HIIII",params1)
 
-    const formattedItems = DEFAULTARRAYS.Nationality?.map((item) => ({
-      label: item.Text,
-      value: item.Value,
+    // const formattedItems = DEFAULTARRAYS.Nationality?.map((item) => ({
+    //   label: item.Text,
+    //   value: item.Value,
+    // }));
+    const formattedItems = AllCountriesdata?.map((item) => ({
+      label: item.Name,
+      value: item.Name,
     }));
+    console.log("formattedItems",formattedItems)
+    setItems(formattedItems);
     console.log("formattedItems",formattedItems)
     setItems(formattedItems);
     

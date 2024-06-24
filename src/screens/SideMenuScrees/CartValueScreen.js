@@ -593,7 +593,7 @@ const handlePress = () => {
     </View>
   </View>
 ) : (
-  <View /> // Render a blank View when item.id !== 3
+  <View/>
 )}
        {(item.id === 1 || item.id === 4)&& (
 
@@ -608,7 +608,7 @@ const handlePress = () => {
   
     
               <Icons
-                name={item.IsInsured == true ? 'checkbox-active' : 'checkbox-passive'}
+                name={item.isInsurance == true ? 'checkbox-active' : 'checkbox-passive'}
                 style={styles.icon}
                 Type={Icon.Fontisto}
                 size={rf(2.8)}

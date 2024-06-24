@@ -24,10 +24,11 @@ import { useSelector } from 'react-redux';
 export default function POCDSAccountDetails1({navigation}) {
   const route = useRoute();
   const AllCountries = useSelector(state => state.category.AllCountries);
-  console.log("AllCountries",AllCountries)
+  // console.log("AllCountries",AllCountries)
 
- // const AllCountriesdata = AllCountries?.aaData
-  console.log("AllCountriesdata",AllCountriesdata)
+ // 
+ const AllCountriesdata = AllCountries?.aaData
+  // console.log("AllCountriesdata",AllCountriesdata)
   const options = [
     { label: 'Yes', value: 'Yes' },
     { label: 'No', value: 'No' },
@@ -36,17 +37,17 @@ export default function POCDSAccountDetails1({navigation}) {
 useEffect(() => {
 
 console.log("Params1",Params1)
-// const formattedItems = AllCountriesdata?.map((item) => ({
-//   label: item.Name,
-//   value: item.Name,
-// }));
-// console.log("formattedItems",formattedItems)
-// setItems(formattedItems);
-
-const formattedItems = DEFAULTARRAYS.Nationality?.map((item) => ({
-  label: item.Text,
-  value: item.Value,
+const formattedItems = AllCountriesdata?.map((item) => ({
+  label: item.Name,
+  value: item.Name,
 }));
+console.log("formattedItems",formattedItems)
+setItems(formattedItems);
+
+// const formattedItems = DEFAULTARRAYS.Nationality?.map((item) => ({
+//   label: item.Text,
+//   value: item.Value,
+// }));
 console.log("formattedItems",formattedItems)
 setItems(formattedItems);
 

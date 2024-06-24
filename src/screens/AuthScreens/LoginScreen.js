@@ -485,24 +485,72 @@ export default function LoginScreen({ navigation }) {
           if (res.data.ispayment === true) {
             const countNonNullOrTrueValues = Object.values(services).filter(value => value !== null && value !== false).length;
 
-            if (countNonNullOrTrueValues === 1) {
-              console.log('Exactly one value is not null or true.');
+            // if (countNonNullOrTrueValues === 1) {
+            //   console.log('Exactly one value is not null or true.');
 
-              if (services?.hsUserId !== null) {
-                navigation.replace(SCREENS.HSAccountDetail);
-              } else if (services?.ezUserId !== null) {
-                navigation.replace(SCREENS.EZAccountDetail);
-              } else if (services?.ltbUserId !== null) {
-                navigation.replace(SCREENS.RentalBoxAccountDetail);
-              } else if (services?.pbdsUserId !== null) {
-                navigation.replace(SCREENS.PBDSAccountDetail);
-              } else if (services?.pocdsUserId == true) {
-                navigation.replace(SCREENS.POCDSAccountDetail);
+            //   if (services?.hsUserId !== null) {
+            //     navigation.replace(SCREENS.HSAccountDetail);
+            //   } else if (services?.ezUserId !== null) {
+            //     navigation.replace(SCREENS.EZAccountDetail);
+            //   } else if (services?.ltbUserId !== null) {
+            //     navigation.replace(SCREENS.RentalBoxAccountDetail);
+            //   } else if (services?.pbdsUserId !== null) {
+            //     navigation.replace(SCREENS.PBDSAccountDetail);
+            //   } else if (services?.pocdsUserId == true) {
+            //     navigation.replace(SCREENS.POCDSAccountDetail);
+            //   }
+            // } else {
+            //   navigation.replace(SCREENS.DashBoard);
+            //   AsyncStorage.setItem(CONSTANTS.ISLOGGEDIN, "Yes");
+            // }
+
+
+            if (countNonNullOrTrueValues === 1) {
+              console.log('2');
+  
+              console.log('Exactly one value is not null or true.');
+          
+              if  (services?.hsUserId !== null){
+  
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: SCREENS.HSAccountDetail }], // Replace 'InitialScreen' with the name of your initial screen
+                });   
+                
+                //navigation.replace(SCREENS.HSAccountDetail);
+              } else if  (services?.ezUserId !== null){
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: SCREENS.EZAccountDetail }], // Replace 'InitialScreen' with the name of your initial screen
+                });  
+               } else if  (services?.ltbUserId !== null){
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: SCREENS.RentalBoxAccountDetail }], // Replace 'InitialScreen' with the name of your initial screen
+                });  
+              }else if  (services?.pbdsUserId !== null){
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: SCREENS.PBDSAccountDetail }], // Replace 'InitialScreen' with the name of your initial screen
+                });  
+              }else if  (services?.pocdsUserId == true){
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: SCREENS.POCDSAccountDetail }], // Replace 'InitialScreen' with the name of your initial screen
+                });  
               }
             } else {
-              navigation.replace(SCREENS.DashBoard);
-              AsyncStorage.setItem(CONSTANTS.ISLOGGEDIN, "Yes");
+              console.log('3');
+  
+          navigation.reset({
+            index: 0,
+            routes: [{ name: SCREENS.DashBoard }], // Replace 'InitialScreen' with the name of your initial screen
+          });    
+            
             }
+
+
+
           } else {
             navigation.navigate(SCREENS.CartValueScreen, { From: "Login", Service: '', userID: res?.data?.userID, LoginParams: res?.data })
           }

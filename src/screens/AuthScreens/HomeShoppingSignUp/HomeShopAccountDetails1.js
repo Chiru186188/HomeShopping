@@ -18,18 +18,26 @@ import utills from '../../../utills';
 import TouchableNativeFeedback from '../../../components/TouchableNativeFeedback';
 // import CustomRadioButtons from '../../../components/CustomRadioButtons';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { useSelector } from 'react-redux';
 
 export default function HomeShopAccountDetails1({navigation}) {
   const route = useRoute();
-
+  const AllCountries = useSelector(state => state.category.AllCountries);
+ const AllCountriesdata = AllCountries?.aaData
   const { From,Params1 } = route.params;
 useEffect(() => {
 console.log("From",From)
 console.log("Params1",Params1)
-const formattedItems = DEFAULTARRAYS.Nationality?.map((item) => ({
-  label: item.Text,
-  value: item.Value,
+// const formattedItems = DEFAULTARRAYS.Nationality?.map((item) => ({
+//   label: item.Text,
+//   value: item.Value,
+// }));
+const formattedItems = AllCountriesdata?.map((item) => ({
+  label: item.Name,
+  value: item.Name,
 }));
+console.log("formattedItems",formattedItems)
+setItems(formattedItems);
 console.log("formattedItems",formattedItems)
 setItems(formattedItems);
 

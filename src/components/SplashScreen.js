@@ -24,7 +24,7 @@ export default function SplashScreen({navigation}) {
     let data = {
       iSortingCols:3,
       iDisplayStart:0,
-      iDisplayLength:30
+      iDisplayLength:250
   };
     dispatch(getAllCountrySlice(data))
       .unwrap()

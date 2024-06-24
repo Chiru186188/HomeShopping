@@ -461,11 +461,16 @@ export default function SelectServicesSubscription({ navigation }) {
 
   const handlePress = () => {
     console.log("from",from)
-    if (from === 'AddMore' || from == "Side") {
+    if (from === 'AddMore') {
      // navigation.replace(SCREENS.LoginScreen);
 
      handleGoToHome()
     }
+    if (from == "Side") {
+      // navigation.replace(SCREENS.LoginScreen);
+ 
+      navigation.goBack();
+     }
    else if (from === 'Registration') {
       navigation.replace(SCREENS.LoginScreen);
     }
@@ -514,7 +519,6 @@ console.log("from",from)
     id: userId,
   
   };
-
   console.log('Go to Login');
   console.log('data',data);
   
